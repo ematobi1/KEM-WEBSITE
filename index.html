@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="KEM Logistics And Solutions LLC - Professional freight and logistics services with real-time tracking, competitive rates, and reliable delivery.">
+    <meta name="keywords" content="logistics, freight, shipping, transportation, supply chain">
+    <meta name="author" content="KEM Logistics And Solutions LLC">
+
+    <title>KEM Logistics And Solutions LLC - Reliable Freight & Logistics Services</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/icons/favicon.png">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/styles.css">
+
+    <!-- Preload critical resources -->
+    <link rel="preload" href="css/styles.css" as="style">
+</head>
+<body>
+    <!-- Skip to main content for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Header -->
+    <header class="header" role="banner">
+        <nav class="navbar" role="navigation" aria-label="Main navigation">
+            <div class="container">
+                <div class="nav-wrapper">
+                    <!-- Logo -->
+                    <div class="logo">
+                        <a href="index.html" aria-label="KEM Logistics home">
+                            <span class="logo-text">KEM</span>
+                            <span class="logo-subtitle">Logistics & Solutions</span>
+                        </a>
+                    </div>
+
+                    <!-- Mobile menu toggle -->
+                    <button class="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+                        <span class="hamburger"></span>
+                        <span class="hamburger"></span>
+                        <span class="hamburger"></span>
+                    </button>
+
+                    <!-- Navigation Links -->
+                    <ul class="nav-links">
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="#tracking">Track Shipment</a></li>
+                        <li><a href="#quote">Get Quote</a></li>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                        <li><a href="login.html" class="btn-login">Sign In</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" role="main">
+
+        <!-- Hero Section -->
+        <section class="hero" aria-labelledby="hero-heading">
+            <div class="hero-overlay"></div>
+            <div class="container">
+                <div class="hero-content">
+                    <h1 id="hero-heading">Freight Solutions Built for Your Business</h1>
+                    <p class="hero-subtitle">Fast, reliable, and cost-effective logistics services across the nation</p>
+
+                    <!-- Quick Actions -->
+                    <div class="hero-actions">
+                        <a href="#quote" class="btn btn-primary">Get a Quote</a>
+                        <a href="#tracking" class="btn btn-secondary">Track Shipment</a>
+                    </div>
+
+                    <!-- Quick Stats -->
+                    <div class="quick-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">10,000+</span>
+                            <span class="stat-label">Deliveries/Month</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">98%</span>
+                            <span class="stat-label">On-Time Rate</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">24/7</span>
+                            <span class="stat-label">Support</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tracking Section -->
+        <section id="tracking" class="tracking-section" aria-labelledby="tracking-heading">
+            <div class="container">
+                <h2 id="tracking-heading">Track Your Shipment</h2>
+                <p class="section-subtitle">Enter your tracking number for real-time updates</p>
+
+                <form class="tracking-form" role="search" aria-label="Shipment tracking">
+                    <div class="input-group">
+                        <label for="tracking-input" class="visually-hidden">Tracking number</label>
+                        <input
+                            type="text"
+                            id="tracking-input"
+                            class="tracking-input"
+                            placeholder="Enter tracking number (e.g., KEM123456789)"
+                            aria-describedby="tracking-help"
+                            required
+                        >
+                        <button type="submit" class="btn btn-track">Track</button>
+                    </div>
+                    <small id="tracking-help" class="form-help">Tracking numbers are typically 12-15 characters</small>
+                </form>
+
+                <!-- Tracking Result (Initially Hidden) -->
+                <div class="tracking-result" role="region" aria-live="polite" aria-atomic="true">
+                    <!-- Results will be inserted here via JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="services-section" aria-labelledby="services-heading">
+            <div class="container">
+                <h2 id="services-heading">Our Services</h2>
+                <p class="section-subtitle">Elite logistics solutions engineered for operational excellence</p>
+
+                <div class="services-grid">
+                    <article class="service-card">
+                        <div class="service-icon" aria-hidden="true">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="1" y="3" width="15" height="13"></rect>
+                                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                                <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                                <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                            </svg>
+                        </div>
+                        <h3>Full Truckload (FTL)</h3>
+                        <p>Premium dedicated capacity with exclusive use of modern equipment, providing nonstop service from origin to destination with zero handling touchpoints for maximum cargo protection and accelerated transit times.</p>
+                        <a href="#quote" class="service-link">Learn more →</a>
+                    </article>
+
+                    <article class="service-card">
+                        <div class="service-icon" aria-hidden="true">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                            </svg>
+                        </div>
+                        <h3>Less Than Truckload (LTL)</h3>
+                        <p>Sophisticated consolidation services optimizing cost efficiency for partial loads through strategic freight pooling, while maintaining carrier-grade care standards and comprehensive tracking for every pallet throughout the network.</p>
+                        <a href="#quote" class="service-link">Learn more →</a>
+                    </article>
+
+                    <article class="service-card">
+                        <div class="service-icon" aria-hidden="true">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="16 16 12 12 8 16"></polyline>
+                                <line x1="12" y1="12" x2="12" y2="21"></line>
+                                <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"></path>
+                            </svg>
+                        </div>
+                        <h3>Expedited Shipping</h3>
+                        <p>Mission-critical express delivery leveraging our priority network infrastructure with guaranteed time-definite service windows, dedicated routing protocols, and white-glove handling ensuring your urgent freight arrives precisely when promised.</p>
+                        <a href="#quote" class="service-link">Learn more →</a>
+                    </article>
+
+                    <article class="service-card">
+                        <div class="service-icon" aria-hidden="true">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </div>
+                        <h3>Warehousing & Distribution</h3>
+                        <p>State-of-the-art fulfillment centers featuring climate-controlled environments, advanced WMS technology for real-time inventory intelligence, strategic cross-docking capabilities, and seamless last-mile distribution coordination.</p>
+                        <a href="#quote" class="service-link">Learn more →</a>
+                    </article>
+
+                    <article class="service-card">
+                        <div class="service-icon" aria-hidden="true">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </div>
+                        <h3>Specialized Freight</h3>
+                        <p>Specialized heavy-haul and project cargo solutions with certified equipment for oversized dimensions, temperature-sensitive pharmaceuticals, hazmat-compliant handling, and high-value asset transportation requiring enhanced security protocols and precision logistics.</p>
+                        <a href="#quote" class="service-link">Learn more →</a>
+                    </article>
+
+                    <article class="service-card">
+                        <div class="service-icon" aria-hidden="true">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                        </div>
+                        <h3>Same-Day Delivery</h3>
+                        <p>Hyperlocal rapid response logistics utilizing dynamic route optimization and GPS-tracked fleet deployment for immediate pickup and same-business-day delivery within metropolitan service areas, complete with digital proof of delivery and customer notifications.</p>
+                        <a href="#quote" class="service-link">Learn more →</a>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quote Request Section -->
+        <section id="quote" class="quote-section" aria-labelledby="quote-heading">
+            <div class="container">
+                <h2 id="quote-heading">Get an Instant Quote</h2>
+                <p class="section-subtitle">Fill out the form below and receive a competitive rate within minutes</p>
+
+                <form class="quote-form" aria-label="Quote request form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="quote-name">Full Name *</label>
+                            <input type="text" id="quote-name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="quote-email">Email Address *</label>
+                            <input type="email" id="quote-email" name="email" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="quote-phone">Phone Number *</label>
+                            <input type="tel" id="quote-phone" name="phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="quote-company">Company Name</label>
+                            <input type="text" id="quote-company" name="company">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="quote-origin">Pickup Location *</label>
+                            <input type="text" id="quote-origin" name="origin" placeholder="City, State or ZIP" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="quote-destination">Delivery Location *</label>
+                            <input type="text" id="quote-destination" name="destination" placeholder="City, State or ZIP" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="quote-service">Service Type *</label>
+                            <select id="quote-service" name="service" required>
+                                <option value="">Select a service...</option>
+                                <option value="ftl">Full Truckload (FTL)</option>
+                                <option value="ltl">Less Than Truckload (LTL)</option>
+                                <option value="expedited">Expedited Shipping</option>
+                                <option value="warehousing">Warehousing & Distribution</option>
+                                <option value="specialized">Specialized Freight</option>
+                                <option value="same-day">Same-Day Delivery</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="quote-weight">Estimated Weight (lbs) *</label>
+                            <input type="number" id="quote-weight" name="weight" min="1" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="quote-details">Additional Details</label>
+                        <textarea id="quote-details" name="details" rows="4" placeholder="Dimensions, special requirements, etc."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-large">Get My Quote</button>
+                </form>
+
+                <!-- Quote Result (Initially Hidden) -->
+                <div class="quote-result" role="region" aria-live="polite">
+                    <!-- Results will be inserted here via JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="about-section" aria-labelledby="about-heading">
+            <div class="container">
+                <div class="about-content">
+                    <div class="about-text">
+                        <h2 id="about-heading">About KEM Logistics</h2>
+                        <p class="about-intro">Your trusted partner in freight and logistics solutions since our founding. We combine cutting-edge technology with personalized service to deliver exceptional results.</p>
+
+                        <div class="about-features">
+                            <div class="feature-item">
+                                <h3>Our Mission</h3>
+                                <p>To provide reliable, efficient, and cost-effective logistics solutions that help businesses thrive in a competitive marketplace.</p>
+                            </div>
+                            <div class="feature-item">
+                                <h3>Our Values</h3>
+                                <ul>
+                                    <li>Integrity in every transaction</li>
+                                    <li>Customer-first approach</li>
+                                    <li>Innovation and continuous improvement</li>
+                                    <li>Safety and compliance</li>
+                                </ul>
+                            </div>
+                            <div class="feature-item">
+                                <h3>Why Choose Us</h3>
+                                <ul>
+                                    <li>Nationwide coverage with local expertise</li>
+                                    <li>Real-time tracking and visibility</li>
+                                    <li>Competitive pricing with no hidden fees</li>
+                                    <li>Dedicated account management</li>
+                                    <li>24/7 customer support</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="about-media">
+                        <!-- Company Video -->
+                        <video controls poster="assets/images/about-logistics.jpg" preload="metadata">
+                            <source src="assets/videos/logistics-intro.mp4" type="video/mp4">
+                            <p>Your browser doesn't support HTML5 video. <a href="assets/videos/logistics-intro.mp4">Download the video</a> instead.</p>
+                        </video>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section class="testimonials-section" aria-labelledby="testimonials-heading">
+            <div class="container">
+                <h2 id="testimonials-heading">What Our Clients Say</h2>
+                <p class="section-subtitle">Trusted by businesses across the nation</p>
+
+                <div class="testimonials-grid">
+                    <article class="testimonial-card">
+                        <div class="testimonial-rating" aria-label="5 out of 5 stars">
+                            ★★★★★
+                        </div>
+                        <blockquote>
+                            <p>"KEM Logistics has transformed our supply chain. Their real-time tracking and reliable service have reduced our delivery times by 30%."</p>
+                        </blockquote>
+                        <cite>
+                            <strong>Sarah Johnson</strong>
+                            <span>Operations Director, TechCorp Industries</span>
+                        </cite>
+                    </article>
+
+                    <article class="testimonial-card">
+                        <div class="testimonial-rating" aria-label="5 out of 5 stars">
+                            ★★★★★
+                        </div>
+                        <blockquote>
+                            <p>"Outstanding service and competitive rates. Their team goes above and beyond to ensure our freight arrives on time, every time."</p>
+                        </blockquote>
+                        <cite>
+                            <strong>Michael Chen</strong>
+                            <span>Supply Chain Manager, Global Manufacturing Co.</span>
+                        </cite>
+                    </article>
+
+                    <article class="testimonial-card">
+                        <div class="testimonial-rating" aria-label="5 out of 5 stars">
+                            ★★★★★
+                        </div>
+                        <blockquote>
+                            <p>"The transparency and communication from KEM Logistics is exceptional. We always know where our shipments are and when they'll arrive."</p>
+                        </blockquote>
+                        <cite>
+                            <strong>Emily Rodriguez</strong>
+                            <span>Logistics Coordinator, Retail Solutions LLC</span>
+                        </cite>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="contact-section" aria-labelledby="contact-heading">
+            <div class="container">
+                <h2 id="contact-heading">Get in Touch</h2>
+                <p class="section-subtitle">Have questions? Our team is here to help</p>
+
+                <div class="contact-content">
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <h3>Phone</h3>
+                            <p><a href="tel:+14708363519">1-470-836-3519</a></p>
+                            <small>Mon-Fri: 8AM-8PM EST | Sat-Sun: 9AM-5PM EST</small>
+                        </div>
+
+                        <div class="contact-item">
+                            <h3>Email</h3>
+                            <p><a href="mailto:kemlogistics23@gmail.com">kemlogistics23@gmail.com</a></p>
+                            <small>We respond within 24 hours</small>
+                        </div>
+
+                        <div class="contact-item">
+                            <h3>Headquarters</h3>
+                            <address>
+                                972 Holly Meadow Dr<br>
+                                Buford, GA 30518
+                            </address>
+                        </div>
+
+                        <div class="contact-item">
+                            <h3>Emergency Dispatch</h3>
+                            <p><a href="tel:+14708363519">1-470-836-3519</a></p>
+                            <small>24/7 emergency support</small>
+                        </div>
+                    </div>
+
+                    <form class="contact-form" aria-label="Contact form">
+                        <div class="form-group">
+                            <label for="contact-name">Name *</label>
+                            <input type="text" id="contact-name" name="name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contact-email">Email *</label>
+                            <input type="email" id="contact-email" name="email" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contact-subject">Subject *</label>
+                            <input type="text" id="contact-subject" name="subject" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contact-message">Message *</label>
+                            <textarea id="contact-message" name="message" rows="5" required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>KEM Logistics</h3>
+                    <p>Delivering excellence in freight and logistics solutions nationwide.</p>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Follow us on Facebook" class="social-link">Facebook</a>
+                        <a href="https://www.twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Follow us on Twitter" class="social-link">Twitter</a>
+                        <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="Connect with us on LinkedIn" class="social-link">LinkedIn</a>
+                    </div>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="#services">Premium Full Truckload Solutions</a></li>
+                        <li><a href="#services">Consolidated LTL Services</a></li>
+                        <li><a href="#services">Time-Critical Expedited Delivery</a></li>
+                        <li><a href="#services">Strategic Warehousing Operations</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#about">Discover Our Story</a></li>
+                        <li><a href="#contact">Connect With Our Team</a></li>
+                        <li><a href="careers.html">Join Our Growing Network</a></li>
+                        <li><a href="news.html">Industry Insights & Updates</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#tracking">Real-Time Shipment Tracking</a></li>
+                        <li><a href="#quote">Instant Rate Calculator</a></li>
+                        <li><a href="documentation.html">Shipping Documentation Portal</a></li>
+                        <li><a href="faqs.html">Frequently Asked Questions</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="privacy.html">Data Protection & Privacy Policy</a></li>
+                        <li><a href="terms.html">Master Service Agreement & Terms</a></li>
+                        <li><a href="shipping-terms.html">Bill of Lading & Shipping Conditions</a></li>
+                        <li><a href="insurance.html">Cargo Coverage & Claims Protocol</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 KEM Logistics And Solutions LLC. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/api.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

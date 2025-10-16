@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="KEM Logistics Admin Dashboard">
+    <title>Admin Dashboard - KEM Logistics</title>
+
+    <link rel="icon" type="image/png" href="assets/icons/favicon.png">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin-body">
+    <!-- Admin Header -->
+    <header class="admin-header">
+        <div class="admin-nav">
+            <div class="admin-logo">
+                <span class="logo-text">KEM</span>
+                <span class="admin-badge">ADMIN</span>
+            </div>
+            <div class="admin-user">
+                <span id="adminUserName">Administrator</span>
+                <button onclick="adminLogout()" class="btn-logout">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Admin Content -->
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <nav class="sidebar-nav">
+                <a href="#dashboard" class="nav-item active" onclick="showSection('dashboard')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                    Dashboard
+                </a>
+                <a href="#shipments" class="nav-item" onclick="showSection('shipments')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="1" y="3" width="15" height="13"></rect>
+                        <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                        <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                        <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                    </svg>
+                    Shipments
+                </a>
+                <a href="#quotes" class="nav-item" onclick="showSection('quotes')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                    Quote Requests
+                </a>
+                <a href="#customers" class="nav-item" onclick="showSection('customers')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    Customers
+                </a>
+                <a href="#analytics" class="nav-item" onclick="showSection('analytics')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="20" x2="12" y2="10"></line>
+                        <line x1="18" y1="20" x2="18" y2="4"></line>
+                        <line x1="6" y1="20" x2="6" y2="16"></line>
+                    </svg>
+                    Analytics
+                </a>
+                <a href="#settings" class="nav-item" onclick="showSection('settings')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M12 1v6m0 6v6m-9-9h6m6 0h6"></path>
+                    </svg>
+                    Settings
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="admin-main">
+            <!-- Dashboard Section -->
+            <section id="dashboard-section" class="admin-section active">
+                <h1>Dashboard Overview</h1>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon blue">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="1" y="3" width="15" height="13"></rect>
+                                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                                <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                                <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                            </svg>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Active Shipments</h3>
+                            <p class="stat-number">247</p>
+                            <span class="stat-change positive">+12% from last week</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon green">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                            </svg>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Revenue (MTD)</h3>
+                            <p class="stat-number">$342,890</p>
+                            <span class="stat-change positive">+8.3% from last month</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon orange">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Total Customers</h3>
+                            <p class="stat-number">1,847</p>
+                            <span class="stat-change positive">+23 new this month</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon purple">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                        </div>
+                        <div class="stat-info">
+                            <h3>On-Time Delivery</h3>
+                            <p class="stat-number">98.4%</p>
+                            <span class="stat-change positive">+0.2% improvement</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <h2>Recent Shipments</h2>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Tracking #</th>
+                                        <th>Customer</th>
+                                        <th>Origin</th>
+                                        <th>Destination</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>KEM234567890</strong></td>
+                                        <td>TechCorp Industries</td>
+                                        <td>Atlanta, GA</td>
+                                        <td>New York, NY</td>
+                                        <td><span class="status-badge in-transit">In Transit</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>KEM234567891</strong></td>
+                                        <td>Global Manufacturing</td>
+                                        <td>Dallas, TX</td>
+                                        <td>Chicago, IL</td>
+                                        <td><span class="status-badge delivered">Delivered</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>KEM234567892</strong></td>
+                                        <td>Retail Solutions LLC</td>
+                                        <td>Miami, FL</td>
+                                        <td>Boston, MA</td>
+                                        <td><span class="status-badge pending">Pending Pickup</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <h2>Pending Quote Requests</h2>
+                        <div class="quote-list">
+                            <div class="quote-item">
+                                <div class="quote-header">
+                                    <strong>ABC Company Inc.</strong>
+                                    <span class="quote-time">2 hours ago</span>
+                                </div>
+                                <p>Full Truckload | Atlanta, GA → Los Angeles, CA</p>
+                                <p class="quote-weight">Weight: 40,000 lbs</p>
+                            </div>
+                            <div class="quote-item">
+                                <div class="quote-header">
+                                    <strong>XYZ Logistics</strong>
+                                    <span class="quote-time">5 hours ago</span>
+                                </div>
+                                <p>LTL Service | Houston, TX → Denver, CO</p>
+                                <p class="quote-weight">Weight: 3,500 lbs</p>
+                            </div>
+                            <div class="quote-item">
+                                <div class="quote-header">
+                                    <strong>Fast Ship Co.</strong>
+                                    <span class="quote-time">1 day ago</span>
+                                </div>
+                                <p>Expedited | Miami, FL → Seattle, WA</p>
+                                <p class="quote-weight">Weight: 12,000 lbs</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Shipments Section -->
+            <section id="shipments-section" class="admin-section">
+                <h1>Shipment Management</h1>
+                <p>Manage all active and historical shipments</p>
+                <div class="section-placeholder">
+                    <p>Full shipment management system would be implemented here with backend integration.</p>
+                </div>
+            </section>
+
+            <!-- Quotes Section -->
+            <section id="quotes-section" class="admin-section">
+                <h1>Quote Requests</h1>
+                <p>Review and respond to customer quote requests</p>
+                <div class="section-placeholder">
+                    <p>Quote management system would be implemented here.</p>
+                </div>
+            </section>
+
+            <!-- Customers Section -->
+            <section id="customers-section" class="admin-section">
+                <h1>Customer Management</h1>
+                <p>View and manage customer accounts</p>
+                <div class="section-placeholder">
+                    <p>Customer database and management tools would be implemented here.</p>
+                </div>
+            </section>
+
+            <!-- Analytics Section -->
+            <section id="analytics-section" class="admin-section">
+                <h1>Analytics & Reports</h1>
+                <p>Business intelligence and performance metrics</p>
+                <div class="section-placeholder">
+                    <p>Advanced analytics dashboards and reporting tools would be implemented here.</p>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings-section" class="admin-section">
+                <h1>System Settings</h1>
+                <p>Configure system preferences and user accounts</p>
+                <div class="section-placeholder">
+                    <p>System configuration and settings panel would be implemented here.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/admin.js"></script>
+</body>
+</html>
