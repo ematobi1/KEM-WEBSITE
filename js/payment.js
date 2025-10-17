@@ -104,11 +104,13 @@ document.addEventListener('DOMContentLoaded', function() {
     function showSuccessMessage(amount, method) {
         const methodNames = {
             'credit-card': 'Credit/Debit Card',
-            'bank-transfer': 'Bank Transfer',
-            'crypto': 'Cryptocurrency'
+            'bank-transfer': 'Bank Transfer'
         };
 
-        alert(`Payment of $${amount} via ${methodNames[method]} has been successfully processed!\\n\\nThank you for your payment. You will receive a confirmation email shortly.`);
+        // Generate receipt
+        generateReceipt(amount, method);
+
+        alert(`Payment of $${amount} via ${methodNames[method]} has been successfully processed!\\n\\nYour receipt has been generated and will be downloaded automatically.`);
 
         // Reset form
         paymentForm.reset();
@@ -124,6 +126,107 @@ document.addEventListener('DOMContentLoaded', function() {
             </svg>
         `;
         submitButton.disabled = false;
+    }
+
+    function generateReceipt(amount, method) {
+        const methodNames = {
+            'credit-card': 'Credit/Debit Card',
+            'bank-transfer': 'Bank Transfer'
+        };
+
+        const invoiceNumber = document.querySelector('#invoice-number').value || 'N/A';
+        const email = document.querySelector('#billing-email').value;
+        const phone = document.querySelector('#billing-phone').value;
+        const date = new Date().toLocaleString();
+        const transactionId = 'TXN' + Date.now();
+        const processingFee = (parseFloat(amount) * 0.029).toFixed(2);
+        const total = (parseFloat(amount) + parseFloat(processingFee)).toFixed(2);
+
+        // Create receipt HTML
+        const receiptHTML = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Receipt - KEM Logistics</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; }
+        .receipt-header { text-align: center; border-bottom: 3px solid #ff9900; padding-bottom: 20px; margin-bottom: 30px; }
+        .receipt-header h1 { color: #ff9900; margin: 0; }
+        .receipt-info { margin: 20px 0; }
+        .receipt-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; }
+        .receipt-row.total { font-size: 1.2em; font-weight: bold; border-top: 2px solid #333; margin-top: 20px; }
+        .footer { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="receipt-header">
+        <h1>KEM LOGISTICS</h1>
+        <p>Payment Receipt</p>
+    </div>
+
+    <div class="receipt-info">
+        <div class="receipt-row">
+            <span>Transaction ID:</span>
+            <strong>${transactionId}</strong>
+        </div>
+        <div class="receipt-row">
+            <span>Date & Time:</span>
+            <strong>${date}</strong>
+        </div>
+        <div class="receipt-row">
+            <span>Invoice Number:</span>
+            <strong>${invoiceNumber}</strong>
+        </div>
+        <div class="receipt-row">
+            <span>Email:</span>
+            <strong>${email}</strong>
+        </div>
+        <div class="receipt-row">
+            <span>Phone:</span>
+            <strong>${phone}</strong>
+        </div>
+        <div class="receipt-row">
+            <span>Payment Method:</span>
+            <strong>${methodNames[method]}</strong>
+        </div>
+        <div class="receipt-row">
+            <span>Subtotal:</span>
+            <strong>$${amount}</strong>
+        </div>
+        <div class="receipt-row">
+            <span>Processing Fee (2.9%):</span>
+            <strong>$${processingFee}</strong>
+        </div>
+        <div class="receipt-row total">
+            <span>Total Paid:</span>
+            <strong>$${total}</strong>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p><strong>Thank you for your payment!</strong></p>
+        <p>KEM Logistics And Solutions LLC</p>
+        <p>972 Holly Meadow Dr, Buford, GA 30518</p>
+        <p>Phone: 1-470-836-3519 | Email: kemlogistics23@gmail.com</p>
+    </div>
+</body>
+</html>
+        `;
+
+        // Create a Blob with the HTML content
+        const blob = new Blob([receiptHTML], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+
+        // Create a download link and trigger it
+        const downloadLink = document.createElement('a');
+        downloadLink.href = url;
+        downloadLink.download = `KEM_Receipt_${transactionId}.html`;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+        URL.revokeObjectURL(url);
     }
 
     // Initialize summary with default values
