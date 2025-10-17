@@ -1,5 +1,6 @@
 # Environment variables (IMPORTANT - contains secrets!)
 server/.env
+.env
 
 # Node modules
 node_modules/
@@ -14,6 +15,7 @@ logs/
 .DS_Store
 Thumbs.db
 desktop.ini
+nul
 
 # IDE
 .vscode/
@@ -24,3 +26,15 @@ desktop.ini
 # Temporary files
 *.tmp
 *.temp
+
+# Server backend (not needed for Netlify frontend deployment)
+server/
+serverconfig/
+servercontrollers/
+servermiddleware/
+servermodels/
+serverroutes/
+serverutils/
+
+# Claude settings
+.claude/settings.local.json
