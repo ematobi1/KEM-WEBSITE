@@ -364,7 +364,7 @@ a:focus {
     background-image: url('../assets/images/hero-background.jpg');
     background-size: cover;
     background-position: center;
-    opacity: 0.3;
+    opacity: 1;
     z-index: 0;
 }
 
@@ -374,7 +374,7 @@ a:focus {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.5);
     z-index: 1;
 }
 
