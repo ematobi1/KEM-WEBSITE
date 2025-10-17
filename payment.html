@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Make secure payments for your KEM Logistics shipments.">
+    <title>Make Payment - KEM Logistics</title>
+
+    <link rel="icon" type="image/png" href="assets/icons/favicon.png">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/futuristic.css">
+</head>
+<body class="futuristic-page">
+    <!-- Skip to main content for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Header -->
+    <header class="header" role="banner">
+        <nav class="navbar" role="navigation" aria-label="Main navigation">
+            <div class="container">
+                <div class="nav-wrapper">
+                    <!-- Logo -->
+                    <div class="logo">
+                        <a href="index.html" aria-label="KEM Logistics home">
+                            <span class="logo-text">KEM</span>
+                            <span class="logo-subtitle">Logistics & Solutions</span>
+                        </a>
+                    </div>
+
+                    <!-- Mobile menu toggle -->
+                    <button class="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+                        <span class="hamburger"></span>
+                        <span class="hamburger"></span>
+                        <span class="hamburger"></span>
+                    </button>
+
+                    <!-- Navigation Links -->
+                    <ul class="nav-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="index.html#services">Services</a></li>
+                        <li><a href="tracking.html">Track Shipment</a></li>
+                        <li><a href="payment.html" class="active">Make Payment</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                        <li><a href="login.html" class="btn-login">Sign In</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" role="main">
+        <!-- Hero Section -->
+        <section class="page-hero">
+            <div class="hero-particles"></div>
+            <div class="container">
+                <div class="hero-content">
+                    <h1 class="glitch-text" data-text="Secure Payment">Secure Payment</h1>
+                    <p class="hero-subtitle">Encrypted transactions with blockchain verification</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Payment Section -->
+        <section class="payment-main">
+            <div class="container">
+                <div class="payment-layout">
+                    <!-- Payment Form -->
+                    <div class="payment-form-panel">
+                        <h2>Payment Information</h2>
+
+                        <form class="futuristic-payment-form" id="payment-form">
+                            <!-- Invoice/Tracking Number -->
+                            <div class="form-section">
+                                <h3>Invoice Details</h3>
+                                <div class="form-group-futuristic">
+                                    <label for="invoice-number">Invoice or Tracking Number *</label>
+                                    <input type="text" id="invoice-number" name="invoice" class="futuristic-input" placeholder="INV-123456" required>
+                                </div>
+                                <div class="form-group-futuristic">
+                                    <label for="amount">Amount (USD) *</label>
+                                    <input type="number" id="amount" name="amount" class="futuristic-input" placeholder="0.00" step="0.01" min="0" required>
+                                </div>
+                            </div>
+
+                            <!-- Payment Method Selection -->
+                            <div class="form-section">
+                                <h3>Payment Method</h3>
+                                <div class="payment-methods">
+                                    <label class="payment-method-card active">
+                                        <input type="radio" name="payment-method" value="credit-card" checked>
+                                        <div class="method-content">
+                                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                                                <line x1="1" y1="10" x2="23" y2="10"></line>
+                                            </svg>
+                                            <span>Credit/Debit Card</span>
+                                        </div>
+                                        <div class="method-glow"></div>
+                                    </label>
+                                    <label class="payment-method-card">
+                                        <input type="radio" name="payment-method" value="bank-transfer">
+                                        <div class="method-content">
+                                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <line x1="12" y1="1" x2="12" y2="23"></line>
+                                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                            </svg>
+                                            <span>Bank Transfer</span>
+                                        </div>
+                                        <div class="method-glow"></div>
+                                    </label>
+                                    <label class="payment-method-card">
+                                        <input type="radio" name="payment-method" value="crypto">
+                                        <div class="method-content">
+                                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <circle cx="12" cy="12" r="10"></circle>
+                                                <path d="M8 12h8M12 8v8"></path>
+                                            </svg>
+                                            <span>Cryptocurrency</span>
+                                        </div>
+                                        <div class="method-glow"></div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Card Details (shown when credit card is selected) -->
+                            <div class="form-section" id="card-details">
+                                <h3>Card Details</h3>
+                                <div class="form-group-futuristic">
+                                    <label for="card-number">Card Number *</label>
+                                    <input type="text" id="card-number" class="futuristic-input" placeholder="1234 5678 9012 3456" maxlength="19" pattern="[0-9\s]{13,19}">
+                                </div>
+                                <div class="form-group-futuristic">
+                                    <label for="card-name">Cardholder Name *</label>
+                                    <input type="text" id="card-name" class="futuristic-input" placeholder="John Doe">
+                                </div>
+                                <div class="form-row-inline">
+                                    <div class="form-group-futuristic">
+                                        <label for="expiry">Expiry Date *</label>
+                                        <input type="text" id="expiry" class="futuristic-input" placeholder="MM/YY" maxlength="5" pattern="\d{2}/\d{2}">
+                                    </div>
+                                    <div class="form-group-futuristic">
+                                        <label for="cvv">CVV *</label>
+                                        <input type="text" id="cvv" class="futuristic-input" placeholder="123" maxlength="4" pattern="\d{3,4}">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Billing Information -->
+                            <div class="form-section">
+                                <h3>Billing Information</h3>
+                                <div class="form-group-futuristic">
+                                    <label for="billing-email">Email *</label>
+                                    <input type="email" id="billing-email" name="email" class="futuristic-input" placeholder="your@email.com" required>
+                                </div>
+                                <div class="form-group-futuristic">
+                                    <label for="billing-phone">Phone Number *</label>
+                                    <input type="tel" id="billing-phone" name="phone" class="futuristic-input" placeholder="+1 (555) 123-4567" required>
+                                </div>
+                                <div class="form-group-futuristic">
+                                    <label for="billing-address">Billing Address</label>
+                                    <textarea id="billing-address" name="address" class="futuristic-input" rows="3" placeholder="Street Address, City, State ZIP"></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button type="submit" class="btn-futuristic btn-payment">
+                                <span class="btn-text">Process Secure Payment</span>
+                                <span class="btn-glow"></span>
+                                <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                </svg>
+                            </button>
+
+                            <div class="security-badges">
+                                <p>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                    </svg>
+                                    256-bit SSL Encrypted | PCI DSS Compliant | Blockchain Verified
+                                </p>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Payment Summary -->
+                    <div class="payment-summary-panel">
+                        <h3>Payment Summary</h3>
+                        <div class="summary-content">
+                            <div class="summary-item">
+                                <span>Subtotal</span>
+                                <span class="summary-amount" id="subtotal">$0.00</span>
+                            </div>
+                            <div class="summary-item">
+                                <span>Processing Fee</span>
+                                <span class="summary-amount" id="processing-fee">$0.00</span>
+                            </div>
+                            <div class="summary-divider"></div>
+                            <div class="summary-item summary-total">
+                                <span>Total Amount</span>
+                                <span class="summary-amount" id="total-amount">$0.00</span>
+                            </div>
+                        </div>
+
+                        <div class="payment-features">
+                            <h4>Why Pay With Us?</h4>
+                            <ul>
+                                <li>
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    <span>Instant payment confirmation</span>
+                                </li>
+                                <li>
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    <span>Automatic receipt generation</span>
+                                </li>
+                                <li>
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    <span>Multiple payment options</span>
+                                </li>
+                                <li>
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    <span>24/7 payment support</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="accepted-cards">
+                            <p>We Accept:</p>
+                            <div class="card-logos">
+                                <span class="card-logo">VISA</span>
+                                <span class="card-logo">MASTERCARD</span>
+                                <span class="card-logo">AMEX</span>
+                                <span class="card-logo">DISCOVER</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Security Features -->
+        <section class="security-section">
+            <div class="container">
+                <h2>Enterprise-Grade Security</h2>
+                <div class="security-grid">
+                    <div class="security-card">
+                        <div class="security-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                        </div>
+                        <h3>SSL Encryption</h3>
+                        <p>Military-grade 256-bit encryption protects all transactions</p>
+                    </div>
+                    <div class="security-card">
+                        <div class="security-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                            </svg>
+                        </div>
+                        <h3>PCI Compliant</h3>
+                        <p>Fully certified Payment Card Industry Data Security Standard</p>
+                    </div>
+                    <div class="security-card">
+                        <div class="security-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="14" width="7" height="7"></rect>
+                                <rect x="3" y="14" width="7" height="7"></rect>
+                            </svg>
+                        </div>
+                        <h3>Blockchain Verified</h3>
+                        <p>Immutable transaction records on distributed ledger</p>
+                    </div>
+                    <div class="security-card">
+                        <div class="security-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                            </svg>
+                        </div>
+                        <h3>Instant Receipts</h3>
+                        <p>Digital receipts sent immediately via email and SMS</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>KEM Logistics</h3>
+                    <p>Delivering excellence in freight and logistics solutions nationwide.</p>
+                </div>
+                <div class="footer-column">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="tracking.html">Track Shipment</a></li>
+                        <li><a href="payment.html">Make Payment</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><a href="tel:+14708363519">1-470-836-3519</a></li>
+                        <li><a href="mailto:kemlogistics23@gmail.com">kemlogistics23@gmail.com</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 KEM Logistics And Solutions LLC. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/main.js"></script>
+    <script src="js/payment.js"></script>
+</body>
+</html>

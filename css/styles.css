@@ -914,6 +914,22 @@ a:focus {
     border-radius: var(--radius-md);
 }
 
+.map-section {
+    margin-top: var(--spacing-xl);
+    text-align: center;
+}
+
+.map-section h3 {
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-md);
+}
+
+.map-container {
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+}
+
 /* ===================================
    Footer
    =================================== */
