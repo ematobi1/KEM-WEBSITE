@@ -143,7 +143,6 @@ const handleTrackingRequest = async (container, trackingNumber) => {
             showError(container, 'Shipment not found. Please check your tracking number and try again.');
         }
     } catch (error) {
-        console.error('Tracking error:', error);
         showError(container, 'Unable to retrieve tracking information. Please try again later.');
     }
 };
@@ -334,7 +333,6 @@ const handleQuoteRequest = async (container, formData, form) => {
             showQuoteError(container, 'Unable to generate quote. Please try again.');
         }
     } catch (error) {
-        console.error('Quote error:', error);
         showQuoteError(container, error.message || 'Unable to generate quote. Please try again later.');
     }
 };
@@ -465,7 +463,6 @@ const handleContactSubmission = async (form, data) => {
             alert('Unable to send message. Please try again.');
         }
     } catch (error) {
-        console.error('Contact error:', error);
         alert(error.message || 'Unable to send message. Please try again later.');
     }
 };
@@ -581,8 +578,6 @@ const init = () => {
 };
 
 const initializeApp = () => {
-    console.log('KEM Logistics website initialized');
-
     // Initialize all modules
     initMobileMenu();
     initSmoothScroll();
