@@ -243,33 +243,26 @@ const initQuoteForm = () => {
     if (!quoteForm || !quoteResult) return;
 
     quoteForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        // Get form data
         const formData = new FormData(quoteForm);
         const data = Object.fromEntries(formData.entries());
 
-        // Validate required fields
         const requiredFields = ['name', 'email', 'phone', 'origin', 'destination', 'service', 'weight'];
         const missingFields = requiredFields.filter(field => !data[field]);
 
         if (missingFields.length > 0) {
+            e.preventDefault();
             showQuoteError(quoteResult, 'Please fill in all required fields');
             return;
         }
 
-        // Validate email format
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(data.email)) {
+            e.preventDefault();
             showQuoteError(quoteResult, 'Please enter a valid email address');
             return;
         }
 
-        // Show loading state
-        showQuoteLoading(quoteResult);
-
-        // Call backend API
-        handleQuoteRequest(quoteResult, data, quoteForm);
+        // Valid — let the form POST natively to Web3Forms
     });
 };
 
@@ -428,70 +421,24 @@ const initContactForm = () => {
 
     if (!contactForm) return;
 
-    contactForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
+    contactForm.addEventListener('submit', (e) => {
         const formData = new FormData(contactForm);
         const data = Object.fromEntries(formData.entries());
 
-        // Validate required fields
         if (!data.name || !data.email || !data.subject || !data.message) {
+            e.preventDefault();
             alert('Please fill in all required fields');
             return;
         }
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(data.email)) {
+            e.preventDefault();
             alert('Please enter a valid email address');
             return;
         }
 
-        const submitBtn = contactForm.querySelector('button[type="submit"]');
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Sending...';
-
-        try {
-            const payload = {
-                access_key: 'cc3d43b2-a0c7-4524-ad65-7da59ecb4929',
-                name: data.name,
-                email: data.email,
-                subject: data.subject,
-                message: data.message,
-                from_name: 'KEM Logistics Website'
-            };
-
-            const response = await fetch('https://api.web3forms.com/submit', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-
-            const result = await response.json();
-
-            if (result.success) {
-                const successMessage = document.createElement('div');
-                successMessage.style.cssText = `
-                    background-color: var(--success-color);
-                    color: white;
-                    padding: 1rem;
-                    border-radius: var(--radius-sm);
-                    margin-top: 1rem;
-                    text-align: center;
-                    font-weight: 600;
-                `;
-                successMessage.textContent = 'Thank you for contacting us! We\'ll respond within 24 hours.';
-                contactForm.insertAdjacentElement('afterend', successMessage);
-                contactForm.reset();
-                setTimeout(() => successMessage.remove(), 5000);
-            } else {
-                alert('Unable to send message. Please try again.');
-            }
-        } catch (error) {
-            alert('Unable to send message. Please try again later.');
-        } finally {
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Send Message';
-        }
+        // Valid — let the form POST natively to Web3Forms
     });
 };
 
@@ -621,6 +568,33 @@ const initializeApp = () => {
 
 // Start the application
 init();
+
+// Show success banner after Web3Forms redirect
+const urlParams = new URLSearchParams(window.location.search);
+const sentType = urlParams.get('sent');
+if (sentType) {
+    const isQuote = sentType === 'quote';
+    const banner = document.createElement('div');
+    banner.style.cssText = `
+        position: fixed; top: 80px; left: 50%; transform: translateX(-50%);
+        background: #00c853; color: white; padding: 1rem 2rem;
+        border-radius: 8px; font-weight: 600; font-size: 1rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3); z-index: 9999;
+        text-align: center; max-width: 90vw;
+    `;
+    banner.textContent = isQuote
+        ? 'Quote request sent! We\'ll email you a competitive rate shortly.'
+        : 'Message sent! We\'ll get back to you within 24 hours.';
+    document.body.appendChild(banner);
+
+    // Scroll to the relevant section
+    const target = document.getElementById(isQuote ? 'quote' : 'contact');
+    if (target) target.scrollIntoView({ behavior: 'smooth' });
+
+    // Clean URL and remove banner after 6 seconds
+    window.history.replaceState({}, '', window.location.pathname);
+    setTimeout(() => banner.remove(), 6000);
+}
 
 // ===================================
 // Utility Functions

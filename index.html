@@ -222,7 +222,12 @@
                 <h2 id="quote-heading">Get an Instant Quote</h2>
                 <p class="section-subtitle">Fill out the form below and receive a competitive rate within minutes</p>
 
-                <form class="quote-form" aria-label="Quote request form">
+                <form class="quote-form" action="https://api.web3forms.com/submit" method="POST" aria-label="Quote request form">
+                    <input type="hidden" name="access_key" value="cc3d43b2-a0c7-4524-ad65-7da59ecb4929">
+                    <input type="hidden" name="subject" value="New Quote Request - KEM Logistics">
+                    <input type="hidden" name="from_name" value="KEM Logistics Website">
+                    <input type="hidden" name="redirect" value="https://kemlogisticsolutions.netlify.app/?sent=quote">
+                    <input type="checkbox" name="botcheck" style="display:none">
                     <div class="form-row">
                         <div class="form-group">
                             <label for="quote-name">Full Name *</label>
@@ -423,11 +428,12 @@
                         </div>
                     </div>
 
-                    <form class="contact-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" aria-label="Contact form">
-                        <input type="hidden" name="form-name" value="contact">
-                        <p style="display:none">
-                            <label>Don't fill this out: <input name="bot-field"></label>
-                        </p>
+                    <form class="contact-form" action="https://api.web3forms.com/submit" method="POST" aria-label="Contact form">
+                        <input type="hidden" name="access_key" value="cc3d43b2-a0c7-4524-ad65-7da59ecb4929">
+                        <input type="hidden" name="subject" value="New Contact Message - KEM Logistics">
+                        <input type="hidden" name="from_name" value="KEM Logistics Website">
+                        <input type="hidden" name="redirect" value="https://kemlogisticsolutions.netlify.app/?sent=contact">
+                        <input type="checkbox" name="botcheck" style="display:none">
                         <div class="form-group">
                             <label for="contact-name">Name *</label>
                             <input type="text" id="contact-name" name="name" required>
