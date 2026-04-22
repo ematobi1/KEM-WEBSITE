@@ -431,6 +431,7 @@ const initContactForm = () => {
                 body: new URLSearchParams(formData).toString()
             });
 
+            console.log('Form response status:', response.status);
             if (response.ok) {
                 const successMessage = document.createElement('div');
                 successMessage.style.cssText = `
@@ -447,6 +448,7 @@ const initContactForm = () => {
                 contactForm.reset();
                 setTimeout(() => successMessage.remove(), 5000);
             } else {
+                console.error('Form submission failed, status:', response.status, await response.text());
                 alert('Unable to send message. Please try again.');
             }
         } catch (error) {
