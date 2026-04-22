@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Sign in to KEM Logistics customer portal">
-    <title>Sign In - KEM Logistics</title>
-
+    <meta name="description" content="KEM Logistics Admin Login">
+    <title>Admin Login - KEM Logistics</title>
     <link rel="icon" type="image/png" href="assets/icons/favicon.png">
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/admin.css">
 </head>
 <body>
-    <!-- Header -->
     <header class="header" role="banner">
         <nav class="navbar" role="navigation" aria-label="Main navigation">
             <div class="container">
@@ -21,51 +20,36 @@
                             <span class="logo-subtitle">Logistics & Solutions</span>
                         </a>
                     </div>
-
                     <ul class="nav-links">
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="index.html#services">Services</a></li>
-                        <li><a href="index.html#contact">Contact</a></li>
+                        <li><a href="index.html">← Back to Website</a></li>
+                        <li><a href="customer-login.html">Customer Portal</a></li>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
 
-    <!-- Main Content -->
     <main id="main-content" role="main">
         <section class="login-section">
             <div class="container">
-                <div class="login-container">
+                <div class="login-container" style="max-width:500px;margin:0 auto;display:block">
                     <div class="login-box">
-                        <h1>Sign In to Your Account</h1>
-                        <p class="login-subtitle">Access your shipment dashboard and account settings</p>
+                        <div style="text-align:center;margin-bottom:1.5rem">
+                            <span style="background:var(--primary-color);color:var(--text-dark);padding:0.35rem 1rem;border-radius:var(--radius-sm);font-size:0.8rem;font-weight:700;letter-spacing:0.05em">ADMIN ACCESS ONLY</span>
+                        </div>
+
+                        <h1>Admin Sign In</h1>
+                        <p class="login-subtitle">KEM Logistics management portal</p>
 
                         <form id="loginForm" class="login-form">
                             <div class="form-group">
                                 <label for="login-email">Email Address</label>
-                                <input
-                                    type="email"
-                                    id="login-email"
-                                    name="email"
-                                    required
-                                    autocomplete="email"
-                                    placeholder="you@example.com"
-                                >
+                                <input type="email" id="login-email" name="email" required autocomplete="email" placeholder="admin@kemlogistics.com">
                             </div>
-
                             <div class="form-group">
                                 <label for="login-password">Password</label>
-                                <input
-                                    type="password"
-                                    id="login-password"
-                                    name="password"
-                                    required
-                                    autocomplete="current-password"
-                                    placeholder="Enter your password"
-                                >
+                                <input type="password" id="login-password" name="password" required autocomplete="current-password" placeholder="Enter your password">
                             </div>
-
                             <div class="form-options">
                                 <label class="checkbox-label">
                                     <input type="checkbox" name="remember" id="remember-me">
@@ -73,63 +57,20 @@
                                 </label>
                                 <a href="#" class="forgot-password">Forgot password?</a>
                             </div>
-
                             <button type="submit" class="btn btn-primary btn-large login-btn">Sign In</button>
-
-                            <div class="admin-link">
-                                <p>Admin Access: <a href="admin.html">Admin Portal</a></p>
-                            </div>
                         </form>
 
-                        <div class="login-footer">
-                            <p>Don't have an account? <a href="#contact">Contact us</a> to get started</p>
+                        <div id="loginMessage" class="login-message" role="alert" style="display:none"></div>
+
+                        <div class="login-footer" style="margin-top:1.5rem">
+                            <p>Not an admin? <a href="customer-login.html">Customer portal →</a></p>
                         </div>
-
-                        <!-- Login Result Message -->
-                        <div id="loginMessage" class="login-message" role="alert" style="display: none;"></div>
-                    </div>
-
-                    <div class="login-info">
-                        <h2>Customer Portal Benefits</h2>
-                        <ul class="benefits-list">
-                            <li>
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                                Real-time shipment tracking
-                            </li>
-                            <li>
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                                Instant quote generation
-                            </li>
-                            <li>
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                                Invoice and document access
-                            </li>
-                            <li>
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                                Shipment history and analytics
-                            </li>
-                            <li>
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                                Priority customer support
-                            </li>
-                        </ul>
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- Footer -->
     <footer class="footer" role="contentinfo">
         <div class="container">
             <div class="footer-bottom">
@@ -138,7 +79,6 @@
         </div>
     </footer>
 
-    <script src="js/api.js"></script>
     <script src="js/login.js"></script>
 </body>
 </html>

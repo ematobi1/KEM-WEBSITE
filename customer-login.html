@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sign in or create a KEM Logistics customer account to track shipments, request quotes, and manage your freight.">
+    <title>Customer Portal - KEM Logistics</title>
+    <link rel="icon" type="image/png" href="assets/icons/favicon.png">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header class="header" role="banner">
+        <nav class="navbar" role="navigation" aria-label="Main navigation">
+            <div class="container">
+                <div class="nav-wrapper">
+                    <div class="logo">
+                        <a href="index.html" aria-label="KEM Logistics home">
+                            <span class="logo-text">KEM</span>
+                            <span class="logo-subtitle">Logistics & Solutions</span>
+                        </a>
+                    </div>
+                    <button class="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+                        <span class="hamburger"></span>
+                        <span class="hamburger"></span>
+                        <span class="hamburger"></span>
+                    </button>
+                    <ul class="nav-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="tracking.html">Track Shipment</a></li>
+                        <li><a href="quote.html">Get Quote</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="about.html#contact">Contact</a></li>
+                        <li><a href="customer-login.html" class="btn-login active">Sign In</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main id="main-content" role="main">
+        <section class="login-section">
+            <div class="container">
+                <div class="login-container">
+
+                    <!-- Auth Box -->
+                    <div class="login-box">
+                        <!-- Tabs -->
+                        <div class="auth-tabs">
+                            <button class="auth-tab active" id="loginTab" onclick="switchTab('login')">Sign In</button>
+                            <button class="auth-tab" id="registerTab" onclick="switchTab('register')">Create Account</button>
+                        </div>
+
+                        <!-- Login Form -->
+                        <div id="loginPanel">
+                            <h1>Welcome Back</h1>
+                            <p class="login-subtitle">Sign in to your customer account</p>
+
+                            <form id="customerLoginForm" class="login-form" onsubmit="handleLogin(event)">
+                                <div class="form-group">
+                                    <label for="login-email">Email Address</label>
+                                    <input type="email" id="login-email" name="email" required autocomplete="email" placeholder="you@example.com">
+                                </div>
+                                <div class="form-group">
+                                    <label for="login-password">Password</label>
+                                    <input type="password" id="login-password" name="password" required autocomplete="current-password" placeholder="Enter your password">
+                                </div>
+                                <div class="form-options">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="remember-me">
+                                        <span>Remember me</span>
+                                    </label>
+                                    <a href="#" class="forgot-password" onclick="showForgot()">Forgot password?</a>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-large login-btn">Sign In</button>
+                            </form>
+
+                            <div id="loginMessage" class="login-message" role="alert" style="display:none"></div>
+
+                            <div class="login-footer">
+                                <p>Don't have an account? <a href="#" onclick="switchTab('register')">Create one free</a></p>
+                            </div>
+                        </div>
+
+                        <!-- Register Form -->
+                        <div id="registerPanel" style="display:none">
+                            <h1>Create Account</h1>
+                            <p class="login-subtitle">Join KEM Logistics customer portal</p>
+
+                            <form id="customerRegisterForm" class="login-form" onsubmit="handleRegister(event)">
+                                <div class="form-group">
+                                    <label for="reg-name">Full Name *</label>
+                                    <input type="text" id="reg-name" required placeholder="Your full name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="reg-company">Company Name</label>
+                                    <input type="text" id="reg-company" placeholder="Your company (optional)">
+                                </div>
+                                <div class="form-group">
+                                    <label for="reg-email">Email Address *</label>
+                                    <input type="email" id="reg-email" required autocomplete="email" placeholder="you@example.com">
+                                </div>
+                                <div class="form-group">
+                                    <label for="reg-phone">Phone Number</label>
+                                    <input type="tel" id="reg-phone" placeholder="(000) 000-0000">
+                                </div>
+                                <div class="form-group">
+                                    <label for="reg-password">Password *</label>
+                                    <input type="password" id="reg-password" required placeholder="Minimum 6 characters">
+                                </div>
+                                <div class="form-group">
+                                    <label for="reg-confirm">Confirm Password *</label>
+                                    <input type="password" id="reg-confirm" required placeholder="Repeat your password">
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-large login-btn">Create Account</button>
+                            </form>
+
+                            <div id="registerMessage" class="login-message" role="alert" style="display:none"></div>
+
+                            <div class="login-footer">
+                                <p>Already have an account? <a href="#" onclick="switchTab('login')">Sign in</a></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Benefits Panel -->
+                    <div class="login-info">
+                        <h2>Customer Portal Benefits</h2>
+                        <ul class="benefits-list">
+                            <li>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                Real-time shipment tracking
+                            </li>
+                            <li>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                Instant quote generation
+                            </li>
+                            <li>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                Invoice and document access
+                            </li>
+                            <li>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                Shipment history and analytics
+                            </li>
+                            <li>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                Priority customer support
+                            </li>
+                            <li>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                Free to join — no subscription fees
+                            </li>
+                        </ul>
+
+                        <div style="margin-top:2rem;padding:1.5rem;background:var(--background-light);border-radius:var(--radius-md)">
+                            <h3 style="margin-bottom:0.5rem">Need Help?</h3>
+                            <p style="color:var(--text-medium);margin-bottom:0.75rem">Having trouble signing in? Contact our support team.</p>
+                            <a href="tel:+14708363519" class="btn btn-secondary" style="display:inline-block">📞 1-470-836-3519</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2025 KEM Logistics And Solutions LLC. All rights reserved. | <a href="login.html" style="color:var(--text-medium);font-size:0.85rem">Admin Access</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    'use strict';
+
+    // Tab switching
+    function switchTab(tab) {
+        const isLogin = tab === 'login';
+        document.getElementById('loginPanel').style.display    = isLogin ? 'block' : 'none';
+        document.getElementById('registerPanel').style.display = isLogin ? 'none'  : 'block';
+        document.getElementById('loginTab').classList.toggle('active', isLogin);
+        document.getElementById('registerTab').classList.toggle('active', !isLogin);
+    }
+
+    // Check URL param to auto-open register tab
+    if (new URLSearchParams(location.search).get('tab') === 'register') switchTab('register');
+
+    // Pre-fill remembered email
+    const remembered = localStorage.getItem('customerRememberEmail');
+    if (remembered) {
+        document.getElementById('login-email').value = remembered;
+        document.getElementById('remember-me').checked = true;
+    }
+
+    function getCustomers() {
+        try { return JSON.parse(localStorage.getItem('customerAccounts')) || []; } catch { return []; }
+    }
+    function saveCustomers(list) { localStorage.setItem('customerAccounts', JSON.stringify(list)); }
+
+    function showMsg(id, msg, type) {
+        const el = document.getElementById(id);
+        el.textContent = msg;
+        el.className = 'login-message ' + type;
+        el.style.display = 'block';
+        if (type === 'error') setTimeout(() => { el.style.display = 'none'; }, 5000);
+    }
+
+    function handleLogin(e) {
+        e.preventDefault();
+        const email    = document.getElementById('login-email').value.trim().toLowerCase();
+        const password = document.getElementById('login-password').value;
+        const remember = document.getElementById('remember-me').checked;
+
+        const btn = e.target.querySelector('button[type="submit"]');
+        btn.textContent = 'Signing in...';
+        btn.disabled = true;
+
+        setTimeout(() => {
+            const customer = getCustomers().find(c => c.email === email && c.password === password);
+            if (!customer) {
+                showMsg('loginMessage', 'Invalid email or password. Please try again.', 'error');
+                btn.textContent = 'Sign In';
+                btn.disabled = false;
+                return;
+            }
+            if (remember) localStorage.setItem('customerRememberEmail', email);
+            else           localStorage.removeItem('customerRememberEmail');
+
+            sessionStorage.setItem('customerLoggedIn', 'true');
+            sessionStorage.setItem('customerEmail', customer.email);
+            sessionStorage.setItem('customerName',  customer.name);
+
+            showMsg('loginMessage', 'Login successful! Redirecting...', 'success');
+            setTimeout(() => { window.location.href = 'tracking.html'; }, 1200);
+        }, 600);
+    }
+
+    function handleRegister(e) {
+        e.preventDefault();
+        const name     = document.getElementById('reg-name').value.trim();
+        const company  = document.getElementById('reg-company').value.trim();
+        const email    = document.getElementById('reg-email').value.trim().toLowerCase();
+        const phone    = document.getElementById('reg-phone').value.trim();
+        const password = document.getElementById('reg-password').value;
+        const confirm  = document.getElementById('reg-confirm').value;
+
+        if (password.length < 6) { showMsg('registerMessage', 'Password must be at least 6 characters.', 'error'); return; }
+        if (password !== confirm) { showMsg('registerMessage', 'Passwords do not match.', 'error'); return; }
+
+        const customers = getCustomers();
+        if (customers.find(c => c.email === email)) {
+            showMsg('registerMessage', 'An account with this email already exists.', 'error');
+            return;
+        }
+
+        const btn = e.target.querySelector('button[type="submit"]');
+        btn.textContent = 'Creating account...';
+        btn.disabled = true;
+
+        setTimeout(() => {
+            customers.push({ name, company, email, phone, password, joined: new Date().toISOString().slice(0,10) });
+            saveCustomers(customers);
+
+            sessionStorage.setItem('customerLoggedIn', 'true');
+            sessionStorage.setItem('customerEmail', email);
+            sessionStorage.setItem('customerName',  name);
+
+            showMsg('registerMessage', 'Account created! Redirecting...', 'success');
+            setTimeout(() => { window.location.href = 'tracking.html'; }, 1200);
+        }, 800);
+    }
+
+    function showForgot() {
+        alert('To reset your password, please contact us at kemlogistics23@gmail.com or call 1-470-836-3519.');
+    }
+    </script>
+</body>
+</html>
