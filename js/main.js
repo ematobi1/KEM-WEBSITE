@@ -402,7 +402,7 @@ const initContactForm = () => {
 
     if (!contactForm) return;
 
-    contactForm.addEventListener('submit', (e) => {
+    contactForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const formData = new FormData(contactForm);
@@ -414,60 +414,48 @@ const initContactForm = () => {
             return;
         }
 
-        // Validate email
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(data.email)) {
             alert('Please enter a valid email address');
             return;
         }
 
-        // Call backend API
-        handleContactSubmission(contactForm, data);
-    });
-};
+        const submitBtn = contactForm.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending...';
 
-// Handle contact form API request
-const handleContactSubmission = async (form, data) => {
-    try {
-        const contactData = {
-            name: data.name,
-            email: data.email,
-            phone: data.phone || '',
-            company: data.company || '',
-            subject: data.subject,
-            message: data.message
-        };
+        try {
+            const response = await fetch('/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams(formData).toString()
+            });
 
-        const response = await API.contact.submitContact(contactData);
-
-        if (response.success) {
-            // Show success message
-            const successMessage = document.createElement('div');
-            successMessage.style.cssText = `
-                background-color: var(--success-color);
-                color: white;
-                padding: 1rem;
-                border-radius: var(--radius-sm);
-                margin-top: 1rem;
-                text-align: center;
-                font-weight: 600;
-            `;
-            successMessage.textContent = response.message || 'Thank you for contacting us! We\'ll respond within 24 hours.';
-
-            form.insertAdjacentElement('afterend', successMessage);
-            form.reset();
-
-            // Remove success message after 5 seconds
-            setTimeout(() => {
-                successMessage.remove();
-            }, 5000);
-        } else {
-            alert('Unable to send message. Please try again.');
+            if (response.ok) {
+                const successMessage = document.createElement('div');
+                successMessage.style.cssText = `
+                    background-color: var(--success-color);
+                    color: white;
+                    padding: 1rem;
+                    border-radius: var(--radius-sm);
+                    margin-top: 1rem;
+                    text-align: center;
+                    font-weight: 600;
+                `;
+                successMessage.textContent = 'Thank you for contacting us! We\'ll respond within 24 hours.';
+                contactForm.insertAdjacentElement('afterend', successMessage);
+                contactForm.reset();
+                setTimeout(() => successMessage.remove(), 5000);
+            } else {
+                alert('Unable to send message. Please try again.');
+            }
+        } catch (error) {
+            alert('Unable to send message. Please try again later.');
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Send Message';
         }
-    } catch (error) {
-        console.error('Contact error:', error);
-        alert(error.message || 'Unable to send message. Please try again later.');
-    }
+    });
 };
 
 // ===================================

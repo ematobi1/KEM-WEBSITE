@@ -423,7 +423,11 @@
                         </div>
                     </div>
 
-                    <form class="contact-form" aria-label="Contact form">
+                    <form class="contact-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" aria-label="Contact form">
+                        <input type="hidden" name="form-name" value="contact">
+                        <p style="display:none">
+                            <label>Don't fill this out: <input name="bot-field"></label>
+                        </p>
                         <div class="form-group">
                             <label for="contact-name">Name *</label>
                             <input type="text" id="contact-name" name="name" required>
