@@ -222,76 +222,17 @@
                 <h2 id="quote-heading">Get an Instant Quote</h2>
                 <p class="section-subtitle">Fill out the form below and receive a competitive rate within minutes</p>
 
-                <form class="quote-form" action="https://api.web3forms.com/submit" method="POST" aria-label="Quote request form">
-                    <input type="hidden" name="access_key" value="cc3d43b2-a0c7-4524-ad65-7da59ecb4929">
-                    <input type="hidden" name="subject" value="New Quote Request - KEM Logistics">
-                    <input type="hidden" name="from_name" value="KEM Logistics Website">
-                    <input type="hidden" name="redirect" value="https://kemlogisticsolutions.netlify.app/?sent=quote">
-                    <input type="checkbox" name="botcheck" style="display:none">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="quote-name">Full Name *</label>
-                            <input type="text" id="quote-name" name="name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="quote-email">Email Address *</label>
-                            <input type="email" id="quote-email" name="email" required>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="quote-phone">Phone Number *</label>
-                            <input type="tel" id="quote-phone" name="phone" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="quote-company">Company Name</label>
-                            <input type="text" id="quote-company" name="company">
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="quote-origin">Pickup Location *</label>
-                            <input type="text" id="quote-origin" name="origin" placeholder="City, State or ZIP" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="quote-destination">Delivery Location *</label>
-                            <input type="text" id="quote-destination" name="destination" placeholder="City, State or ZIP" required>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="quote-service">Service Type *</label>
-                            <select id="quote-service" name="service" required>
-                                <option value="">Select a service...</option>
-                                <option value="ftl">Full Truckload (FTL)</option>
-                                <option value="ltl">Less Than Truckload (LTL)</option>
-                                <option value="expedited">Expedited Shipping</option>
-                                <option value="warehousing">Warehousing & Distribution</option>
-                                <option value="specialized">Specialized Freight</option>
-                                <option value="same-day">Same-Day Delivery</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="quote-weight">Estimated Weight (lbs) *</label>
-                            <input type="number" id="quote-weight" name="weight" min="1" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="quote-details">Additional Details</label>
-                        <textarea id="quote-details" name="details" rows="4" placeholder="Dimensions, special requirements, etc."></textarea>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary btn-large">Get My Quote</button>
-                </form>
-
-                <!-- Quote Result (Initially Hidden) -->
-                <div class="quote-result" role="region" aria-live="polite">
-                    <!-- Results will be inserted here via JavaScript -->
-                </div>
+                <iframe
+                    id="JotFormIFrame-261114435050140"
+                    title="Logistics Support Quote Request"
+                    allow="geolocation; microphone; camera; fullscreen"
+                    src="https://form.jotform.com/261114435050140"
+                    frameborder="0"
+                    style="width:100%; min-height:900px; border:none;"
+                    scrolling="yes"
+                ></iframe>
+                <script src="https://cdn.jotfor.ms/s/umd/latest/for-form-embed-handler.js"></script>
+                <script>window.jotformEmbedHandler("JotFormIFrame-261114435050140", "https://www.jotform.com")</script>
             </div>
         </section>
 
