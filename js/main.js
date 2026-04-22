@@ -425,14 +425,24 @@ const initContactForm = () => {
         submitBtn.textContent = 'Sending...';
 
         try {
-            const response = await fetch('/', {
+            const payload = {
+                access_key: 'cc3d43b2-a0c7-4524-ad65-7da59ecb4929',
+                name: data.name,
+                email: data.email,
+                subject: data.subject,
+                message: data.message,
+                from_name: 'KEM Logistics Website'
+            };
+
+            const response = await fetch('https://api.web3forms.com/submit', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams(formData).toString()
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
             });
 
-            console.log('Form response status:', response.status);
-            if (response.ok) {
+            const result = await response.json();
+
+            if (result.success) {
                 const successMessage = document.createElement('div');
                 successMessage.style.cssText = `
                     background-color: var(--success-color);
@@ -448,7 +458,6 @@ const initContactForm = () => {
                 contactForm.reset();
                 setTimeout(() => successMessage.remove(), 5000);
             } else {
-                console.error('Form submission failed, status:', response.status, await response.text());
                 alert('Unable to send message. Please try again.');
             }
         } catch (error) {
