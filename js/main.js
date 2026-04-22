@@ -296,46 +296,72 @@ const showQuoteError = (container, message) => {
     container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 };
 
-// Handle quote API request
+// Handle quote request via Web3Forms email
 const handleQuoteRequest = async (container, formData, form) => {
     try {
-        // Map form data to API format
-        const quoteData = {
-            customerInfo: {
-                name: formData.name,
-                email: formData.email,
-                phone: formData.phone,
-                company: formData.company || ''
-            },
-            serviceType: formData.service.toUpperCase(),
-            origin: {
-                city: formData.origin.split(',')[0].trim(),
-                state: formData.origin.split(',')[1]?.trim() || 'GA',
-                zipCode: '00000'
-            },
-            destination: {
-                city: formData.destination.split(',')[0].trim(),
-                state: formData.destination.split(',')[1]?.trim() || 'GA',
-                zipCode: '00000'
-            },
-            cargo: {
-                weight: parseFloat(formData.weight),
-                description: formData.cargo || 'General cargo'
-            },
-            notes: formData.notes || ''
+        const serviceLabels = {
+            ftl: 'Full Truckload (FTL)',
+            ltl: 'Less Than Truckload (LTL)',
+            expedited: 'Expedited Shipping',
+            warehousing: 'Warehousing & Distribution',
+            specialized: 'Specialized Freight',
+            'same-day': 'Same-Day Delivery'
         };
 
-        const response = await API.quotes.createQuote(quoteData);
+        const payload = {
+            access_key: 'cc3d43b2-a0c7-4524-ad65-7da59ecb4929',
+            from_name: 'KEM Logistics Website',
+            subject: `New Quote Request from ${formData.name}`,
+            message: `
+NEW QUOTE REQUEST
+=================
+Name:        ${formData.name}
+Email:       ${formData.email}
+Phone:       ${formData.phone}
+Company:     ${formData.company || 'Not provided'}
 
-        if (response.success && response.quote) {
-            displayQuoteResult(container, response.quote);
+Service:     ${serviceLabels[formData.service] || formData.service}
+Pickup:      ${formData.origin}
+Delivery:    ${formData.destination}
+Weight:      ${formData.weight} lbs
+
+Details:     ${formData.details || 'None'}
+            `.trim()
+        };
+
+        const response = await fetch('https://api.web3forms.com/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            container.innerHTML = `
+                <div class="quote-result-card">
+                    <h3 style="color: var(--success-color); margin-bottom: 1rem;">Quote Request Received!</h3>
+                    <div style="background: var(--background-light); padding: 1.5rem; border-radius: var(--radius-md); margin-bottom: 1.5rem;">
+                        <p style="font-size: 1.1rem; margin-bottom: 1rem;">Thank you, <strong>${formData.name}</strong>! We've received your quote request.</p>
+                        <div style="display: grid; gap: 0.75rem;">
+                            <div><strong>Service:</strong> ${serviceLabels[formData.service] || formData.service}</div>
+                            <div><strong>Route:</strong> ${formData.origin} → ${formData.destination}</div>
+                            <div><strong>Weight:</strong> ${parseFloat(formData.weight).toLocaleString()} lbs</div>
+                        </div>
+                    </div>
+                    <p style="color: var(--text-medium);">Our team will review your request and send a competitive rate to <strong>${formData.email}</strong> within minutes.</p>
+                    <p style="color: var(--text-medium); margin-top: 0.5rem;">For urgent requests, call us at <strong>1-470-836-3519</strong>.</p>
+                </div>
+            `;
+            container.classList.add('active');
+            container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             form.reset();
         } else {
-            showQuoteError(container, 'Unable to generate quote. Please try again.');
+            showQuoteError(container, 'Unable to submit quote request. Please try again.');
         }
     } catch (error) {
         console.error('Quote error:', error);
-        showQuoteError(container, error.message || 'Unable to generate quote. Please try again later.');
+        showQuoteError(container, 'Unable to submit quote request. Please try again later.');
     }
 };
 
