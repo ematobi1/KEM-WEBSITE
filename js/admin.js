@@ -14,15 +14,16 @@ window.addEventListener('DOMContentLoaded', () => {
 function checkAuthentication() {
     const isLoggedIn = sessionStorage.getItem('isLoggedIn');
     const userEmail = sessionStorage.getItem('userEmail');
+    const userRole = sessionStorage.getItem('userRole');
+
+    console.log('AUTH CHECK:', { isLoggedIn, userEmail, userRole });
 
     if (!isLoggedIn || !userEmail) {
-        // Redirect to login if not authenticated
         window.location.href = 'login.html';
         return;
     }
 
-    // Optional: Check if admin user
-    if (userEmail !== 'admin@kemlogistics.com') {
+    if (userRole !== 'admin') {
         alert('Access denied. Admin privileges required.');
         window.location.href = 'index.html';
     }

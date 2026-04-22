@@ -3,6 +3,7 @@
  */
 
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
 const User = require('../models/User');
 
 // Protect routes - verify JWT token
@@ -25,6 +26,13 @@ exports.protect = async (req, res, next) => {
     try {
         // Verify token
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        if (mongoose.connection.readyState !== 1) {
+            return res.status(503).json({
+                success: false,
+                message: 'Database unavailable. Please try again later.'
+            });
+        }
 
         // Get user from token
         req.user = await User.findById(decoded.id);
