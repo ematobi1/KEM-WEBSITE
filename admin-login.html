@@ -229,6 +229,62 @@
         &copy; 2025 KEM Logistics And Solutions LLC. Authorized personnel only.
     </div>
 
-    <script src="js/login.js"></script>
+    <script>
+    'use strict';
+
+    const ADMIN_EMAIL = 'admin.info@kemlogisticsnsolutions.com';
+    const ADMIN_PASS  = 'KEM@2025';
+
+    const form    = document.getElementById('loginForm');
+    const msgBox  = document.getElementById('loginMessage');
+
+    // Pre-fill remembered email
+    const saved = localStorage.getItem('adminRememberEmail');
+    if (saved) {
+        document.getElementById('login-email').value = saved;
+        document.getElementById('remember-me').checked = true;
+    }
+
+    function showMsg(text, type) {
+        msgBox.textContent = text;
+        msgBox.className   = 'admin-login-msg ' + type;
+        msgBox.style.display = 'block';
+    }
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const email    = document.getElementById('login-email').value.trim().toLowerCase();
+        const password = document.getElementById('login-password').value;
+        const remember = document.getElementById('remember-me').checked;
+        const btn      = form.querySelector('button[type="submit"]');
+
+        btn.textContent = 'Signing in...';
+        btn.disabled    = true;
+
+        setTimeout(() => {
+            if (email === ADMIN_EMAIL && password === ADMIN_PASS) {
+                if (remember) localStorage.setItem('adminRememberEmail', email);
+                else          localStorage.removeItem('adminRememberEmail');
+
+                sessionStorage.setItem('isLoggedIn', 'true');
+                sessionStorage.setItem('userEmail',  email);
+                sessionStorage.setItem('userRole',   'admin');
+
+                showMsg('Login successful! Redirecting...', 'success');
+                setTimeout(() => { window.location.href = 'admin.html'; }, 1000);
+            } else {
+                showMsg('Invalid email or password. Please try again.', 'error');
+                btn.textContent = 'Sign In to Admin';
+                btn.disabled    = false;
+            }
+        }, 600);
+    });
+
+    document.querySelector('.forgot-password').addEventListener('click', (e) => {
+        e.preventDefault();
+        alert('To reset your password, please contact: kemlogistics23@gmail.com');
+    });
+    </script>
 </body>
 </html>
