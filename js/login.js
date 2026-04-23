@@ -4,7 +4,7 @@
 
 'use strict';
 
-const ADMIN_EMAIL = 'kemlogistics23@gmail.com';
+const ADMIN_EMAIL = 'admin.info@kemlogisticsnsolutions.com';
 const ADMIN_PASS  = 'KEM@2025';
 
 const loginForm    = document.getElementById('loginForm');
