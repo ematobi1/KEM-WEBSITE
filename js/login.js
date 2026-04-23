@@ -44,7 +44,7 @@ if (loginForm) {
                 }
 
                 showMessage('Login successful! Redirecting...', 'success');
-                setTimeout(() => { window.location.href = 'admin.html'; }, 1200);
+                setTimeout(() => { window.location.href = 'admin.html'; }, 1000);
             } else {
                 showMessage('Invalid email or password. Please try again.', 'error');
                 submitBtn.textContent = 'Sign In';

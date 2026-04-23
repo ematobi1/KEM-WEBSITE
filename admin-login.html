@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="KEM Logistics Admin Login">
+    <title>Admin Login - KEM Logistics</title>
+    <link rel="icon" type="image/png" href="assets/icons/favicon.png">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #1a2b3c 0%, #0d1b2a 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+        }
+
+        .admin-login-page {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .admin-login-card {
+            background: white;
+            border-radius: 16px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 24px 80px rgba(0,0,0,0.4);
+        }
+
+        .admin-login-logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .admin-login-logo .logo-text {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--secondary-color);
+            letter-spacing: 0.05em;
+            display: block;
+        }
+
+        .admin-login-logo .logo-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-medium);
+            display: block;
+            margin-top: 0.25rem;
+        }
+
+        .admin-badge-label {
+            display: inline-block;
+            background: var(--primary-color);
+            color: var(--secondary-color);
+            font-size: 0.7rem;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            padding: 0.25rem 0.85rem;
+            border-radius: 20px;
+            margin-top: 0.75rem;
+        }
+
+        .admin-login-card h1 {
+            font-size: 1.5rem;
+            text-align: center;
+            margin-bottom: 0.4rem;
+            color: var(--text-dark);
+        }
+
+        .admin-login-card p {
+            text-align: center;
+            color: var(--text-medium);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+
+        .admin-form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .admin-form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--text-dark);
+            margin-bottom: 0.4rem;
+        }
+
+        .admin-form-group input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 0.75rem 1rem;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .admin-form-group input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .admin-form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+        }
+
+        .admin-form-options label {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: var(--text-medium);
+            cursor: pointer;
+        }
+
+        .admin-form-options a {
+            color: var(--accent-color);
+        }
+
+        .admin-submit-btn {
+            width: 100%;
+            padding: 0.85rem;
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+            letter-spacing: 0.02em;
+        }
+
+        .admin-submit-btn:hover    { background: #1a2b3c; }
+        .admin-submit-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+        .admin-login-msg {
+            margin-top: 1rem;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            text-align: center;
+            display: none;
+        }
+
+        .admin-login-msg.success { background: #e8f5e9; color: #2e7d32; }
+        .admin-login-msg.error   { background: #fce4e4; color: #c62828; }
+
+        .admin-login-footer {
+            text-align: center;
+            margin-top: 1.75rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .admin-login-footer a {
+            color: var(--text-medium);
+            font-size: 0.85rem;
+        }
+
+        .admin-login-footer a:hover { color: var(--accent-color); }
+
+        .page-footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: rgba(255,255,255,0.4);
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="admin-login-page">
+        <div class="admin-login-card">
+
+            <div class="admin-login-logo">
+                <span class="logo-text">KEM</span>
+                <span class="logo-subtitle">Logistics & Solutions</span>
+                <span class="admin-badge-label">ADMIN PORTAL</span>
+            </div>
+
+            <h1>Welcome Back</h1>
+            <p>Sign in to access the admin dashboard</p>
+
+            <form id="loginForm">
+                <div class="admin-form-group">
+                    <label for="login-email">Email Address</label>
+                    <input type="email" id="login-email" name="email" required autocomplete="email" placeholder="admin@example.com">
+                </div>
+
+                <div class="admin-form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" name="password" required autocomplete="current-password" placeholder="Enter your password">
+                </div>
+
+                <div class="admin-form-options">
+                    <label>
+                        <input type="checkbox" id="remember-me">
+                        Remember me
+                    </label>
+                    <a href="#" class="forgot-password">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="admin-submit-btn">Sign In to Admin</button>
+            </form>
+
+            <div id="loginMessage" class="admin-login-msg" role="alert"></div>
+
+            <div class="admin-login-footer">
+                <a href="customer-login.html">← Customer Portal</a>
+                &nbsp;·&nbsp;
+                <a href="index.html">Back to Website</a>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="page-footer">
+        &copy; 2025 KEM Logistics And Solutions LLC. Authorized personnel only.
+    </div>
+
+    <script src="js/login.js"></script>
+</body>
+</html>
