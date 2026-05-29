@@ -993,6 +993,134 @@
 }
 #analytics-section .status-badge { font-size: 0.65rem; padding: 0.15rem 0.5rem; }
 
+/* ── Customer Login Page — Vibrant Theme ────────────────── */
+.customer-login-page {
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+.customer-login-page .login-section {
+    background: linear-gradient(135deg, #0f0c29 0%, #1e0a5e 40%, #0a2a6b 100%);
+}
+.customer-login-page .login-box {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 8px 48px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255,153,0,0.08);
+}
+.customer-login-page .login-box h1 {
+    color: #ffffff;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: 2rem;
+    letter-spacing: -0.02em;
+}
+.customer-login-page .login-subtitle {
+    color: #ff9900;
+    font-weight: 500;
+    font-size: 1rem;
+}
+.customer-login-page .form-group label {
+    color: #c8d8ff;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 0.875rem;
+    letter-spacing: 0.02em;
+}
+.customer-login-page .form-group input {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    font-family: 'Poppins', sans-serif;
+    border-radius: 8px;
+}
+.customer-login-page .form-group input::placeholder {
+    color: rgba(255, 255, 255, 0.35);
+}
+.customer-login-page .form-group input:focus {
+    border-color: #ff9900;
+    box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.25);
+    background: rgba(255, 255, 255, 0.11);
+    outline: none;
+}
+.customer-login-page .checkbox-label {
+    color: #8899cc;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.875rem;
+}
+.customer-login-page .forgot-password {
+    color: #00d4ff;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+}
+.customer-login-page .forgot-password:hover { color: #ff9900; }
+.customer-login-page .login-footer {
+    color: #8899cc;
+    font-family: 'Poppins', sans-serif;
+}
+.customer-login-page .login-footer a {
+    color: #ff9900;
+    font-weight: 700;
+}
+.customer-login-page .login-footer a:hover { color: #00d4ff; }
+.customer-login-page .login-info {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 2.5rem;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+.customer-login-page .login-info h2 {
+    color: #ff9900;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: 1.5rem;
+    letter-spacing: -0.01em;
+}
+.customer-login-page .login-info h3 {
+    color: #ffffff;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+}
+.customer-login-page .login-info p {
+    color: #8899cc;
+    font-family: 'Poppins', sans-serif;
+}
+.customer-login-page .benefits-list li {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    color: #c8d8ff;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+}
+.customer-login-page .benefits-list svg { color: #00ff88; }
+.customer-login-page .auth-tab {
+    font-family: 'Poppins', sans-serif;
+}
+.customer-login-page .auth-tabs {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.customer-login-page .auth-tab { color: #8899cc; }
+.customer-login-page .auth-tab.active {
+    background: #ff9900;
+    color: #0f0c29;
+}
+.customer-login-page .auth-tab:hover:not(.active) {
+    background: rgba(255,255,255,0.1);
+    color: #ffffff;
+}
+.customer-login-page .header {
+    background: rgba(15, 12, 41, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.customer-login-page .footer {
+    background: rgba(15, 12, 41, 0.95);
+    border-top: 1px solid rgba(255,255,255,0.08);
+}
+
 /* ── Login (used by login.html) ──────────────────────── */
 .login-section {
     min-height: calc(100vh - 200px);
