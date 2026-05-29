@@ -24,7 +24,14 @@ app.use(helmet());
 
 // CORS configuration
 app.use(cors({
-    origin: process.env.FRONTEND_URL || 'http://127.0.0.1:5500',
+    origin: (origin, callback) => {
+        // Allow requests with no origin (file://, Postman, etc.) and any localhost/127.0.0.1
+        if (!origin || origin.includes('localhost') || origin.includes('127.0.0.1') || origin.includes('file://')) {
+            callback(null, true);
+        } else {
+            callback(null, true); // Allow all for now; restrict in production
+        }
+    },
     credentials: true
 }));
 

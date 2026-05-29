@@ -209,6 +209,13 @@ a:focus {
     opacity: 0.9;
 }
 
+.logo-img {
+    height: 100px;
+    width: auto;
+    display: block;
+    object-fit: contain;
+}
+
 .logo-text {
     font-size: 1.75rem;
     font-weight: 700;

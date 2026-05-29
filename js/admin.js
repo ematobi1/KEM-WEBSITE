@@ -72,72 +72,269 @@ function genTracking() {
     return 'KEM' + Date.now().toString().slice(-9);
 }
 
-// ── Seed Data (first load) ────────────────────────────────────────────────────
+// ── Seed Data ─────────────────────────────────────────────────────────────────
+
+const DATA_VERSION = 'v3';
 
 function seedIfEmpty() {
+    if (localStorage.getItem('dataVersion') !== DATA_VERSION) {
+        ['shipments', 'quotes', 'customers'].forEach(k => localStorage.removeItem(k));
+        localStorage.setItem('dataVersion', DATA_VERSION);
+    }
+
+    const R = {
+        pick: arr => arr[Math.floor(Math.random() * arr.length)],
+        int:  (min, max) => Math.floor(Math.random() * (max - min + 1)) + min,
+        date: (daysAgo) => {
+            const d = new Date();
+            d.setDate(d.getDate() - Math.floor(Math.random() * daysAgo));
+            return d.toISOString().slice(0, 10);
+        },
+        phone: () => `${R.int(200,999)}-${R.int(200,999)}-${R.int(1000,9999)}`,
+        weight: () => R.pick(['1,200','3,500','5,800','8,400','12,000','15,500','22,000','28,000','34,000','40,000']),
+    };
+
+    const CITIES = [
+        'Atlanta, GA','New York, NY','Dallas, TX','Chicago, IL','Miami, FL',
+        'Los Angeles, CA','Houston, TX','Phoenix, AZ','Seattle, WA','Denver, CO',
+        'Boston, MA','Charlotte, NC','Nashville, TN','Philadelphia, PA','San Diego, CA',
+        'Detroit, MI','Portland, OR','Las Vegas, NV','Memphis, TN','Columbus, OH',
+        'Indianapolis, IN','Jacksonville, FL','Austin, TX','Baltimore, MD','Louisville, KY',
+        'Minneapolis, MN','Kansas City, MO','Raleigh, NC','Oklahoma City, OK','Tucson, AZ',
+    ];
+
+    const COMPANIES = [
+        'TechCorp Industries','Global Manufacturing','Retail Solutions LLC','Summit Distributors',
+        'Apex Freight Co.','Blue Ridge Supply','Ironclad Logistics','Sunrise Distribution',
+        'Pacific Rim Exports','MidWest Freight Inc.','Coastal Trading Co.','Peak Performance LLC',
+        'Harbor View Supply','Delta Cargo Group','Keystone Industries','Sterling Logistics',
+        'Redwood Freight','Cascade Supply Chain','Northern Tier Goods','Pinnacle Transport',
+        'Allied Distributors','Crestview Shipping','Lakeshore Supply','Riverbend Freight',
+        'Golden Gate Trading','Thunderbolt Logistics','Horizon Supply Co.','BlueSky Cargo',
+        'Silverstone Freight','Vanguard Shipping','Crossroads Distribution','Landmark Supply',
+        'Eagle Eye Logistics','Centennial Freight','Keystone Supply Group','Atlas Transport',
+        'Compass Cargo','Meridian Freight','Titan Logistics','Patriot Supply LLC',
+    ];
+
+    const FIRST = ['James','Maria','Robert','Linda','Michael','Patricia','David','Jennifer',
+        'William','Barbara','Richard','Susan','Joseph','Jessica','Thomas','Sarah',
+        'Charles','Karen','Christopher','Lisa','Daniel','Nancy','Matthew','Betty',
+        'Anthony','Margaret','Mark','Sandra','Donald','Ashley','Steven','Dorothy',
+        'Paul','Kimberly','Andrew','Emily','Joshua','Donna','Kevin','Michelle'];
+
+    const LAST = ['Smith','Johnson','Williams','Brown','Jones','Garcia','Miller','Davis',
+        'Rodriguez','Martinez','Hernandez','Lopez','Gonzalez','Wilson','Anderson','Thomas',
+        'Taylor','Moore','Jackson','Martin','Lee','Perez','Thompson','White','Harris',
+        'Sanchez','Clark','Ramirez','Lewis','Robinson','Walker','Young','Allen','King',
+        'Wright','Scott','Torres','Nguyen','Hill','Flores'];
+
+    const SERVICES = [
+        'Full Truckload (FTL)',
+        'Less-Than-Truckload (LTL)',
+        'Expedited',
+        'Intermodal',
+    ];
+
+    const STATUSES   = ['Pending Pickup','In Transit','In Transit','In Transit','Out for Delivery','Delivered','Delivered','Delivered','Delivered','Delayed'];
+    const Q_STATUSES = ['Pending','Pending','Pending','Reviewed','Approved','Approved','Rejected'];
+
     if (getData('shipments').length === 0) {
-        setData('shipments', [
-            { id: genId(), tracking: 'KEM234567890', customer: 'TechCorp Industries',   origin: 'Atlanta, GA',  destination: 'New York, NY',  type: 'Full Truckload (FTL)',       weight: 38000, status: 'In Transit',     date: '2025-04-20' },
-            { id: genId(), tracking: 'KEM234567891', customer: 'Global Manufacturing',  origin: 'Dallas, TX',   destination: 'Chicago, IL',   type: 'Less-Than-Truckload (LTL)',  weight: 12000, status: 'Delivered',      date: '2025-04-18' },
-            { id: genId(), tracking: 'KEM234567892', customer: 'Retail Solutions LLC',  origin: 'Miami, FL',    destination: 'Boston, MA',    type: 'Expedited',                  weight: 5500,  status: 'Pending Pickup', date: '2025-04-22' },
-            { id: genId(), tracking: 'KEM234567893', customer: 'Summit Distributors',   origin: 'Phoenix, AZ',  destination: 'Seattle, WA',   type: 'Intermodal',                 weight: 22000, status: 'In Transit',     date: '2025-04-19' },
-            { id: genId(), tracking: 'KEM234567894', customer: 'Apex Freight Co.',      origin: 'Denver, CO',   destination: 'Houston, TX',   type: 'Full Truckload (FTL)',       weight: 40000, status: 'Delivered',      date: '2025-04-15' },
-        ]);
+        const shipments = Array.from({ length: 200 }, (_, i) => {
+            let origin = R.pick(CITIES);
+            let dest   = R.pick(CITIES.filter(c => c !== origin));
+            return {
+                id:          genId(),
+                tracking:    'KEM' + String(100000000 + i).slice(-9),
+                customer:    R.pick(COMPANIES),
+                type:        R.pick(SERVICES),
+                origin,
+                destination: dest,
+                weight:      R.int(500, 40000),
+                status:      R.pick(STATUSES),
+                date:        R.date(180),
+            };
+        });
+        setData('shipments', shipments);
     }
+
     if (getData('quotes').length === 0) {
-        setData('quotes', [
-            { id: genId(), date: '2025-04-22', company: 'ABC Company Inc.',  name: 'John Smith',   email: 'john@abc.com',    phone: '404-555-0101', origin: 'Atlanta, GA',   destination: 'Los Angeles, CA', service: 'Full Truckload (FTL)',      weight: '40,000', status: 'Pending',  notes: '' },
-            { id: genId(), date: '2025-04-22', company: 'XYZ Logistics',     name: 'Sara Lee',     email: 'sara@xyz.com',    phone: '713-555-0102', origin: 'Houston, TX',   destination: 'Denver, CO',      service: 'Less-Than-Truckload (LTL)', weight: '3,500',  status: 'Pending',  notes: '' },
-            { id: genId(), date: '2025-04-21', company: 'Fast Ship Co.',     name: 'Mike Torres',  email: 'mike@fast.com',   phone: '305-555-0103', origin: 'Miami, FL',     destination: 'Seattle, WA',     service: 'Expedited',                 weight: '12,000', status: 'Reviewed', notes: 'Quoted $4,200' },
-            { id: genId(), date: '2025-04-20', company: 'Blue Ridge Supply', name: 'Amy Chen',     email: 'amy@bluridge.com',phone: '828-555-0104', origin: 'Charlotte, NC', destination: 'Nashville, TN',   service: 'Less-Than-Truckload (LTL)', weight: '7,800',  status: 'Approved', notes: '' },
-        ]);
+        const quotes = Array.from({ length: 80 }, () => {
+            const first = R.pick(FIRST), last = R.pick(LAST);
+            const co    = R.pick(COMPANIES);
+            const slug  = co.toLowerCase().replace(/[^a-z]/g,'').slice(0,8);
+            let origin  = R.pick(CITIES);
+            let dest    = R.pick(CITIES.filter(c => c !== origin));
+            return {
+                id:          genId(),
+                date:        R.date(90),
+                company:     co,
+                name:        `${first} ${last}`,
+                email:       `${first.toLowerCase()}.${last.toLowerCase()}@${slug}.com`,
+                phone:       R.phone(),
+                origin,
+                destination: dest,
+                service:     R.pick(SERVICES),
+                weight:      R.weight(),
+                status:      R.pick(Q_STATUSES),
+                notes:       '',
+            };
+        });
+        setData('quotes', quotes);
     }
+
     if (getData('customers').length === 0) {
-        setData('customers', [
-            { id: genId(), name: 'John Smith',   company: 'ABC Company Inc.',  email: 'john@abc.com',     phone: '404-555-0101', shipments: 12, joined: '2024-09-10' },
-            { id: genId(), name: 'Sara Lee',     company: 'XYZ Logistics',     email: 'sara@xyz.com',     phone: '713-555-0102', shipments: 7,  joined: '2024-11-03' },
-            { id: genId(), name: 'Mike Torres',  company: 'Fast Ship Co.',     email: 'mike@fast.com',    phone: '305-555-0103', shipments: 19, joined: '2024-06-15' },
-            { id: genId(), name: 'Amy Chen',     company: 'Blue Ridge Supply', email: 'amy@bluridge.com', phone: '828-555-0104', shipments: 5,  joined: '2025-01-22' },
-            { id: genId(), name: 'David Park',   company: 'TechCorp Industries',email:'d.park@techcorp.com',phone:'678-555-0105',shipments: 31, joined: '2023-12-01' },
-        ]);
+        const customers = Array.from({ length: 60 }, () => {
+            const first = R.pick(FIRST), last = R.pick(LAST);
+            const co    = R.pick(COMPANIES);
+            const slug  = co.toLowerCase().replace(/[^a-z]/g,'').slice(0,8);
+            return {
+                id:        genId(),
+                name:      `${first} ${last}`,
+                company:   co,
+                email:     `${first.toLowerCase()}.${last.toLowerCase()}@${slug}.com`,
+                phone:     R.phone(),
+                shipments: R.int(1, 45),
+                joined:    R.date(730),
+            };
+        });
+        setData('customers', customers);
     }
 }
 
 // ── Dashboard ─────────────────────────────────────────────────────────────────
 
+const MTD_RATES = {
+    'Full Truckload (FTL)': 0.09,
+    'Less-Than-Truckload (LTL)': 0.18,
+    'Expedited': 0.28,
+    'Intermodal': 0.07,
+};
+
 function initDashboard() {
     seedIfEmpty();
     const shipments = getData('shipments');
-    const active = shipments.filter(s => s.status !== 'Delivered').length;
-    document.querySelector('#dashboard-section .stats-grid .stat-card:nth-child(1) .stat-number').textContent = active;
-    document.querySelector('#dashboard-section .stats-grid .stat-card:nth-child(3) .stat-number').textContent = getData('customers').length.toLocaleString();
-    renderDashboardShipments(shipments.slice(-5).reverse());
-    renderDashboardQuotes(getData('quotes').filter(q => q.status === 'Pending').slice(0, 3));
+    const customers = getData('customers');
+    const quotes    = getData('quotes');
+    const now       = new Date();
+    const ms30      = 30 * 24 * 60 * 60 * 1000;
+    const ms7       = 7  * 24 * 60 * 60 * 1000;
+
+    // Active Shipments
+    const active       = shipments.filter(s => s.status !== 'Delivered').length;
+    const newLast7     = shipments.filter(s => (now - new Date(s.date)) <= ms7).length;
+    const el1 = document.getElementById('statActiveShipments');
+    if (el1) animateCount(el1, active, '', '', false);
+    const ch1 = document.getElementById('statActiveChange');
+    if (ch1) ch1.textContent = `${newLast7} new in the last 7 days`;
+
+    // Revenue MTD
+    const mtd = shipments.filter(s => (now - new Date(s.date)) <= ms30);
+    const revenue = Math.round(mtd.reduce((sum, s) => sum + (Number(s.weight) * (MTD_RATES[s.type] || 0.1)), 0));
+    const el2 = document.getElementById('statRevenue');
+    if (el2) animateCount(el2, revenue, '$', '', false);
+    const ch2 = document.getElementById('statRevenueChange');
+    if (ch2) ch2.textContent = `From ${mtd.length} shipments this month`;
+
+    // Total Customers
+    const newCust = customers.filter(c => (now - new Date(c.joined)) <= ms30).length;
+    const el3 = document.getElementById('statTotalCustomers');
+    if (el3) animateCount(el3, customers.length, '', '', false);
+    const ch3 = document.getElementById('statCustomersChange');
+    if (ch3) ch3.textContent = `+${newCust} new this month`;
+
+    // On-Time Delivery Rate
+    const delivered = shipments.filter(s => s.status === 'Delivered').length;
+    const rate = shipments.length ? Math.round((delivered / shipments.length) * 1000) / 10 : 0;
+    const el4 = document.getElementById('statOnTime');
+    if (el4) animateCount(el4, rate, '', '%', true);
+    const ch4 = document.getElementById('statOnTimeChange');
+    if (ch4) ch4.textContent = `${delivered.toLocaleString()} of ${shipments.length.toLocaleString()} delivered`;
+
+    renderDashboardShipments([...shipments].reverse().slice(0, 8));
+    renderDashboardQuotes(quotes.filter(q => q.status === 'Pending').slice(0, 4));
+}
+
+function animateCount(el, end, prefix, suffix, isDecimal) {
+    const duration = 900;
+    const startTime = performance.now();
+    function step(now) {
+        const progress = Math.min((now - startTime) / duration, 1);
+        const ease = 1 - Math.pow(1 - progress, 3);
+        const current = isDecimal
+            ? Math.round(end * ease * 10) / 10
+            : Math.floor(end * ease);
+        el.textContent = prefix + current.toLocaleString() + suffix;
+        if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+}
+
+function typeLabel(type) {
+    if (type.includes('FTL')) return 'FTL';
+    if (type.includes('LTL')) return 'LTL';
+    return type;
 }
 
 function renderDashboardShipments(shipments) {
-    const tbody = document.querySelector('#dashboard-section tbody');
+    const tbody = document.getElementById('dashboardShipmentsBody');
     if (!tbody) return;
+    if (shipments.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem;color:#7a90b0">No shipments yet.</td></tr>';
+        return;
+    }
     tbody.innerHTML = shipments.map(s => `
-        <tr>
+        <tr class="row-clickable" onclick="openViewShipment('${s.id}')">
             <td><strong>${s.tracking}</strong></td>
             <td>${s.customer}</td>
-            <td>${s.origin}</td>
-            <td>${s.destination}</td>
+            <td style="font-size:0.8rem">${s.origin}<br><span style="color:#4a5c7a">→ ${s.destination}</span></td>
+            <td>${typeLabel(s.type)}</td>
+            <td style="font-family:'Courier New',monospace;font-size:0.82rem">${Number(s.weight).toLocaleString()} lbs</td>
             <td><span class="status-badge ${statusClass(s.status)}">${s.status}</span></td>
         </tr>`).join('');
 }
 
 function renderDashboardQuotes(quotes) {
-    const el = document.querySelector('#dashboard-section .quote-list');
+    const el = document.getElementById('dashboardQuoteList');
     if (!el) return;
-    if (quotes.length === 0) { el.innerHTML = '<p style="color:var(--text-medium)">No pending quote requests.</p>'; return; }
+    if (quotes.length === 0) {
+        el.innerHTML = '<p style="color:#7a90b0;font-size:0.85rem;padding:0.5rem 0">No pending quote requests.</p>';
+        return;
+    }
     el.innerHTML = quotes.map(q => `
-        <div class="quote-item">
-            <div class="quote-header"><strong>${q.company}</strong><span class="quote-time">${q.date}</span></div>
+        <div class="quote-item quote-clickable" onclick="openQuoteDetail('${q.id}')">
+            <div class="quote-header">
+                <strong>${q.company}</strong>
+                <span class="quote-time">${q.date}</span>
+            </div>
             <p>${q.service} | ${q.origin} → ${q.destination}</p>
             <p class="quote-weight">Weight: ${q.weight} lbs</p>
         </div>`).join('');
+}
+
+function openViewShipment(id) {
+    const s = getData('shipments').find(x => x.id === id);
+    if (!s) return;
+    document.getElementById('viewShipmentContent').innerHTML = `
+        <div class="shipment-detail-header">
+            <div>
+                <span class="tracking-label">Tracking Number</span>
+                <span class="tracking-number">${s.tracking}</span>
+            </div>
+            <span class="status-badge ${statusClass(s.status)}" style="font-size:0.82rem;padding:0.35rem 1rem;">${s.status}</span>
+        </div>
+        <div class="detail-grid">
+            <div class="detail-item"><span class="detail-label">Customer</span><span>${s.customer}</span></div>
+            <div class="detail-item"><span class="detail-label">Service Type</span><span>${s.type}</span></div>
+            <div class="detail-item"><span class="detail-label">Origin</span><span>${s.origin}</span></div>
+            <div class="detail-item"><span class="detail-label">Destination</span><span>${s.destination}</span></div>
+            <div class="detail-item"><span class="detail-label">Weight</span><span>${Number(s.weight).toLocaleString()} lbs</span></div>
+            <div class="detail-item"><span class="detail-label">Shipment Date</span><span>${s.date}</span></div>
+        </div>`;
+    document.getElementById('viewShipmentEditBtn').onclick = () => {
+        closeModal('viewShipmentModal');
+        openEditShipment(id);
+    };
+    openModal('viewShipmentModal');
 }
 
 // ── Shipments ─────────────────────────────────────────────────────────────────
@@ -361,11 +558,28 @@ function renderAnalytics() {
     const statusCounts = {};
     shipments.forEach(s => { statusCounts[s.status] = (statusCounts[s.status] || 0) + 1; });
     renderBarChart('statusChart', statusCounts);
+    renderDonutChart('shipmentDonut', 'donutLegend', 'donutTotal', statusCounts);
 
     const quoteCounts = {};
     quotes.forEach(q => { quoteCounts[q.status] = (quoteCounts[q.status] || 0) + 1; });
     renderBarChart('quoteChart', quoteCounts);
 
+    const serviceCounts = {};
+    shipments.forEach(s => {
+        const key = s.type.replace('Full Truckload (FTL)', 'FTL').replace('Less-Than-Truckload (LTL)', 'LTL');
+        serviceCounts[key] = (serviceCounts[key] || 0) + 1;
+    });
+    renderDonutChart('serviceMixDonut', 'serviceMixLegend', 'serviceMixTotal', serviceCounts,
+        ['#00d4ff', '#00ff88', '#ff9900', '#a855f7']);
+
+    renderTrendChart(shipments.length);
+
+    const delivered = shipments.filter(s => s.status === 'Delivered').length;
+    const rate = shipments.length ? Math.round((delivered / shipments.length) * 1000) / 10 : 98.4;
+    renderGaugeChart('deliveryGauge', Math.min(rate, 100));
+
+    const actCount = document.getElementById('activityCount');
+    if (actCount) actCount.textContent = `${Math.min(shipments.length, 8)} EVENTS`;
     renderActivityFeed([...shipments].reverse().slice(0, 8));
 }
 
@@ -373,12 +587,12 @@ function renderBarChart(containerId, data) {
     const el = document.getElementById(containerId);
     if (!el) return;
     const max = Math.max(...Object.values(data), 1);
-    const colors = { 'Delivered': '#2e7d32', 'In Transit': '#1565c0', 'Pending Pickup': '#e65100', 'Out for Delivery': '#6a1b9a', 'Delayed': '#c62828', 'Pending': '#e65100', 'Reviewed': '#1565c0', 'Approved': '#2e7d32', 'Rejected': '#c62828' };
+    const colors = { 'Delivered': '#00ff88', 'In Transit': '#00d4ff', 'Pending Pickup': '#ff9900', 'Out for Delivery': '#a855f7', 'Delayed': '#ff3366', 'Pending': '#ff9900', 'Reviewed': '#00d4ff', 'Approved': '#00ff88', 'Rejected': '#ff3366' };
     el.innerHTML = Object.entries(data).map(([label, count]) => `
         <div class="bar-row">
             <span class="bar-label">${label}</span>
             <div class="bar-track">
-                <div class="bar-fill" style="width:${(count/max)*100}%;background:${colors[label]||'var(--primary-color)'}"></div>
+                <div class="bar-fill" style="width:${(count/max)*100}%;background:${colors[label]||'#00d4ff'}"></div>
             </div>
             <span class="bar-count">${count}</span>
         </div>`).join('');
@@ -390,13 +604,137 @@ function renderActivityFeed(shipments) {
     if (shipments.length === 0) { el.innerHTML = '<p style="color:var(--text-medium)">No activity yet.</p>'; return; }
     el.innerHTML = shipments.map(s => `
         <div class="activity-item">
-            <span class="activity-dot" style="background:${s.status==='Delivered'?'#2e7d32':s.status==='In Transit'?'#1565c0':'#e65100'}"></span>
+            <span class="activity-dot" style="background:${s.status==='Delivered'?'#00ff88':s.status==='In Transit'?'#00d4ff':s.status==='Delayed'?'#ff3366':'#ff9900'}"></span>
             <div>
                 <strong>${s.tracking}</strong> — ${s.customer}
                 <span class="status-badge ${statusClass(s.status)}" style="margin-left:.5rem">${s.status}</span>
             </div>
             <span class="activity-date">${s.date}</span>
         </div>`).join('');
+}
+
+// ── SVG Chart Helpers ─────────────────────────────────────────────────────────
+
+function svgEl(tag, attrs) {
+    const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+    Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
+    return el;
+}
+
+function renderDonutChart(svgId, legendId, totalId, data, colors) {
+    colors = colors || ['#00d4ff', '#00ff88', '#ff9900', '#a855f7', '#ff3366', '#fbbf24'];
+    const svg = document.getElementById(svgId);
+    if (!svg) return;
+    const cx = 80, cy = 80, r = 56, sw = 18;
+    const circ = 2 * Math.PI * r;
+    const entries = Object.entries(data);
+    const total = entries.reduce((s, [, v]) => s + v, 0) || 1;
+
+    svg.innerHTML = '';
+    svg.appendChild(svgEl('circle', { cx, cy, r, fill: 'none', stroke: '#1a2540', 'stroke-width': sw }));
+
+    let rotation = -90;
+    entries.forEach(([, count], i) => {
+        const frac = count / total;
+        const arcLen = Math.max(frac * circ - circ * 0.018, 2);
+        const circle = svgEl('circle', {
+            cx, cy, r, fill: 'none',
+            stroke: colors[i % colors.length],
+            'stroke-width': sw,
+            'stroke-dasharray': `${arcLen} ${circ}`,
+            'stroke-linecap': 'round'
+        });
+        circle.setAttribute('transform', `rotate(${rotation} ${cx} ${cy})`);
+        circle.style.filter = `drop-shadow(0 0 4px ${colors[i % colors.length]}88)`;
+        svg.appendChild(circle);
+        rotation += frac * 360;
+    });
+
+    if (totalId) { const el = document.getElementById(totalId); if (el) el.textContent = total; }
+    if (legendId) {
+        const el = document.getElementById(legendId);
+        if (el) el.innerHTML = entries.map(([label, count], i) => `
+            <div class="legend-item">
+                <span class="legend-dot" style="background:${colors[i%colors.length]};box-shadow:0 0 4px ${colors[i%colors.length]}"></span>
+                <span>${label}</span>
+                <span class="legend-count">${count}</span>
+            </div>`).join('');
+    }
+}
+
+function renderTrendChart(currentTotal) {
+    const svg = document.getElementById('trendLineChart');
+    const labelsEl = document.getElementById('trendLabels');
+    if (!svg) return;
+    const months = ['Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr'];
+    const seed = [14, 21, 17, 25, 19, currentTotal || 5];
+    if (labelsEl) labelsEl.innerHTML = months.map(m => `<span>${m}</span>`).join('');
+    const W = 400, H = 150, padX = 16, padY = 24;
+    const max = Math.max(...seed, 1) * 1.25;
+    const pts = seed.map((v, i) => ({
+        x: padX + (i / (seed.length - 1)) * (W - 2 * padX),
+        y: H - padY - (v / max) * (H - 2 * padY)
+    }));
+    svg.innerHTML = '';
+    const defs = svgEl('defs', {});
+    defs.innerHTML = `<linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#00d4ff" stop-opacity="0.25"/><stop offset="100%" stop-color="#00d4ff" stop-opacity="0.01"/></linearGradient>`;
+    svg.appendChild(defs);
+    [0.25, 0.5, 0.75].forEach(p => {
+        const y = H - padY - p * (H - 2 * padY);
+        svg.appendChild(svgEl('line', { x1: padX, y1: y, x2: W - padX, y2: y, stroke: '#1a2e50', 'stroke-width': 1 }));
+    });
+    const areaD = `M ${pts[0].x} ${H - padY} ${pts.map(p => `L ${p.x} ${p.y}`).join(' ')} L ${pts[pts.length-1].x} ${H - padY} Z`;
+    svg.appendChild(svgEl('path', { d: areaD, fill: 'url(#areaGrad)', stroke: 'none' }));
+    let lineD = `M ${pts[0].x} ${pts[0].y}`;
+    for (let i = 1; i < pts.length; i++) {
+        const cx1 = (pts[i-1].x + pts[i].x) / 2;
+        lineD += ` C ${cx1} ${pts[i-1].y}, ${cx1} ${pts[i].y}, ${pts[i].x} ${pts[i].y}`;
+    }
+    const linePath = svgEl('path', { d: lineD, fill: 'none', stroke: '#00d4ff', 'stroke-width': 2.5, 'stroke-linecap': 'round' });
+    linePath.style.filter = 'drop-shadow(0 0 5px #00d4ff)';
+    svg.appendChild(linePath);
+    pts.forEach((p, i) => {
+        svg.appendChild(svgEl('circle', { cx: p.x, cy: p.y, r: 5, fill: '#0a1128', stroke: '#00d4ff', 'stroke-width': 2 }));
+        const dot = svgEl('circle', { cx: p.x, cy: p.y, r: 2, fill: '#00d4ff' });
+        dot.style.filter = 'drop-shadow(0 0 3px #00d4ff)';
+        svg.appendChild(dot);
+        const lbl = svgEl('text', { x: p.x, y: p.y - 9, 'text-anchor': 'middle', fill: '#6b80a0', 'font-size': 9, 'font-family': 'monospace' });
+        lbl.textContent = seed[i];
+        svg.appendChild(lbl);
+    });
+}
+
+function renderGaugeChart(svgId, percent) {
+    const svg = document.getElementById(svgId);
+    if (!svg) return;
+    const cx = 100, cy = 105, r = 72, SWEEP = 240, START = 150;
+    svg.innerHTML = '';
+    const defs = svgEl('defs', {});
+    defs.innerHTML = `<linearGradient id="gaugeGrad" gradientUnits="userSpaceOnUse" x1="${cx-r}" y1="${cy}" x2="${cx+r}" y2="${cy}"><stop offset="0%" stop-color="#ff3366"/><stop offset="40%" stop-color="#ff9900"/><stop offset="100%" stop-color="#00ff88"/></linearGradient>`;
+    svg.appendChild(defs);
+    function pToC(cx, cy, r, deg) { const rad = deg * Math.PI / 180; return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) }; }
+    function makeArc(sa, sw) {
+        const s = pToC(cx, cy, r, sa), e = pToC(cx, cy, r, sa + sw);
+        return `M ${s.x} ${s.y} A ${r} ${r} 0 ${sw > 180 ? 1 : 0} 1 ${e.x} ${e.y}`;
+    }
+    svg.appendChild(Object.assign(svgEl('path', { d: makeArc(START, SWEEP), fill: 'none', stroke: '#1a2540', 'stroke-width': 14, 'stroke-linecap': 'round' })));
+    if (percent > 0) {
+        const fill = svgEl('path', { d: makeArc(START, (percent / 100) * SWEEP), fill: 'none', stroke: 'url(#gaugeGrad)', 'stroke-width': 14, 'stroke-linecap': 'round' });
+        fill.style.filter = 'drop-shadow(0 0 8px #00ff88)';
+        svg.appendChild(fill);
+    }
+    [0, 0.25, 0.5, 0.75, 1].forEach(p => {
+        const deg = START + p * SWEEP;
+        const inner = pToC(cx, cy, r - 12, deg), outer = pToC(cx, cy, r + 2, deg);
+        svg.appendChild(svgEl('line', { x1: inner.x, y1: inner.y, x2: outer.x, y2: outer.y, stroke: '#2a3f60', 'stroke-width': 1.5 }));
+    });
+    const val = svgEl('text', { x: cx, y: cy - 10, 'text-anchor': 'middle', fill: '#00ff88', 'font-size': 26, 'font-weight': 800, 'font-family': 'monospace' });
+    val.textContent = percent + '%';
+    val.style.filter = 'drop-shadow(0 0 10px #00ff88)';
+    svg.appendChild(val);
+    const sub = svgEl('text', { x: cx, y: cy + 8, 'text-anchor': 'middle', fill: '#4a5c7a', 'font-size': 8 });
+    sub.textContent = 'ON-TIME RATE';
+    svg.appendChild(sub);
 }
 
 // ── Settings ──────────────────────────────────────────────────────────────────
@@ -442,7 +780,7 @@ function exportData() {
 
 function clearAllData() {
     if (!confirm('This will delete ALL shipments, quotes, and customers. Are you sure?')) return;
-    ['shipments','quotes','customers','companySettings'].forEach(k => localStorage.removeItem(k));
+    ['shipments','quotes','customers','companySettings','dataVersion'].forEach(k => localStorage.removeItem(k));
     showToast('All data cleared');
     initDashboard();
 }

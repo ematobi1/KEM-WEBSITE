@@ -2,7 +2,16 @@
   "permissions": {
     "allow": [
       "Bash(npm install)",
-      "Bash(npm start)"
+      "Bash(npm start)",
+      "Bash(netstat -ano)",
+      "Bash(findstr \":5000\")",
+      "Bash(awk '{print $5}')",
+      "Bash(xargs -I{} taskkill /PID {} /F sleep 2 cd \"C:\\\\Users\\\\emmat\\\\KEM WEBSITE\\\\server\")",
+      "Bash(node server.js)",
+      "Bash(git commit -m ' *)",
+      "Bash(netlify sites:list *)",
+      "Bash(netlify link *)",
+      "Bash(netlify deploy *)"
     ],
     "deny": [],
     "ask": []

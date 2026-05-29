@@ -209,7 +209,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <p><strong>Thank you for your payment!</strong></p>
         <p>KEM Logistics And Solutions LLC</p>
         <p>972 Holly Meadow Dr, Buford, GA 30518</p>
-        <p>Phone: 1-470-836-3519 | Email: kemlogistics23@gmail.com</p>
+        <p>Phone: 1-470-836-3519 | Email: admin.info@kemlogisticsnsolutions.com</p>
     </div>
 </body>
 </html>

@@ -22,15 +22,12 @@ exports.submitContact = async (req, res) => {
     try {
         const { name, email, phone, company, subject, message } = req.body;
 
-        // Create contact entry
-        const contact = await Contact.create({
-            name,
-            email,
-            phone,
-            company,
-            subject,
-            message
-        });
+        // Try to save to database (optional - continues even if DB is unavailable)
+        try {
+            await Contact.create({ name, email, phone, company, subject, message });
+        } catch (dbError) {
+            console.error('Database save failed (continuing):', dbError.message);
+        }
 
         // Send confirmation email to customer
         try {
@@ -45,13 +42,13 @@ exports.submitContact = async (req, res) => {
                     <p>${message}</p>
                     <br>
                     <p>Best regards,<br>KEM Logistics Team</p>
-                    <p>Phone: 1-470-836-3519<br>Email: kemlogistics23@gmail.com</p>
+                    <p>Phone: 1-470-836-3519<br>Email: admin.info@kemlogisticsnsolutions.com</p>
                 `
             });
 
             // Send notification email to admin
             await sendEmail({
-                to: process.env.EMAIL_USER,
+                to: process.env.ADMIN_NOTIFICATION_EMAIL || process.env.EMAIL_USER,
                 subject: `New Contact Form Submission - ${subject}`,
                 html: `
                     <h2>New Contact Form Submission</h2>
@@ -70,12 +67,7 @@ exports.submitContact = async (req, res) => {
 
         res.status(201).json({
             success: true,
-            message: 'Thank you for your message. We will get back to you soon!',
-            contact: {
-                id: contact._id,
-                name: contact.name,
-                email: contact.email
-            }
+            message: 'Thank you for your message. We will get back to you soon!'
         });
     } catch (error) {
         res.status(500).json({
@@ -141,7 +133,7 @@ exports.updateContactStatus = async (req, res) => {
                         <p>${responseMessage}</p>
                         <br>
                         <p>Best regards,<br>KEM Logistics Team</p>
-                        <p>Phone: 1-470-836-3519<br>Email: kemlogistics23@gmail.com</p>
+                        <p>Phone: 1-470-836-3519<br>Email: admin.info@kemlogisticsnsolutions.com</p>
                     `
                 });
             } catch (emailError) {

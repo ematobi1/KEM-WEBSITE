@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (forgotLink) {
         forgotLink.addEventListener('click', (e) => {
             e.preventDefault();
-            alert('To reset your password, please contact: kemlogistics23@gmail.com');
+            alert('To reset your password, please contact: admin.info@kemlogisticsnsolutions.com');
         });
     }
 });
