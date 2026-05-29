@@ -654,29 +654,30 @@ a:focus {
     }
 }
 
-/* ── Logo image — full circular orbit ── */
+/* ── Logo image — orbits inside the inner circle ── */
 .favicon-display {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 62px;
-    height: 62px;
+    width: 68px;
+    height: 68px;
     object-fit: cover;
     border-radius: 50%;
     z-index: 3;
     filter:
-        drop-shadow(0 0 6px rgba(255, 153, 0, 1))
-        drop-shadow(0 0 16px rgba(255, 153, 0, 0.8))
-        drop-shadow(0 0 32px rgba(0, 212, 255, 0.5));
-    animation: orbit-logo 6s linear infinite;
+        drop-shadow(0 0 8px rgba(255, 153, 0, 1))
+        drop-shadow(0 0 18px rgba(255, 153, 0, 0.8))
+        drop-shadow(0 0 36px rgba(0, 212, 255, 0.5));
+    animation: orbit-inner 5s linear infinite;
 }
 
-@keyframes orbit-logo {
+/* Orbits at radius 36px — keeps the 68px logo fully inside the 150px inner circle */
+@keyframes orbit-inner {
     from {
-        transform: translate(-50%, -50%) rotate(0deg) translateX(105px) rotate(0deg);
+        transform: translate(-50%, -50%) rotate(0deg) translateX(36px) rotate(0deg);
     }
     to {
-        transform: translate(-50%, -50%) rotate(360deg) translateX(105px) rotate(-360deg);
+        transform: translate(-50%, -50%) rotate(360deg) translateX(36px) rotate(-360deg);
     }
 }
 
