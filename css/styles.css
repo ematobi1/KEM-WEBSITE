@@ -210,10 +210,12 @@ a:focus {
 }
 
 .logo-img {
-    height: 100px;
+    height: 54px;
     width: auto;
     display: block;
     object-fit: contain;
+    mix-blend-mode: screen;
+    filter: brightness(1.15) contrast(1.05);
 }
 
 .logo-text {
