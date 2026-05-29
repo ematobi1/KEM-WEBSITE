@@ -1363,25 +1363,31 @@ a:focus {
 /* ── Auth tabs (customer-login.html) ── */
 .auth-tabs {
     display: flex;
-    border-bottom: 2px solid var(--border-color);
-    margin-bottom: 1.5rem;
-    gap: 0;
+    background: var(--background-light);
+    border-radius: var(--radius-md);
+    margin-bottom: 2rem;
+    padding: 0.35rem;
+    gap: 0.35rem;
 }
 .auth-tab {
     flex: 1;
-    padding: 0.75rem;
+    padding: 0.9rem 1rem;
     background: none;
     border: none;
-    font-size: 1rem;
-    font-weight: 600;
+    border-radius: calc(var(--radius-md) - 2px);
+    font-size: 1.05rem;
+    font-weight: 700;
     color: var(--text-medium);
     cursor: pointer;
-    border-bottom: 3px solid transparent;
-    margin-bottom: -2px;
+    letter-spacing: 0.02em;
     transition: all var(--transition-fast);
 }
 .auth-tab.active {
-    color: var(--primary-color);
-    border-bottom-color: var(--primary-color);
+    background: var(--primary-color);
+    color: var(--text-dark);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
-.auth-tab:hover:not(.active) { color: var(--text-dark); }
+.auth-tab:hover:not(.active) {
+    background: var(--border-color);
+    color: var(--text-dark);
+}
