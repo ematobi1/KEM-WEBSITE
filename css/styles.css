@@ -826,32 +826,11 @@ a:focus {
 
 .services-section {
     padding: var(--spacing-xxl) 0;
-    background: linear-gradient(160deg, #07111e 0%, #0d1a30 50%, #07111e 100%);
-    position: relative;
-    overflow: hidden;
-}
-
-.services-section::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image:
-        linear-gradient(rgba(255, 153, 0, 0.035) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 153, 0, 0.035) 1px, transparent 1px);
-    background-size: 52px 52px;
-    pointer-events: none;
+    background-color: var(--background-white);
 }
 
 .services-section h2 {
     text-align: center;
-    background: linear-gradient(130deg, #ffffff 20%, #ff9900 80%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.services-section .section-subtitle {
-    color: rgba(255, 255, 255, 0.5);
 }
 
 .services-grid {
@@ -864,25 +843,13 @@ a:focus {
 }
 
 .service-card {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 18px;
-    padding: 2rem;
-    transition: transform 0.35s ease, border-color 0.35s ease, background 0.35s ease, box-shadow 0.35s ease;
+    background: var(--background-white);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-lg);
+    transition: all var(--transition-medium);
     position: relative;
     overflow: hidden;
-}
-
-/* Glowing top-edge sweep on hover */
-.service-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 10%; right: 10%;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, #ff9900, transparent);
-    border-radius: 0 0 2px 2px;
-    opacity: 0;
-    transition: opacity 0.35s ease;
 }
 
 /* Large faded number watermark */
@@ -894,7 +861,7 @@ a:focus {
     font-size: 5rem;
     font-weight: 900;
     line-height: 1;
-    color: rgba(255, 153, 0, 0.06);
+    color: rgba(255, 153, 0, 0.07);
     pointer-events: none;
     font-family: monospace;
     letter-spacing: -4px;
@@ -902,64 +869,53 @@ a:focus {
 
 .service-card:hover,
 .service-card:focus-within {
-    transform: translateY(-7px);
-    border-color: rgba(255, 153, 0, 0.35);
-    background: rgba(255, 153, 0, 0.05);
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45), 0 0 40px rgba(255, 153, 0, 0.08);
-}
-
-.service-card:hover::before,
-.service-card:focus-within::before {
-    opacity: 1;
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-4px);
+    border-color: var(--primary-color);
 }
 
 .service-icon {
     width: 60px;
     height: 60px;
     border-radius: 14px;
-    background: rgba(255, 153, 0, 0.1);
-    border: 1px solid rgba(255, 153, 0, 0.25);
+    background: rgba(255, 153, 0, 0.08);
+    border: 1px solid rgba(255, 153, 0, 0.2);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #ff9900;
+    color: var(--primary-color);
     margin-bottom: 1.5rem;
     transition: background 0.3s, box-shadow 0.3s;
 }
 
 .service-card:hover .service-icon {
-    background: rgba(255, 153, 0, 0.18);
-    box-shadow: 0 0 24px rgba(255, 153, 0, 0.3);
+    background: rgba(255, 153, 0, 0.15);
+    box-shadow: 0 0 20px rgba(255, 153, 0, 0.2);
 }
 
 .service-card h3 {
     margin-bottom: var(--spacing-sm);
-    color: #ffffff;
-    font-weight: 700;
-    font-size: 1.15rem;
+    color: var(--text-dark);
 }
 
 .service-card p {
-    color: rgba(255, 255, 255, 0.55);
-    margin-bottom: 1.5rem;
-    line-height: 1.75;
-    font-size: 0.95rem;
+    color: var(--text-medium);
+    margin-bottom: var(--spacing-md);
 }
 
 .service-link {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    color: #ff9900;
+    color: var(--accent-color);
     font-weight: 600;
-    font-size: 0.9rem;
-    transition: gap 0.2s ease, color 0.2s ease;
+    transition: gap var(--transition-fast), color var(--transition-fast);
 }
 
 .service-link:hover,
 .service-link:focus {
     gap: 0.65rem;
-    color: #ffb732;
+    color: var(--primary-color);
 }
 
 /* ===================================
