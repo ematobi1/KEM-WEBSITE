@@ -700,24 +700,26 @@ a:focus {
     }
 }
 
-/* ── Logo image — orbits inside the inner circle ── */
+/* ── Logo image — circular, orbits inside the inner circle ── */
 .favicon-display {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 68px;
-    height: 68px;
+    width: 66px;
+    height: 66px;
     object-fit: cover;
     border-radius: 50%;
     z-index: 3;
-    filter:
-        drop-shadow(0 0 8px rgba(255, 153, 0, 1))
-        drop-shadow(0 0 18px rgba(255, 153, 0, 0.8))
-        drop-shadow(0 0 36px rgba(0, 212, 255, 0.5));
+    border: 2.5px solid rgba(255, 153, 0, 0.9);
+    box-shadow:
+        0 0 10px rgba(255, 153, 0, 0.9),
+        0 0 24px rgba(255, 153, 0, 0.5),
+        0 0 44px rgba(0, 212, 255, 0.3),
+        inset 0 0 8px rgba(255, 153, 0, 0.15);
     animation: orbit-inner 5s linear infinite;
 }
 
-/* Orbits at radius 36px — keeps the 68px logo fully inside the 150px inner circle */
+/* Orbits at radius 36px — keeps the 66px logo fully inside the 150px inner circle */
 @keyframes orbit-inner {
     from {
         transform: translate(-50%, -50%) rotate(0deg) translateX(36px) rotate(0deg);
@@ -824,60 +826,140 @@ a:focus {
 
 .services-section {
     padding: var(--spacing-xxl) 0;
-    background-color: var(--background-white);
+    background: linear-gradient(160deg, #07111e 0%, #0d1a30 50%, #07111e 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.services-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255, 153, 0, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 153, 0, 0.035) 1px, transparent 1px);
+    background-size: 52px 52px;
+    pointer-events: none;
 }
 
 .services-section h2 {
     text-align: center;
+    background: linear-gradient(130deg, #ffffff 20%, #ff9900 80%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.services-section .section-subtitle {
+    color: rgba(255, 255, 255, 0.5);
 }
 
 .services-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: var(--spacing-lg);
+    gap: 1.5rem;
     margin-top: var(--spacing-xl);
+    position: relative;
+    z-index: 1;
 }
 
 .service-card {
-    background: var(--background-white);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    padding: var(--spacing-lg);
-    transition: all var(--transition-medium);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+    padding: 2rem;
+    transition: transform 0.35s ease, border-color 0.35s ease, background 0.35s ease, box-shadow 0.35s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Glowing top-edge sweep on hover */
+.service-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 10%; right: 10%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #ff9900, transparent);
+    border-radius: 0 0 2px 2px;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+}
+
+/* Large faded number watermark */
+.service-card::after {
+    content: attr(data-num);
+    position: absolute;
+    bottom: 0.5rem;
+    right: 1.25rem;
+    font-size: 5rem;
+    font-weight: 900;
+    line-height: 1;
+    color: rgba(255, 153, 0, 0.06);
+    pointer-events: none;
+    font-family: monospace;
+    letter-spacing: -4px;
 }
 
 .service-card:hover,
 .service-card:focus-within {
-    box-shadow: var(--shadow-lg);
-    transform: translateY(-4px);
-    border-color: var(--primary-color);
+    transform: translateY(-7px);
+    border-color: rgba(255, 153, 0, 0.35);
+    background: rgba(255, 153, 0, 0.05);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45), 0 0 40px rgba(255, 153, 0, 0.08);
+}
+
+.service-card:hover::before,
+.service-card:focus-within::before {
+    opacity: 1;
 }
 
 .service-icon {
-    color: var(--primary-color);
-    margin-bottom: var(--spacing-md);
+    width: 60px;
+    height: 60px;
+    border-radius: 14px;
+    background: rgba(255, 153, 0, 0.1);
+    border: 1px solid rgba(255, 153, 0, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ff9900;
+    margin-bottom: 1.5rem;
+    transition: background 0.3s, box-shadow 0.3s;
+}
+
+.service-card:hover .service-icon {
+    background: rgba(255, 153, 0, 0.18);
+    box-shadow: 0 0 24px rgba(255, 153, 0, 0.3);
 }
 
 .service-card h3 {
     margin-bottom: var(--spacing-sm);
-    color: var(--text-dark);
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 1.15rem;
 }
 
 .service-card p {
-    color: var(--text-medium);
-    margin-bottom: var(--spacing-md);
+    color: rgba(255, 255, 255, 0.55);
+    margin-bottom: 1.5rem;
+    line-height: 1.75;
+    font-size: 0.95rem;
 }
 
 .service-link {
-    display: inline-block;
-    color: var(--accent-color);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: #ff9900;
     font-weight: 600;
-    transition: transform var(--transition-fast);
+    font-size: 0.9rem;
+    transition: gap 0.2s ease, color 0.2s ease;
 }
 
 .service-link:hover,
 .service-link:focus {
-    transform: translateX(4px);
+    gap: 0.65rem;
+    color: #ffb732;
 }
 
 /* ===================================
