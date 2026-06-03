@@ -9,6 +9,7 @@
     <link rel="icon" type="image/png" href="assets/icons/favicon.png">
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/futuristic.css">
+    <link rel="stylesheet" href="css/dispatch.css">
 </head>
 <body class="futuristic-page">
     <!-- Skip to main content for accessibility -->
@@ -37,6 +38,7 @@
                     <ul class="nav-links">
                         <li><a href="index.html">Home</a></li>
                         <li><a href="services.html">Services</a></li>
+                        <li><a href="dispatch.html">Dispatch Portal</a></li>
                         <li><a href="tracking.html" class="active">Track Shipment</a></li>
                         <li><a href="quote.html">Get Quote</a></li>
                         <li><a href="about.html">About Us</a></li>
@@ -176,6 +178,44 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Dispatcher Status Update Panel -->
+                <div class="dispatcher-update-section" role="region" aria-label="Dispatcher status update">
+                    <button class="dispatcher-toggle" id="dispatcher-toggle" aria-expanded="false" aria-controls="dispatcher-form-body">
+                        🛠️ Dispatcher: Update Load Status
+                        <span class="dispatcher-toggle-arrow" aria-hidden="true">▼</span>
+                    </button>
+                    <div class="dispatcher-form-body" id="dispatcher-form-body">
+                        <form id="dispatcher-update-form" novalidate>
+                            <div class="dispatcher-form-grid">
+                                <div class="form-field">
+                                    <label for="d-load-id">Load Number *</label>
+                                    <input type="text" id="d-load-id" name="d-load-id" placeholder="e.g. KEM0001">
+                                </div>
+                                <div class="form-field">
+                                    <label for="d-status">New Status *</label>
+                                    <select id="d-status" name="d-status">
+                                        <option value="">-- Select Status --</option>
+                                        <option value="Pending">Pending</option>
+                                        <option value="Dispatched">Dispatched</option>
+                                        <option value="In Transit">In Transit</option>
+                                        <option value="Delivered">Delivered</option>
+                                    </select>
+                                </div>
+                                <div class="form-field">
+                                    <label for="d-location">Current Location</label>
+                                    <input type="text" id="d-location" name="d-location" placeholder="e.g. Nashville, TN">
+                                </div>
+                                <div class="form-field full-width">
+                                    <label for="d-notes">Notes</label>
+                                    <textarea id="d-notes" name="d-notes" rows="2" placeholder="Optional update notes..."></textarea>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-dispatch btn-dispatch-primary" style="margin-top:0.5rem">Update Load Status</button>
+                        </form>
+                    </div>
+                </div>
+
             </div>
         </section>
 
@@ -263,5 +303,13 @@
     <script src="js/main.js"></script>
     <script src="js/tracking.js"></script>
     <script src="js/chat.js"></script>
+    <script>
+        /* Inline btn-dispatch style bridge for tracking page */
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.btn-dispatch').forEach(function(btn) {
+                btn.style.fontFamily = 'inherit';
+            });
+        });
+    </script>
 </body>
 </html>

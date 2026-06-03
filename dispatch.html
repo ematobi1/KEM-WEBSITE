@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="KEM Logistics Dispatch Portal — Submit loads, manage drivers, track active shipments, and generate rate confirmations.">
+    <title>Dispatch Portal - KEM Logistics And Solutions LLC</title>
+    <link rel="icon" type="image/png" href="assets/icons/favicon.png">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/futuristic.css">
+    <link rel="stylesheet" href="css/dispatch.css">
+</head>
+<body class="futuristic-page dispatch-page">
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Header -->
+    <header class="header" role="banner">
+        <nav class="navbar" role="navigation" aria-label="Main navigation">
+            <div class="container">
+                <div class="nav-wrapper">
+                    <div class="logo">
+                        <a href="index.html" aria-label="KEM Logistics home">
+                            <img src="images/kem-logo.jpeg" alt="KEM Logistics & Solutions" class="logo-img">
+                        </a>
+                    </div>
+                    <button class="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+                        <span class="hamburger"></span>
+                        <span class="hamburger"></span>
+                        <span class="hamburger"></span>
+                    </button>
+                    <ul class="nav-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="dispatch.html" class="active">Dispatch Portal</a></li>
+                        <li><a href="tracking.html">Track Shipment</a></li>
+                        <li><a href="quote.html">Get Quote</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="about.html#contact">Contact</a></li>
+                        <li><a href="customer-login.html" class="btn-login">Sign In</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main id="main-content" role="main">
+
+        <!-- Hero -->
+        <section class="dispatch-hero" aria-labelledby="dispatch-heading">
+            <div class="container">
+                <h1 id="dispatch-heading">Dispatch Operations Center</h1>
+                <p>Submit loads, manage your driver fleet, track active shipments, and generate carrier documents — all in one place.</p>
+            </div>
+        </section>
+
+        <!-- Stats Bar -->
+        <div class="dispatch-stats" role="status" aria-label="Live dispatch statistics">
+            <div class="dispatch-stat">
+                <span class="dispatch-stat-number" id="stat-active-loads">0</span>
+                <span class="dispatch-stat-label">Active Loads</span>
+            </div>
+            <div class="dispatch-stat">
+                <span class="dispatch-stat-number" id="stat-available-drivers">0</span>
+                <span class="dispatch-stat-label">Available Drivers</span>
+            </div>
+            <div class="dispatch-stat">
+                <span class="dispatch-stat-number" id="stat-on-load">0</span>
+                <span class="dispatch-stat-label">On Load</span>
+            </div>
+            <div class="dispatch-stat">
+                <span class="dispatch-stat-number" id="stat-delivered">0</span>
+                <span class="dispatch-stat-label">Delivered Today</span>
+            </div>
+        </div>
+
+        <!-- Portal -->
+        <section class="dispatch-portal" aria-label="Dispatch portal">
+            <div class="container">
+
+                <!-- Tabs -->
+                <div class="dispatch-tabs" role="tablist" aria-label="Dispatch sections">
+                    <button class="tab-btn active" role="tab" aria-selected="true"  data-tab="load-board" aria-controls="panel-load-board">📋 Submit Load</button>
+                    <button class="tab-btn"        role="tab" aria-selected="false" data-tab="drivers"    aria-controls="panel-drivers">🚛 Driver Roster</button>
+                    <button class="tab-btn"        role="tab" aria-selected="false" data-tab="dashboard"  aria-controls="panel-dashboard">📊 Active Loads</button>
+                    <button class="tab-btn"        role="tab" aria-selected="false" data-tab="documents"  aria-controls="panel-documents">📁 Documents</button>
+                </div>
+
+                <!-- =============================================
+                     PANEL 1: LOAD BOARD
+                     ============================================= -->
+                <div class="tab-panel active" id="panel-load-board" role="tabpanel" aria-labelledby="tab-load-board">
+                    <div class="panel-card">
+                        <div class="panel-card-header">
+                            <h2><span class="panel-icon">📋</span> Load Submission Form</h2>
+                            <span style="font-size:0.75rem;color:rgba(255,255,255,0.35)">All fields marked * are required</span>
+                        </div>
+
+                        <form id="load-form" class="dispatch-form" novalidate>
+
+                            <p class="form-section-title">Origin &amp; Destination</p>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="origin-city">Origin City *</label>
+                                    <input type="text" id="origin-city" name="origin-city" placeholder="e.g. Atlanta" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="origin-state">Origin State *</label>
+                                    <input type="text" id="origin-state" name="origin-state" placeholder="e.g. GA" maxlength="2" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="dest-city">Destination City *</label>
+                                    <input type="text" id="dest-city" name="dest-city" placeholder="e.g. Chicago" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="dest-state">Destination State *</label>
+                                    <input type="text" id="dest-state" name="dest-state" placeholder="e.g. IL" maxlength="2" required>
+                                </div>
+                            </div>
+
+                            <p class="form-section-title">Pickup &amp; Delivery Schedule</p>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="pickup-date">Pickup Date *</label>
+                                    <input type="date" id="pickup-date" name="pickup-date" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="pickup-time">Pickup Time</label>
+                                    <input type="time" id="pickup-time" name="pickup-time">
+                                </div>
+                                <div class="form-group">
+                                    <label for="delivery-date">Delivery Date *</label>
+                                    <input type="date" id="delivery-date" name="delivery-date" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="delivery-time">Delivery Time</label>
+                                    <input type="time" id="delivery-time" name="delivery-time">
+                                </div>
+                            </div>
+
+                            <p class="form-section-title">Freight Details</p>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="commodity">Commodity Type *</label>
+                                    <input type="text" id="commodity" name="commodity" placeholder="e.g. Auto Parts, Electronics" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="weight">Weight (lbs) *</label>
+                                    <input type="number" id="weight" name="weight" placeholder="e.g. 42000" min="1" max="80000" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="equipment">Equipment Type *</label>
+                                    <select id="equipment" name="equipment" required>
+                                        <option value="">-- Select Equipment --</option>
+                                        <option value="Box Truck">Box Truck</option>
+                                        <option value="Dry Van">Dry Van (53')</option>
+                                        <option value="Flatbed">Flatbed</option>
+                                        <option value="Reefer">Reefer</option>
+                                        <option value="Step Deck">Step Deck</option>
+                                        <option value="Hot Shot">Hot Shot</option>
+                                        <option value="RGN">RGN (Lowboy)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="dim-length">Length (inches)</label>
+                                    <input type="number" id="dim-length" name="dim-length" placeholder="e.g. 576">
+                                </div>
+                                <div class="form-group">
+                                    <label for="dim-width">Width (inches)</label>
+                                    <input type="number" id="dim-width" name="dim-width" placeholder="e.g. 96">
+                                </div>
+                                <div class="form-group">
+                                    <label for="dim-height">Height (inches)</label>
+                                    <input type="number" id="dim-height" name="dim-height" placeholder="e.g. 96">
+                                </div>
+                            </div>
+
+                            <p class="form-section-title">Rate &amp; Compensation</p>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="rate-type">Rate Type *</label>
+                                    <select id="rate-type" name="rate-type" required>
+                                        <option value="flat">Flat Rate</option>
+                                        <option value="per-mile">Per Mile</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="rate">Rate Amount ($) *</label>
+                                    <input type="number" id="rate" name="rate" placeholder="e.g. 2500" min="0" step="0.01" required>
+                                </div>
+                            </div>
+
+                            <p class="form-section-title">Broker &amp; Reference</p>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="broker-name">Broker Name</label>
+                                    <input type="text" id="broker-name" name="broker-name" placeholder="e.g. XPO Logistics">
+                                </div>
+                                <div class="form-group">
+                                    <label for="broker-contact">Broker Contact</label>
+                                    <input type="text" id="broker-contact" name="broker-contact" placeholder="Phone or Email">
+                                </div>
+                                <div class="form-group">
+                                    <label for="reference-number">Reference / Load #</label>
+                                    <input type="text" id="reference-number" name="reference-number" placeholder="Broker's load number">
+                                </div>
+                            </div>
+
+                            <p class="form-section-title">Special Instructions</p>
+                            <div class="form-row">
+                                <div class="form-group" style="grid-column:1/-1">
+                                    <label for="special-instructions">Special Instructions / Notes</label>
+                                    <textarea id="special-instructions" name="special-instructions" placeholder="Team drivers required, liftgate needed, appointment required, etc."></textarea>
+                                </div>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="hazmat" name="hazmat">
+                                <label for="hazmat">⚠️ Hazmat — this load contains hazardous materials (requires proper documentation)</label>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="reset" class="btn-dispatch btn-dispatch-secondary">Clear Form</button>
+                                <button type="submit" class="btn-dispatch btn-dispatch-primary">📋 Submit Load to Board</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- =============================================
+                     PANEL 2: DRIVER ROSTER
+                     ============================================= -->
+                <div class="tab-panel" id="panel-drivers" role="tabpanel">
+                    <div class="panel-card">
+                        <div class="panel-card-header">
+                            <h2><span class="panel-icon">🚛</span> Driver Roster</h2>
+                            <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
+                                <span style="font-size:0.8rem;color:rgba(255,255,255,0.4)">Click <strong style="color:#ff9900">Assign Load</strong> to dispatch a driver</span>
+                            </div>
+                        </div>
+                        <div class="drivers-grid" id="drivers-container">
+                            <!-- Rendered by dispatch.js -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- =============================================
+                     PANEL 3: ACTIVE LOADS DASHBOARD
+                     ============================================= -->
+                <div class="tab-panel" id="panel-dashboard" role="tabpanel">
+                    <div class="panel-card">
+                        <div class="panel-card-header">
+                            <h2><span class="panel-icon">📊</span> Active Loads &mdash; <span id="active-load-count" style="color:#ff9900">0</span></h2>
+                            <div class="dashboard-filters">
+                                <button class="filter-btn active" data-filter="all">All</button>
+                                <button class="filter-btn" data-filter="pending">Pending</button>
+                                <button class="filter-btn" data-filter="dispatched">Dispatched</button>
+                                <button class="filter-btn" data-filter="in-transit">In Transit</button>
+                                <button class="filter-btn" data-filter="delivered">Delivered</button>
+                            </div>
+                        </div>
+
+                        <div class="loads-table-wrapper" role="region" aria-label="Active loads table">
+                            <table class="loads-table" aria-live="polite">
+                                <thead>
+                                    <tr>
+                                        <th>Load #</th>
+                                        <th>Driver</th>
+                                        <th>Route</th>
+                                        <th>Status</th>
+                                        <th>Pickup</th>
+                                        <th>Delivery</th>
+                                        <th>Rate</th>
+                                        <th>Equipment</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="loads-tbody">
+                                    <tr><td colspan="9">
+                                        <div class="empty-state">
+                                            <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                                            <p>No loads yet. Submit a load from the Load Board tab.</p>
+                                        </div>
+                                    </td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- =============================================
+                     PANEL 4: DOCUMENT MANAGEMENT
+                     ============================================= -->
+                <div class="tab-panel" id="panel-documents" role="tabpanel">
+                    <div class="panel-card">
+                        <div class="panel-card-header">
+                            <h2><span class="panel-icon">📁</span> Document Management</h2>
+                            <span style="font-size:0.8rem;color:rgba(255,255,255,0.38)">Upload and store carrier documents</span>
+                        </div>
+
+                        <div class="doc-grid">
+                            <div class="doc-upload-card">
+                                <input type="file" class="doc-upload-input" data-doc-type="Bill of Lading (BOL)" accept=".pdf,.jpg,.jpeg,.png" aria-label="Upload Bill of Lading">
+                                <span class="doc-upload-icon">📄</span>
+                                <span class="doc-upload-label">Bill of Lading</span>
+                                <span class="doc-upload-hint">PDF or image</span>
+                            </div>
+                            <div class="doc-upload-card">
+                                <input type="file" class="doc-upload-input" data-doc-type="Proof of Delivery (POD)" accept=".pdf,.jpg,.jpeg,.png" aria-label="Upload Proof of Delivery">
+                                <span class="doc-upload-icon">✅</span>
+                                <span class="doc-upload-label">Proof of Delivery</span>
+                                <span class="doc-upload-hint">PDF or image</span>
+                            </div>
+                            <div class="doc-upload-card">
+                                <input type="file" class="doc-upload-input" data-doc-type="Rate Confirmation" accept=".pdf,.jpg,.jpeg,.png" aria-label="Upload Rate Confirmation">
+                                <span class="doc-upload-icon">📋</span>
+                                <span class="doc-upload-label">Rate Confirmation</span>
+                                <span class="doc-upload-hint">PDF or image</span>
+                            </div>
+                            <div class="doc-upload-card">
+                                <input type="file" class="doc-upload-input" data-doc-type="Insurance Certificate" accept=".pdf,.jpg,.jpeg,.png" aria-label="Upload Insurance Certificate">
+                                <span class="doc-upload-icon">🛡️</span>
+                                <span class="doc-upload-label">Insurance Certificate</span>
+                                <span class="doc-upload-hint">PDF or image</span>
+                            </div>
+                            <div class="doc-upload-card">
+                                <input type="file" class="doc-upload-input" data-doc-type="CDL / Driver License" accept=".pdf,.jpg,.jpeg,.png" aria-label="Upload CDL or Driver License">
+                                <span class="doc-upload-icon">🪪</span>
+                                <span class="doc-upload-label">CDL / Driver License</span>
+                                <span class="doc-upload-hint">PDF or image</span>
+                            </div>
+                            <div class="doc-upload-card">
+                                <input type="file" class="doc-upload-input" data-doc-type="Other Document" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" aria-label="Upload other document">
+                                <span class="doc-upload-icon">📎</span>
+                                <span class="doc-upload-label">Other Document</span>
+                                <span class="doc-upload-hint">Any format</span>
+                            </div>
+                        </div>
+
+                        <div style="margin-top:1.5rem">
+                            <h3 style="font-size:0.85rem;font-weight:700;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.85rem">Uploaded Documents</h3>
+                            <div class="doc-list" id="doc-list"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- /container -->
+        </section>
+
+    </main><!-- /main -->
+
+    <!-- ==================================================
+         MODALS
+         ================================================== -->
+
+    <!-- Assign load to driver (from driver card) -->
+    <div class="modal-overlay" id="assign-modal" role="dialog" aria-modal="true" aria-labelledby="assign-modal-title">
+        <div class="modal-box" style="max-width:520px">
+            <div class="modal-header">
+                <h2 id="assign-modal-title">Assign Load to Driver</h2>
+                <button class="modal-close" aria-label="Close modal">✕</button>
+            </div>
+            <div class="assign-select-wrapper">
+                <label for="assign-load-select">Select Pending Load</label>
+                <select id="assign-load-select">
+                    <option value="">-- Select a Load --</option>
+                </select>
+            </div>
+            <div class="form-actions" style="justify-content:flex-end">
+                <button class="btn-dispatch btn-dispatch-secondary" onclick="closeModal('assign-modal')">Cancel</button>
+                <button class="btn-dispatch btn-dispatch-primary" id="confirm-assign-driver-btn">Assign Driver</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Assign driver to load (from dashboard) -->
+    <div class="modal-overlay" id="assign-driver-modal" role="dialog" aria-modal="true" aria-labelledby="assign-driver-modal-title">
+        <div class="modal-box" style="max-width:520px">
+            <div class="modal-header">
+                <h2 id="assign-driver-modal-title">Assign Driver to Load</h2>
+                <button class="modal-close" aria-label="Close modal">✕</button>
+            </div>
+            <div class="assign-select-wrapper">
+                <label for="assign-driver-select">Select Available Driver</label>
+                <select id="assign-driver-select">
+                    <option value="">-- Select a Driver --</option>
+                </select>
+            </div>
+            <div class="form-actions" style="justify-content:flex-end">
+                <button class="btn-dispatch btn-dispatch-secondary" onclick="closeModal('assign-driver-modal')">Cancel</button>
+                <button class="btn-dispatch btn-dispatch-primary" id="confirm-assign-load-btn">Assign to Load</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Update Modal -->
+    <div class="modal-overlay" id="status-modal" role="dialog" aria-modal="true" aria-labelledby="status-modal-title">
+        <div class="modal-box" style="max-width:560px">
+            <div class="modal-header">
+                <h2 id="status-modal-title">Update Load Status</h2>
+                <button class="modal-close" aria-label="Close modal">✕</button>
+            </div>
+            <input type="hidden" id="status-load-id">
+
+            <div style="margin-bottom:1.5rem">
+                <h3 style="font-size:0.8rem;font-weight:700;color:rgba(255,153,0,0.8);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.75rem">Status History</h3>
+                <div class="load-timeline" id="status-modal-timeline"></div>
+            </div>
+
+            <div style="border-top:1px solid rgba(255,255,255,0.06);padding-top:1.25rem">
+                <h3 style="font-size:0.8rem;font-weight:700;color:rgba(255,153,0,0.8);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.85rem">Add New Status</h3>
+                <div class="status-update-form">
+                    <div class="form-field">
+                        <label for="new-status-select">New Status *</label>
+                        <select id="new-status-select">
+                            <option value="">-- Select Status --</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Dispatched">Dispatched</option>
+                            <option value="In Transit">In Transit</option>
+                            <option value="Delivered">Delivered</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label for="status-location">Current Location</label>
+                        <input type="text" id="status-location" placeholder="e.g. Nashville, TN">
+                    </div>
+                    <div class="form-field">
+                        <label for="status-notes">Notes</label>
+                        <textarea id="status-notes" placeholder="e.g. Picked up on time, driver called in, detained at shipper..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions" style="justify-content:flex-end">
+                <button class="btn-dispatch btn-dispatch-secondary" onclick="closeModal('status-modal')">Cancel</button>
+                <button class="btn-dispatch btn-dispatch-primary" id="submit-status-update-btn">Update Status</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load Details Modal -->
+    <div class="modal-overlay" id="details-modal" role="dialog" aria-modal="true" aria-labelledby="details-modal-title">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h2 id="details-modal-title">Load Details</h2>
+                <button class="modal-close" aria-label="Close modal">✕</button>
+            </div>
+            <div id="details-modal-content"></div>
+            <div class="form-actions" style="justify-content:flex-end">
+                <button class="btn-dispatch btn-dispatch-secondary" onclick="closeModal('details-modal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rate Confirmation Modal -->
+    <div class="modal-overlay" id="rc-modal" role="dialog" aria-modal="true" aria-labelledby="rc-load-title">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h2 id="rc-load-title">Rate Confirmation</h2>
+                <button class="modal-close" aria-label="Close modal">✕</button>
+            </div>
+            <div id="rc-content"></div>
+            <div class="form-actions" id="rc-actions" style="justify-content:flex-end">
+                <button class="btn-dispatch btn-dispatch-secondary" onclick="closeModal('rc-modal')">Close</button>
+                <button class="btn-dispatch btn-dispatch-secondary" id="download-rc-btn">⬇ Download PDF</button>
+                <button class="btn-dispatch btn-dispatch-primary" id="print-rc-btn">🖨 Print</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>KEM Logistics</h3>
+                    <p>Delivering excellence in freight and logistics solutions nationwide.</p>
+                </div>
+                <div class="footer-column">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="services.html">Full Truckload (FTL)</a></li>
+                        <li><a href="services.html">Less-Than-Truckload (LTL)</a></li>
+                        <li><a href="services.html">Freight Dispatching</a></li>
+                        <li><a href="services.html">Expedited Shipping</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Portal</h4>
+                    <ul>
+                        <li><a href="dispatch.html">Dispatch Portal</a></li>
+                        <li><a href="tracking.html">Track Shipment</a></li>
+                        <li><a href="quote.html">Get a Quote</a></li>
+                        <li><a href="customer-login.html">Customer Login</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><a href="tel:+14708363519">(470) 836-3519</a></li>
+                        <li><a href="mailto:admin.info@kemlogisticsnsolutions.com">admin.info@kemlogisticsnsolutions.com</a></li>
+                        <li><a href="about.html#contact">Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 KEM Logistics And Solutions LLC. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/dispatch.js"></script>
+</body>
+</html>
