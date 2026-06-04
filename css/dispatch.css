@@ -838,29 +838,37 @@
 .timeline-time    { font-size: 0.72rem; color: rgba(255,255,255,0.38); margin-top: 0.12rem; }
 .timeline-notes   { font-size: 0.77rem; color: rgba(255,255,255,0.5); margin-top: 0.18rem; }
 
-/* ---- Print Styles ---- */
+/* ---- Print Styles — only the Rate Confirmation document prints ---- */
 @media print {
-    body > *:not(.modal-overlay),
-    .modal-header,
-    .form-actions { display: none !important; }
+    /* Hide everything except the RC modal */
+    body > *:not(#rc-modal) { display: none !important; }
+    .modal-header, #rc-actions { display: none !important; }
 
-    .modal-overlay {
+    #rc-modal {
         position: static !important;
         background: transparent !important;
         display: block !important;
         padding: 0 !important;
         opacity: 1 !important;
         visibility: visible !important;
+        width: 100% !important;
     }
-    .modal-box {
+
+    #rc-modal .modal-box {
         border: none !important;
         background: #fff !important;
         padding: 0 !important;
         max-height: none !important;
+        max-width: 100% !important;
         box-shadow: none !important;
         transform: none !important;
+        border-radius: 0 !important;
     }
-    .rate-confirmation { border-radius: 0; }
+
+    .rate-confirmation {
+        border-radius: 0;
+        box-shadow: none;
+    }
 }
 
 /* ===================================================
