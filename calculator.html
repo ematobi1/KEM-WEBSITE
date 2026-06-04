@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="KEM Logistics Trip Calculator — estimate fuel cost, gross revenue, dispatcher fees, and net profit for any freight run.">
+    <title>Trip Calculator - KEM Logistics</title>
+    <link rel="icon" type="image/png" href="assets/icons/favicon.png">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/dispatch.css">
+    <link rel="stylesheet" href="css/calculator.css">
+</head>
+<body class="futuristic-page calc-page">
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Header -->
+    <header class="header" role="banner">
+        <nav class="navbar" role="navigation" aria-label="Main navigation">
+            <div class="container">
+                <div class="nav-wrapper">
+                    <div class="logo">
+                        <a href="index.html" aria-label="KEM Logistics home">
+                            <img src="images/kem-logo.jpeg" alt="KEM Logistics & Solutions" class="logo-img">
+                        </a>
+                    </div>
+                    <button class="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+                        <span class="hamburger"></span>
+                        <span class="hamburger"></span>
+                        <span class="hamburger"></span>
+                    </button>
+                    <ul class="nav-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="dispatch.html">Dispatch Portal</a></li>
+                        <li><a href="calculator.html" class="active">Trip Calculator</a></li>
+                        <li><a href="tracking.html">Track Shipment</a></li>
+                        <li><a href="quote.html">Get Quote</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="about.html#contact">Contact</a></li>
+                        <li><a href="customer-login.html" class="btn-login">Sign In</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main id="main-content" role="main">
+
+        <!-- Hero -->
+        <section class="calc-hero" aria-labelledby="calc-heading">
+            <div class="container">
+                <div class="calc-hero-badge">⛽ Logistics Trip Calculator</div>
+                <h1 id="calc-heading">Trip Profit Calculator</h1>
+                <p>Enter your route, diesel price, and rate to instantly see fuel cost, dispatcher fees, and net profit per mile.</p>
+            </div>
+        </section>
+
+        <!-- Main Calculator -->
+        <section class="calc-main" aria-label="Trip calculator">
+            <div class="container">
+                <div class="calc-layout">
+
+                    <!-- ==================== LEFT: INPUTS ==================== -->
+                    <div class="calc-inputs">
+                        <form id="calc-form" novalidate>
+
+                            <!-- Route -->
+                            <div class="calc-card">
+                                <div class="calc-card-title">📍 Route</div>
+
+                                <div class="form-row">
+                                    <div class="form-field">
+                                        <label for="origin-city">Origin City, State</label>
+                                        <input type="text" id="origin-city" name="origin-city"
+                                            list="origin-city-list"
+                                            placeholder="e.g. Atlanta, GA"
+                                            autocomplete="off">
+                                        <datalist id="origin-city-list"></datalist>
+                                    </div>
+                                    <div class="form-field">
+                                        <label for="dest-city">Destination City, State</label>
+                                        <input type="text" id="dest-city" name="dest-city"
+                                            list="dest-city-list"
+                                            placeholder="e.g. Chicago, IL"
+                                            autocomplete="off">
+                                        <datalist id="dest-city-list"></datalist>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-field">
+                                        <label for="manual-miles">Total Miles <span style="color:rgba(255,255,255,0.3);font-weight:400">(override)</span></label>
+                                        <div class="input-suffix-wrap">
+                                            <input type="number" id="manual-miles" name="manual-miles"
+                                                placeholder="Auto-calculated or enter manually"
+                                                min="1">
+                                            <span class="input-suffix">mi</span>
+                                        </div>
+                                        <span class="field-hint" id="distance-hint"></span>
+                                    </div>
+                                    <div class="form-field">
+                                        <label for="equipment-type">Equipment Type</label>
+                                        <select id="equipment-type" name="equipment-type">
+                                            <option value="Dry Van">Dry Van (53')</option>
+                                            <option value="Reefer">Reefer</option>
+                                            <option value="Flatbed">Flatbed</option>
+                                            <option value="Box Truck">Box Truck</option>
+                                            <option value="Step Deck">Step Deck</option>
+                                            <option value="Hot Shot">Hot Shot</option>
+                                            <option value="RGN">RGN (Lowboy)</option>
+                                            <option value="Tanker">Tanker</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Fuel -->
+                            <div class="calc-card">
+                                <div class="calc-card-title">⛽ Diesel &amp; Fuel</div>
+
+                                <div class="diesel-info-strip" role="note">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                                    Get today's national diesel average at
+                                    <a href="https://www.eia.gov/petroleum/gasdiesel/" target="_blank" rel="noopener noreferrer">EIA.gov</a>
+                                    or
+                                    <a href="https://www.dieselhub.com" target="_blank" rel="noopener noreferrer">DieselHub.com</a>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-field">
+                                        <label for="diesel-price">Diesel Price per Gallon</label>
+                                        <div class="input-prefix-wrap">
+                                            <span class="input-prefix">$</span>
+                                            <input type="number" id="diesel-price" name="diesel-price"
+                                                value="3.89" min="0" step="0.01"
+                                                placeholder="3.89">
+                                        </div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label for="truck-mpg">Truck Fuel Efficiency</label>
+                                        <div class="input-suffix-wrap">
+                                            <input type="number" id="truck-mpg" name="truck-mpg"
+                                                value="6.5" min="1" max="30" step="0.1">
+                                            <span class="input-suffix">MPG</span>
+                                        </div>
+                                        <span class="field-hint">Auto-filled per equipment type</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Rate & Revenue -->
+                            <div class="calc-card">
+                                <div class="calc-card-title">💵 Load Rate &amp; Revenue</div>
+
+                                <div class="form-row">
+                                    <div class="form-field">
+                                        <label for="rate-type">Rate Type</label>
+                                        <select id="rate-type" name="rate-type">
+                                            <option value="per-mile">Per Mile</option>
+                                            <option value="flat">Flat Rate</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-field">
+                                        <label for="rate-amount">Rate Amount</label>
+                                        <div class="input-prefix-wrap">
+                                            <span class="input-prefix">$</span>
+                                            <input type="number" id="rate-amount" name="rate-amount"
+                                                placeholder="e.g. 2.50 per mile or 1800 flat"
+                                                min="0" step="0.01">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Expenses -->
+                            <div class="calc-card">
+                                <div class="calc-card-title">📋 Expenses &amp; Deductions</div>
+
+                                <div class="form-row">
+                                    <div class="form-field">
+                                        <label for="dispatcher-fee">Dispatcher Fee</label>
+                                        <div class="input-suffix-wrap">
+                                            <input type="number" id="dispatcher-fee" name="dispatcher-fee"
+                                                value="8" min="0" max="100" step="0.5">
+                                            <span class="input-suffix">%</span>
+                                        </div>
+                                        <span class="field-hint">% of gross revenue</span>
+                                    </div>
+                                    <div class="form-field">
+                                        <label for="tolls">Tolls</label>
+                                        <div class="input-prefix-wrap">
+                                            <span class="input-prefix">$</span>
+                                            <input type="number" id="tolls" name="tolls"
+                                                value="0" min="0" step="1"
+                                                placeholder="0">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-row form-row-3">
+                                    <div class="form-field">
+                                        <label for="lumper-fees">Lumper Fees</label>
+                                        <div class="input-prefix-wrap">
+                                            <span class="input-prefix">$</span>
+                                            <input type="number" id="lumper-fees" name="lumper-fees"
+                                                value="0" min="0" step="1"
+                                                placeholder="0">
+                                        </div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label for="scale-fees">Scale / Weigh Station</label>
+                                        <div class="input-prefix-wrap">
+                                            <span class="input-prefix">$</span>
+                                            <input type="number" id="scale-fees" name="scale-fees"
+                                                value="0" min="0" step="1"
+                                                placeholder="0">
+                                        </div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label for="other-costs">Other Costs</label>
+                                        <div class="input-prefix-wrap">
+                                            <span class="input-prefix">$</span>
+                                            <input type="number" id="other-costs" name="other-costs"
+                                                value="0" min="0" step="1"
+                                                placeholder="0">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Actions -->
+                            <div class="calc-actions">
+                                <button type="button" class="btn-calc btn-calc-primary" id="save-calc-btn">💾 Save Calculation</button>
+                                <button type="button" class="btn-calc btn-calc-secondary" id="print-calc-btn">🖨 Print</button>
+                                <button type="button" class="btn-calc btn-calc-secondary" id="reset-calc-btn">↺ Reset</button>
+                            </div>
+
+                        </form><!-- /calc-form -->
+
+                        <!-- Saved History -->
+                        <div class="calc-card" style="margin-top:1.5rem">
+                            <div class="calc-card-title" style="justify-content:space-between">
+                                <span>🗂 Saved Calculations</span>
+                                <button class="btn-calc-sm" id="clear-history-btn">Clear All</button>
+                            </div>
+                            <div id="calc-history">
+                                <p class="no-history">No saved calculations yet.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ==================== RIGHT: RESULTS ==================== -->
+                    <div class="results-panel" id="results-panel" role="region" aria-label="Calculation results" aria-live="polite">
+
+                        <!-- Net Profit Banner -->
+                        <div class="results-summary-banner">
+                            <div class="results-net-label">Estimated Net Profit</div>
+                            <div class="results-net-amount" id="res-net-banner">—</div>
+                            <div class="results-net-permile" id="res-net-per-mi-banner">— per mile</div>
+                            <div class="profit-meter" role="meter" aria-label="Profit margin">
+                                <div class="profit-meter-bar" id="profit-meter-bar"></div>
+                            </div>
+                            <div class="profit-meter-label" id="profit-meter-label"></div>
+                        </div>
+
+                        <!-- Route Summary -->
+                        <div class="calc-card">
+                            <div class="calc-card-title">🗺 Route Summary</div>
+                            <div class="result-row">
+                                <span class="result-label">Total Distance</span>
+                                <span class="result-value highlight" id="res-miles">—</span>
+                            </div>
+                            <div class="result-row">
+                                <span class="result-label">Estimated Drive Time</span>
+                                <span class="result-value" id="res-drive-time">—</span>
+                            </div>
+                        </div>
+
+                        <!-- Fuel Breakdown -->
+                        <div class="calc-card">
+                            <div class="calc-card-title">⛽ Fuel Breakdown</div>
+                            <div class="result-row">
+                                <span class="result-label">Gallons Needed</span>
+                                <span class="result-value" id="res-gallons">—</span>
+                            </div>
+                            <div class="result-row">
+                                <span class="result-label">Total Fuel Cost</span>
+                                <span class="result-value highlight" id="res-fuel-cost">—</span>
+                            </div>
+                            <div class="result-row">
+                                <span class="result-label">Fuel Cost per Mile</span>
+                                <span class="result-value" id="res-fuel-per-mi">—</span>
+                            </div>
+                        </div>
+
+                        <!-- Revenue Breakdown -->
+                        <div class="calc-card">
+                            <div class="calc-card-title">💵 Revenue</div>
+                            <div class="result-row">
+                                <span class="result-label">Gross Revenue</span>
+                                <span class="result-value highlight" id="res-gross">—</span>
+                            </div>
+                            <div class="result-row">
+                                <span class="result-label">Revenue per Mile</span>
+                                <span class="result-value" id="res-rate-per-mi">—</span>
+                            </div>
+                        </div>
+
+                        <!-- Expense Breakdown -->
+                        <div class="calc-card">
+                            <div class="calc-card-title">📋 Expense Breakdown</div>
+                            <div class="result-row">
+                                <span class="result-label">Fuel Cost</span>
+                                <span class="result-value" id="res-fuel-cost-exp">—</span>
+                            </div>
+                            <div class="result-row">
+                                <span class="result-label">Dispatcher Fee</span>
+                                <span class="result-value" id="res-disp-fee">—</span>
+                            </div>
+                            <div class="result-row">
+                                <span class="result-label">Tolls</span>
+                                <span class="result-value" id="res-tolls">—</span>
+                            </div>
+                            <div class="result-row">
+                                <span class="result-label">Lumper Fees</span>
+                                <span class="result-value" id="res-lumper">—</span>
+                            </div>
+                            <div class="result-row">
+                                <span class="result-label">Scale Fees</span>
+                                <span class="result-value" id="res-scale">—</span>
+                            </div>
+                            <div class="result-row">
+                                <span class="result-label">Other Costs</span>
+                                <span class="result-value" id="res-other">—</span>
+                            </div>
+                            <div class="result-divider"></div>
+                            <div class="result-total-row">
+                                <span class="result-total-label">Total Expenses</span>
+                                <span class="result-total-value highlight" id="res-total-exp">—</span>
+                            </div>
+                            <div class="result-row" style="padding-top:0.55rem">
+                                <span class="result-label">Expense per Mile</span>
+                                <span class="result-value" id="res-exp-per-mi">—</span>
+                            </div>
+                        </div>
+
+                        <!-- Bottom Line -->
+                        <div class="calc-card" style="border-color:rgba(255,153,0,0.2)">
+                            <div class="calc-card-title">📊 Bottom Line</div>
+                            <div class="result-row">
+                                <span class="result-label">Net Profit</span>
+                                <span class="result-value" id="res-net" style="font-size:1.1rem;font-weight:900">—</span>
+                            </div>
+                            <div class="result-row">
+                                <span class="result-label">Net per Mile</span>
+                                <span class="result-value" id="res-net-per-mi">—</span>
+                            </div>
+                            <div class="result-divider"></div>
+                            <div class="result-row">
+                                <span class="result-label" title="Minimum rate per mile to break even">Break-Even Rate</span>
+                                <span class="result-value" id="res-breakeven">—</span>
+                            </div>
+                        </div>
+
+                        <div style="text-align:center;margin-top:0.5rem">
+                            <button class="btn-calc btn-calc-primary" id="save-calc-btn-2" onclick="document.getElementById('save-calc-btn').click()" style="width:100%;justify-content:center">💾 Save This Calculation</button>
+                        </div>
+
+                    </div><!-- /results-panel -->
+
+                </div><!-- /calc-layout -->
+            </div><!-- /container -->
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>KEM Logistics</h3>
+                    <p>Delivering excellence in freight and logistics solutions nationwide.</p>
+                </div>
+                <div class="footer-column">
+                    <h4>Tools</h4>
+                    <ul>
+                        <li><a href="dispatch.html">Dispatch Portal</a></li>
+                        <li><a href="calculator.html">Trip Calculator</a></li>
+                        <li><a href="tracking.html">Track Shipment</a></li>
+                        <li><a href="quote.html">Get a Quote</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="services.html">Full Truckload (FTL)</a></li>
+                        <li><a href="services.html">Less-Than-Truckload (LTL)</a></li>
+                        <li><a href="services.html#dispatching">Freight Dispatching</a></li>
+                        <li><a href="services.html">Expedited Shipping</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><a href="tel:+14708363519">(470) 836-3519</a></li>
+                        <li><a href="mailto:admin.info@kemlogisticsnsolutions.com">admin.info@kemlogisticsnsolutions.com</a></li>
+                        <li><a href="about.html#contact">Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 KEM Logistics And Solutions LLC. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/calculator.js"></script>
+</body>
+</html>
