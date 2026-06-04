@@ -163,6 +163,7 @@ function initTabs() {
             if (target === 'dashboard') renderDashboard();
             if (target === 'drivers')   renderDrivers();
             if (target === 'documents') renderDocuments();
+            if (target === 'trip')      runTripCalc();
         });
     });
 }
@@ -827,6 +828,436 @@ function esc(str) {
         .replace(/'/g, '&#39;');
 }
 
+/* ============================================================
+   AI Trip Analyzer Engine
+   ============================================================ */
+
+/* ---- City coordinate database (shared with calculator.js) ---- */
+const AI_CITIES = {
+    "Birmingham, AL":[33.520,-86.803],"Mobile, AL":[30.694,-88.043],"Montgomery, AL":[32.361,-86.279],
+    "Phoenix, AZ":[33.448,-112.074],"Tucson, AZ":[32.254,-110.912],"Flagstaff, AZ":[35.198,-111.651],
+    "Little Rock, AR":[34.746,-92.289],"Fort Smith, AR":[35.386,-94.398],
+    "Los Angeles, CA":[34.052,-118.244],"San Francisco, CA":[37.774,-122.419],"San Diego, CA":[32.715,-117.157],"Sacramento, CA":[38.581,-121.494],"Fresno, CA":[36.737,-119.787],"Bakersfield, CA":[35.373,-119.019],
+    "Denver, CO":[39.739,-104.984],"Colorado Springs, CO":[38.834,-104.821],
+    "Hartford, CT":[41.763,-72.685],
+    "Wilmington, DE":[39.744,-75.547],
+    "Miami, FL":[25.775,-80.209],"Orlando, FL":[28.538,-81.381],"Tampa, FL":[27.947,-82.459],"Jacksonville, FL":[30.332,-81.656],"Fort Lauderdale, FL":[26.122,-80.143],"Tallahassee, FL":[30.437,-84.281],
+    "Atlanta, GA":[33.749,-84.388],"Savannah, GA":[32.083,-81.100],"Augusta, GA":[33.471,-81.975],"Columbus, GA":[32.461,-84.987],"Macon, GA":[32.840,-83.632],
+    "Boise, ID":[43.615,-116.202],
+    "Chicago, IL":[41.878,-87.630],"Rockford, IL":[42.271,-89.094],"Springfield, IL":[39.798,-89.655],"Peoria, IL":[40.693,-89.589],
+    "Indianapolis, IN":[39.768,-86.158],"Fort Wayne, IN":[41.130,-85.129],"Evansville, IN":[37.975,-87.556],
+    "Des Moines, IA":[41.600,-93.609],"Cedar Rapids, IA":[41.977,-91.666],
+    "Wichita, KS":[37.697,-97.337],"Kansas City, KS":[39.114,-94.627],
+    "Louisville, KY":[38.252,-85.759],"Lexington, KY":[38.029,-84.495],
+    "New Orleans, LA":[29.951,-90.072],"Baton Rouge, LA":[30.451,-91.154],"Shreveport, LA":[32.525,-93.750],
+    "Baltimore, MD":[39.290,-76.612],
+    "Boston, MA":[42.360,-71.058],"Worcester, MA":[42.263,-71.802],
+    "Detroit, MI":[42.331,-83.046],"Grand Rapids, MI":[42.966,-85.656],"Flint, MI":[43.013,-83.688],"Lansing, MI":[42.732,-84.555],
+    "Minneapolis, MN":[44.977,-93.265],"Saint Paul, MN":[44.944,-93.093],"Duluth, MN":[46.786,-92.100],
+    "Jackson, MS":[32.299,-90.184],"Gulfport, MS":[30.367,-89.093],
+    "Kansas City, MO":[39.099,-94.578],"Saint Louis, MO":[38.627,-90.199],"Springfield, MO":[37.215,-93.298],
+    "Billings, MT":[45.783,-108.501],
+    "Omaha, NE":[41.258,-95.938],"Lincoln, NE":[40.813,-96.703],
+    "Las Vegas, NV":[36.175,-115.137],"Reno, NV":[39.529,-119.814],
+    "Manchester, NH":[42.995,-71.461],
+    "Newark, NJ":[40.735,-74.172],"Trenton, NJ":[40.218,-74.756],
+    "Albuquerque, NM":[35.085,-106.651],
+    "New York, NY":[40.713,-74.006],"Buffalo, NY":[42.886,-78.879],"Rochester, NY":[43.157,-77.615],"Albany, NY":[42.652,-73.756],
+    "Charlotte, NC":[35.227,-80.843],"Raleigh, NC":[35.779,-78.638],"Greensboro, NC":[36.072,-79.792],"Durham, NC":[35.994,-78.899],
+    "Fargo, ND":[46.877,-96.789],
+    "Columbus, OH":[39.961,-82.999],"Cleveland, OH":[41.499,-81.695],"Cincinnati, OH":[39.103,-84.512],"Toledo, OH":[41.664,-83.555],
+    "Oklahoma City, OK":[35.467,-97.516],"Tulsa, OK":[36.154,-95.993],
+    "Portland, OR":[45.523,-122.676],"Eugene, OR":[44.052,-123.087],
+    "Philadelphia, PA":[39.952,-75.164],"Pittsburgh, PA":[40.440,-79.996],"Allentown, PA":[40.608,-75.491],
+    "Providence, RI":[41.823,-71.412],
+    "Columbia, SC":[34.000,-81.035],"Charleston, SC":[32.779,-79.931],"Greenville, SC":[34.852,-82.394],
+    "Sioux Falls, SD":[43.545,-96.731],
+    "Nashville, TN":[36.174,-86.767],"Memphis, TN":[35.149,-90.048],"Knoxville, TN":[35.961,-83.921],"Chattanooga, TN":[35.047,-85.309],
+    "Houston, TX":[29.760,-95.370],"Dallas, TX":[32.776,-96.797],"San Antonio, TX":[29.424,-98.494],"Austin, TX":[30.267,-97.743],"Fort Worth, TX":[32.753,-97.333],"El Paso, TX":[31.761,-106.487],"Amarillo, TX":[35.222,-101.831],"Lubbock, TX":[33.578,-101.856],"Corpus Christi, TX":[27.801,-97.396],"Laredo, TX":[27.506,-99.508],
+    "Salt Lake City, UT":[40.761,-111.891],
+    "Burlington, VT":[44.480,-73.213],
+    "Virginia Beach, VA":[36.853,-75.978],"Norfolk, VA":[36.851,-76.289],"Richmond, VA":[37.541,-77.434],"Roanoke, VA":[37.271,-79.941],
+    "Seattle, WA":[47.606,-122.332],"Spokane, WA":[47.659,-117.426],"Tacoma, WA":[47.253,-122.444],
+    "Charleston, WV":[38.350,-81.633],
+    "Milwaukee, WI":[43.039,-87.907],"Madison, WI":[43.073,-89.401],
+    "Cheyenne, WY":[41.140,-104.820],
+    "Washington, DC":[38.907,-77.037],
+};
+
+/* ---- Lane rate averages ($/mile) by state pair ---- */
+const LANE_RATES = {
+    'AL-FL':2.18,'AL-GA':2.08,'AL-TN':2.12,'AL-MS':2.05,'AL-TX':2.55,
+    'AZ-CA':2.40,'AZ-TX':2.58,'AZ-NV':1.98,'AZ-NM':2.05,'AZ-UT':2.15,
+    'CA-AZ':2.15,'CA-NV':1.88,'CA-OR':2.25,'CA-WA':2.38,'CA-TX':3.25,
+    'CO-TX':2.48,'CO-KS':2.22,'CO-UT':2.12,'CO-NM':2.18,'CO-WY':2.05,
+    'FL-GA':2.12,'FL-NC':2.38,'FL-VA':2.52,'FL-SC':2.20,'FL-AL':2.18,'FL-TX':2.75,
+    'GA-FL':2.08,'GA-NC':2.32,'GA-TN':2.18,'GA-TX':2.88,'GA-OH':2.68,'GA-SC':2.05,'GA-AL':2.08,'GA-VA':2.42,
+    'IL-IN':1.92,'IL-MO':2.12,'IL-WI':2.02,'IL-MI':2.18,'IL-TX':2.82,'IL-OH':2.10,'IL-KY':2.08,
+    'IN-IL':1.92,'IN-OH':1.98,'IN-MI':2.08,'IN-KY':2.02,'IN-TN':2.18,
+    'KY-IN':2.02,'KY-OH':2.08,'KY-TN':2.12,'KY-VA':2.20,'KY-IL':2.08,
+    'LA-TX':2.22,'LA-MS':2.08,'LA-AL':2.12,'LA-GA':2.45,
+    'MI-OH':2.02,'MI-IN':2.08,'MI-IL':2.18,'MI-WI':2.10,
+    'MO-IL':2.12,'MO-KS':2.18,'MO-TN':2.28,'MO-AR':2.15,'MO-TX':2.65,
+    'NC-VA':2.18,'NC-GA':2.32,'NC-SC':2.02,'NC-TN':2.25,'NC-FL':2.38,
+    'NJ-NY':2.88,'NJ-PA':2.22,'NJ-CT':2.58,'NJ-MD':2.30,
+    'NY-NJ':2.88,'NY-PA':2.32,'NY-CT':2.62,'NY-MA':2.55,'NY-FL':2.85,
+    'OH-IN':1.98,'OH-PA':2.18,'OH-MI':2.02,'OH-KY':2.08,'OH-IL':2.10,'OH-TN':2.25,
+    'PA-OH':2.18,'PA-NY':2.32,'PA-NJ':2.22,'PA-MD':2.28,'PA-VA':2.22,
+    'SC-NC':2.02,'SC-GA':1.98,'SC-VA':2.18,'SC-FL':2.22,
+    'TN-GA':2.18,'TN-KY':2.12,'TN-MS':2.08,'TN-NC':2.25,'TN-AL':2.12,'TN-TX':2.72,'TN-IL':2.38,
+    'TX-LA':2.22,'TX-OK':2.18,'TX-NM':2.38,'TX-CA':3.22,'TX-IL':2.85,'TX-GA':2.92,'TX-FL':2.78,'TX-CO':2.48,'TX-TN':2.72,
+    'VA-NC':2.18,'VA-MD':2.12,'VA-DC':2.32,'VA-WV':2.08,'VA-PA':2.22,'VA-GA':2.42,
+    'WA-OR':2.12,'WA-CA':2.42,'WA-ID':2.08,
+};
+
+/* ---- MPG defaults ---- */
+const TRIP_MPG = { 'Box Truck':10,'Dry Van':6.5,'Reefer':6,'Flatbed':6.5,'Step Deck':6.5,'Hot Shot':14,'RGN':5.5,'Tanker':6 };
+
+/* ---- Haversine distance ---- */
+function tripMiles(c1, c2) {
+    const R = 3958.8, toR = Math.PI / 180;
+    const dLat = (c2[0]-c1[0]) * toR, dLon = (c2[1]-c1[1]) * toR;
+    const a = Math.sin(dLat/2)**2 + Math.cos(c1[0]*toR)*Math.cos(c2[0]*toR)*Math.sin(dLon/2)**2;
+    return Math.round(3958.8 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)) * 1.28);
+}
+
+/* ---- Fuzzy city search ---- */
+function fuzzyCity(query) {
+    if (!query || query.length < 2) return [];
+    const q = query.toLowerCase().trim();
+    return Object.keys(AI_CITIES)
+        .filter(c => c.toLowerCase().includes(q))
+        .sort((a, b) => {
+            const al = a.toLowerCase(), bl = b.toLowerCase();
+            const aStarts = al.startsWith(q) ? 0 : 1;
+            const bStarts = bl.startsWith(q) ? 0 : 1;
+            return aStarts - bStarts || a.localeCompare(b);
+        })
+        .slice(0, 10);
+}
+
+/* ---- Load grade based on net $/mile ---- */
+function loadGrade(netPerMile) {
+    if (netPerMile >= 1.80) return { grade: 'A+', cls: 'grade-a-plus', label: 'Excellent Load' };
+    if (netPerMile >= 1.20) return { grade: 'A',  cls: 'grade-a',      label: 'Great Load' };
+    if (netPerMile >= 0.75) return { grade: 'B',  cls: 'grade-b',      label: 'Good Load' };
+    if (netPerMile >= 0.40) return { grade: 'C',  cls: 'grade-c',      label: 'Fair Load' };
+    if (netPerMile >= 0.10) return { grade: 'D',  cls: 'grade-d',      label: 'Marginal Load' };
+    return                         { grade: 'F',  cls: 'grade-f',      label: 'Loss-Making Load' };
+}
+
+/* ---- Lane rate lookup ---- */
+function laneRate(originCity, destCity) {
+    const oState = (originCity.match(/,\s*([A-Z]{2})$/) || [])[1];
+    const dState = (destCity.match(/,\s*([A-Z]{2})$/) || [])[1];
+    if (!oState || !dState) return null;
+    return LANE_RATES[oState + '-' + dState] || null;
+}
+
+/* ---- Format helpers ---- */
+const ai$ = n => '$' + Math.abs(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const aiN = (n,d) => n.toLocaleString('en-US',{minimumFractionDigits:d||0,maximumFractionDigits:d||0});
+
+/* ---- Set result value with flash animation ---- */
+function aiSet(id, val, colorClass) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = val;
+    if (colorClass) el.className = 'ai-row-value ' + colorClass;
+    el.classList.add('num-flash');
+    setTimeout(() => el.classList.remove('num-flash'), 300);
+}
+
+/* ---- Show/hide results cards ---- */
+function showTripCards(show) {
+    ['ai-grade-card','ai-insights-card','ai-route-card','ai-revenue-card','ai-market-card','ai-proj-card'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = show ? '' : 'none';
+    });
+    const ph = document.getElementById('trip-placeholder');
+    if (ph) ph.style.display = show ? 'none' : '';
+}
+
+/* ---- Main calculation engine ---- */
+function runTripCalc() {
+    const g  = id => document.getElementById(id);
+    const v  = id => parseFloat(g(id)?.value) || 0;
+    const sv = id => g(id)?.value?.trim() || '';
+
+    const originCity = sv('ai-origin');
+    const destCity   = sv('ai-dest');
+    const manMiles   = v('t-miles');
+    const dhMiles    = v('t-deadhead');
+    const mpg        = v('t-mpg');
+    const dhMpg      = v('t-dh-mpg');
+    const diesel     = v('t-diesel');
+    const rateType   = sv('t-rate-type');
+    const rate       = v('t-rate');
+    const detention  = v('t-detention');
+    const fsc        = v('t-fsc');
+    const dispPct    = v('t-disp-pct');
+    const tolls      = v('t-tolls');
+    const lumper     = v('t-lumper');
+    const scale      = v('t-scale');
+    const other      = v('t-other');
+
+    /* Distance */
+    let miles = manMiles;
+    let autoCalc = false;
+    const hint = g('t-miles-hint');
+    if (!miles && AI_CITIES[originCity] && AI_CITIES[destCity]) {
+        miles = tripMiles(AI_CITIES[originCity], AI_CITIES[destCity]);
+        autoCalc = true;
+    }
+    if (hint) {
+        if (autoCalc) { hint.textContent = '≈ ' + aiN(miles) + ' mi (road estimate)'; hint.style.color = '#ff9900'; }
+        else if (miles) { hint.textContent = ''; }
+        else { hint.textContent = 'Type cities or enter miles manually'; hint.style.color = 'rgba(255,255,255,0.28)'; }
+    }
+
+    if (!miles || !rate) { showTripCards(false); return; }
+
+    /* Revenue */
+    const grossRev  = rateType === 'per-mile' ? rate * miles : rate;
+    const totalRev  = grossRev + detention + fsc;
+    const ratePerMi = miles > 0 ? grossRev / miles : 0;
+
+    /* Fuel */
+    const gallons    = mpg > 0 ? miles / mpg : 0;
+    const dhGallons  = dhMpg > 0 ? dhMiles / dhMpg : 0;
+    const loadedFuel = gallons * diesel;
+    const dhFuel     = dhGallons * diesel;
+    const totalFuel  = loadedFuel + dhFuel;
+
+    /* Expenses */
+    const dispFee   = totalRev * (dispPct / 100);
+    const miscExp   = tolls + lumper + scale + other;
+    const totalExp  = totalFuel + dispFee + miscExp;
+
+    /* Net */
+    const netProfit = totalRev - totalExp;
+    const netPerMi  = miles > 0 ? netProfit / miles : 0;
+    const expPerMi  = miles > 0 ? totalExp / miles : 0;
+    const breakEven = miles > 0 ? totalExp / miles : 0;
+
+    /* Drive time */
+    const hrs  = miles / 55;
+    const days = Math.floor(hrs / 11);
+    const rem  = (hrs % 11).toFixed(1);
+    const driveTime = days > 0 ? days + 'd ' + rem + 'h (HOS)' : hrs.toFixed(1) + 'h';
+
+    /* Grade */
+    const { grade, cls, label } = loadGrade(netPerMi);
+
+    /* Lane average */
+    const avgRate   = laneRate(originCity, destCity);
+    const laneDiff  = avgRate ? ((ratePerMi - avgRate) / avgRate * 100) : null;
+
+    /* Market needle position (0-100%) */
+    const needlePct = avgRate
+        ? Math.max(5, Math.min(95, 50 + (laneDiff / 2)))
+        : 50;
+
+    /* AI Insights */
+    const insights = buildInsights({ miles, grossRev, totalRev, netProfit, netPerMi, ratePerMi, totalFuel, diesel, diesel, avgRate, laneDiff, dispPct, days, detention, dhMiles, breakEven });
+
+    /* ---- Render ---- */
+    showTripCards(true);
+
+    /* Grade card */
+    const gradeCard = g('ai-grade-card');
+    if (gradeCard) {
+        gradeCard.className = 'ai-grade-card ' + cls;
+    }
+    aiSet('ai-grade-val', grade);
+    g('load-grade-label') && (g('load-grade-label').textContent = label);
+
+    const netColor = netProfit >= 0 ? '#00d4aa' : '#ff6b6b';
+    const netEl = g('ai-net-profit');
+    if (netEl) { netEl.textContent = (netProfit < 0 ? '−' : '') + ai$(netProfit); netEl.style.color = netColor; }
+    const netMiEl = g('ai-net-per-mile');
+    if (netMiEl) { netMiEl.textContent = (netPerMi < 0 ? '−' : '') + ai$(Math.abs(netPerMi)) + '/mi net'; netMiEl.style.color = netColor; }
+
+    const profitPct = totalRev > 0 ? Math.max(0, Math.min(100, (netProfit / totalRev) * 100)) : 0;
+    const bar = g('ai-profit-bar');
+    if (bar) { bar.style.width = profitPct + '%'; bar.style.background = netProfit >= 0 ? 'linear-gradient(90deg,#00d4aa,#00ff88)' : 'linear-gradient(90deg,#ff6b6b,#cc0000)'; }
+    const barLbl = g('ai-profit-bar-label');
+    if (barLbl) barLbl.textContent = netProfit >= 0 ? 'Profit margin: ' + profitPct.toFixed(1) + '%' : 'Operating at a loss';
+
+    /* Insights */
+    const insEl = g('ai-insights-list');
+    if (insEl) insEl.innerHTML = insights.map(i => '<div class="ai-insight-item ' + i.type + '"><span class="ai-insight-icon">' + i.icon + '</span><span>' + i.text + '</span></div>').join('');
+
+    /* Route & Fuel */
+    aiSet('ai-miles',      aiN(miles) + ' mi', 'orange');
+    aiSet('ai-dh-miles',   dhMiles > 0 ? aiN(dhMiles) + ' mi' : '—');
+    aiSet('ai-drive-time', driveTime);
+    aiSet('ai-gallons',    aiN(gallons, 1) + ' gal');
+    aiSet('ai-dh-fuel',    dhFuel > 0 ? ai$(dhFuel) : '—');
+    aiSet('ai-fuel-total', ai$(totalFuel), 'orange');
+    aiSet('ai-fuel-per-mi',ai$(totalFuel / miles) + '/mi');
+
+    /* Revenue */
+    aiSet('ai-gross',     ai$(grossRev), 'orange');
+    aiSet('ai-extras',    (detention + fsc) > 0 ? ai$(detention + fsc) : '—');
+    aiSet('ai-total-rev', ai$(totalRev), 'orange');
+    aiSet('ai-exp-fuel',  ai$(totalFuel));
+    aiSet('ai-exp-disp',  ai$(dispFee));
+    aiSet('ai-exp-misc',  ai$(miscExp));
+    const netTotalEl = g('ai-net-total');
+    if (netTotalEl) { netTotalEl.textContent = (netProfit < 0 ? '−' : '') + ai$(Math.abs(netProfit)); netTotalEl.style.color = netColor; }
+
+    /* Market */
+    aiSet('ai-your-rate',  ai$(ratePerMi) + '/mi', 'orange');
+    aiSet('ai-lane-avg',   avgRate ? ai$(avgRate) + '/mi' : 'N/A');
+    aiSet('ai-breakeven',  ai$(breakEven) + '/mi');
+    const mktEl = g('ai-market-pos');
+    if (mktEl) {
+        if (laneDiff === null) { mktEl.textContent = 'N/A'; mktEl.className = 'ai-row-value'; }
+        else if (laneDiff > 10)  { mktEl.textContent = '↑ ' + Math.abs(laneDiff).toFixed(0) + '% Above Market'; mktEl.className = 'ai-row-value green'; }
+        else if (laneDiff < -10) { mktEl.textContent = '↓ ' + Math.abs(laneDiff).toFixed(0) + '% Below Market'; mktEl.className = 'ai-row-value red'; }
+        else                      { mktEl.textContent = '≈ At Market Rate'; mktEl.className = 'ai-row-value'; }
+    }
+    const needle = g('ai-rate-needle');
+    if (needle) needle.style.left = needlePct + '%';
+
+    /* Projections */
+    aiSet('ai-proj-per-mi',  ai$(netPerMi) + '/mi', netPerMi >= 0 ? 'green' : 'red');
+    aiSet('ai-proj-weekly',  ai$(netProfit * 3));
+    aiSet('ai-proj-monthly', ai$(netProfit * 12));
+    aiSet('ai-proj-annual',  ai$(netProfit * 144), 'green');
+}
+
+/* ---- Build AI insight bullets ---- */
+function buildInsights({ miles, grossRev, totalRev, netProfit, netPerMi, ratePerMi, totalFuel, diesel, avgRate, laneDiff, dispPct, days, detention, dhMiles, breakEven }) {
+    const tips = [];
+    const fuelPct = totalRev > 0 ? (totalFuel / totalRev * 100) : 0;
+
+    /* Grade assessment */
+    if (netPerMi >= 1.8)  tips.push({ type:'good', icon:'🏆', text:'Outstanding margin — this is an A+ load. Accept immediately.' });
+    else if (netPerMi >= 1.2) tips.push({ type:'good', icon:'✅', text:'Strong margin at ' + ai$(netPerMi) + '/mi net. Good load to accept.' });
+    else if (netPerMi >= 0.75) tips.push({ type:'info', icon:'👍', text:'Decent margin. Solid load — look for opportunities to negotiate higher.' });
+    else if (netPerMi >= 0.4)  tips.push({ type:'warn', icon:'⚠️', text:'Thin margin at ' + ai$(netPerMi) + '/mi. Consider negotiating rate up.' });
+    else if (netPerMi >= 0.1)  tips.push({ type:'bad',  icon:'🔴', text:'Very low margin. Only accept if necessary to reposition.' });
+    else                        tips.push({ type:'bad',  icon:'🚫', text:'Operating at a loss. Do not accept without renegotiating to at least ' + ai$(breakEven) + '/mi.' });
+
+    /* Lane rate comparison */
+    if (laneDiff !== null) {
+        if (laneDiff > 20)       tips.push({ type:'good', icon:'💰', text:'Rate is ' + Math.abs(laneDiff).toFixed(0) + '% above lane average. Excellent negotiation!' });
+        else if (laneDiff > 5)   tips.push({ type:'good', icon:'📈', text:'Rate is slightly above the ' + ai$(avgRate || 0) + '/mi lane average. Good rate.' });
+        else if (laneDiff > -5)  tips.push({ type:'info', icon:'📊', text:'Rate matches the lane average of ' + ai$(avgRate || 0) + '/mi for this corridor.' });
+        else if (laneDiff > -20) tips.push({ type:'warn', icon:'📉', text:'Rate is below lane average (' + ai$(avgRate || 0) + '/mi). Try negotiating to ' + ai$(avgRate || 0) + '/mi.' });
+        else                     tips.push({ type:'bad',  icon:'❌', text:'Rate is significantly below market (' + ai$(avgRate || 0) + '/mi). Push for a higher rate before accepting.' });
+    }
+
+    /* Fuel impact */
+    if (fuelPct > 40)      tips.push({ type:'bad',  icon:'⛽', text:'Fuel is ' + fuelPct.toFixed(0) + '% of revenue — very high. Negotiate a fuel surcharge (FSC) or deadhead cost coverage.' });
+    else if (fuelPct > 28) tips.push({ type:'warn', icon:'⛽', text:'Fuel is ' + fuelPct.toFixed(0) + '% of revenue. Ask broker about FSC on this lane.' });
+    else                   tips.push({ type:'good', icon:'⛽', text:'Fuel is ' + fuelPct.toFixed(0) + '% of revenue — healthy fuel-to-revenue ratio.' });
+
+    /* Drive time */
+    if (days > 2)    tips.push({ type:'info', icon:'🕒', text:days + '-day trip at 11h HOS. Confirm delivery window matches your schedule.' });
+    else if (days > 0) tips.push({ type:'info', icon:'🕒', text:'Approximately ' + days + '-day run — manageable for a team or solo driver.' });
+    else             tips.push({ type:'good', icon:'🕒', text:'Short run — completable in one HOS shift. Good turnaround load.' });
+
+    /* Deadhead */
+    if (dhMiles > miles * 0.3) tips.push({ type:'warn', icon:'🔄', text:'Deadhead (' + aiN(dhMiles) + ' mi) is over 30% of loaded miles. Consider nearby loads to reduce repositioning cost.' });
+    else if (dhMiles > 0)      tips.push({ type:'info', icon:'🔄', text:'Deadhead of ' + aiN(dhMiles) + ' mi factored into calculations.' });
+
+    /* Dispatcher fee note */
+    if (dispPct > 10) tips.push({ type:'warn', icon:'💼', text:'Dispatcher fee is ' + dispPct + '%. Standard is 6-10%. Confirm your agreement.' });
+
+    return tips.slice(0, 6);
+}
+
+/* ---- AI City Search Autocomplete ---- */
+function initAiSearch() {
+    setupCityInput('ai-origin', 'ai-origin-drop', id => { document.getElementById(id) && runTripCalc(); });
+    setupCityInput('ai-dest',   'ai-dest-drop',   id => { document.getElementById(id) && runTripCalc(); });
+
+    /* Swap button */
+    document.getElementById('ai-swap-btn')?.addEventListener('click', () => {
+        const o = document.getElementById('ai-origin');
+        const d = document.getElementById('ai-dest');
+        if (!o || !d) return;
+        [o.value, d.value] = [d.value, o.value];
+        runTripCalc();
+    });
+
+    /* Quick lane buttons */
+    document.querySelectorAll('.quick-lane-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const o = document.getElementById('ai-origin');
+            const d = document.getElementById('ai-dest');
+            if (o) o.value = btn.dataset.origin;
+            if (d) d.value = btn.dataset.dest;
+            runTripCalc();
+        });
+    });
+
+    /* Equipment → MPG auto-fill */
+    document.getElementById('t-equipment')?.addEventListener('change', e => {
+        const mpgEl = document.getElementById('t-mpg');
+        if (mpgEl && TRIP_MPG[e.target.value]) mpgEl.value = TRIP_MPG[e.target.value];
+        runTripCalc();
+    });
+
+    /* Live recalc on all trip inputs */
+    document.getElementById('panel-trip')?.querySelectorAll('input, select').forEach(el => {
+        el.addEventListener('input', runTripCalc);
+        el.addEventListener('change', runTripCalc);
+    });
+}
+
+function setupCityInput(inputId, dropId, onSelect) {
+    const input = document.getElementById(inputId);
+    const drop  = document.getElementById(dropId);
+    if (!input || !drop) return;
+
+    let activeIdx = -1;
+
+    input.addEventListener('input', () => {
+        const results = fuzzyCity(input.value);
+        activeIdx = -1;
+        if (!results.length) {
+            drop.innerHTML = '<div class="ai-dropdown-empty">No cities found</div>';
+        } else {
+            drop.innerHTML = results.map((c, i) => {
+                const [city, state] = c.split(', ');
+                const qLow = input.value.toLowerCase();
+                const highlighted = city.replace(new RegExp('(' + qLow.replace(/[^a-z]/gi,'') + ')', 'gi'), '<strong>$1</strong>');
+                return '<div class="ai-dropdown-item" data-idx="' + i + '" data-city="' + esc(c) + '">' +
+                    '<span class="city-name">' + highlighted + '</span>' +
+                    '<span class="city-state">' + state + '</span>' +
+                '</div>';
+            }).join('');
+        }
+        drop.classList.add('open');
+        runTripCalc();
+
+        drop.querySelectorAll('.ai-dropdown-item').forEach(item => {
+            item.addEventListener('mousedown', e => {
+                e.preventDefault();
+                input.value = item.dataset.city;
+                drop.classList.remove('open');
+                runTripCalc();
+            });
+        });
+    });
+
+    input.addEventListener('keydown', e => {
+        const items = drop.querySelectorAll('.ai-dropdown-item');
+        if (e.key === 'ArrowDown')  { e.preventDefault(); activeIdx = Math.min(activeIdx+1, items.length-1); }
+        if (e.key === 'ArrowUp')    { e.preventDefault(); activeIdx = Math.max(activeIdx-1, 0); }
+        if (e.key === 'Enter' && activeIdx >= 0) { input.value = items[activeIdx]?.dataset.city || input.value; drop.classList.remove('open'); runTripCalc(); }
+        if (e.key === 'Escape')     { drop.classList.remove('open'); }
+        items.forEach((item, i) => item.classList.toggle('selected', i === activeIdx));
+    });
+
+    input.addEventListener('blur', () => setTimeout(() => drop.classList.remove('open'), 180));
+    input.addEventListener('focus', () => { if (input.value.length >= 2) input.dispatchEvent(new Event('input')); });
+}
+
 /* ---- Init ---- */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -837,6 +1268,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initFilters();
     initDocUploads();
     initStatCards();
+    initAiSearch();
     updateStats();
 
     /* Cross-tab live sync — stats and active panel refresh when another tab changes data */

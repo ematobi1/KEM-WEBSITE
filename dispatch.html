@@ -98,6 +98,7 @@
                     <button class="tab-btn"        role="tab" aria-selected="false" data-tab="drivers"    aria-controls="panel-drivers">🚛 Driver Roster</button>
                     <button class="tab-btn"        role="tab" aria-selected="false" data-tab="dashboard"  aria-controls="panel-dashboard">📊 Active Loads</button>
                     <button class="tab-btn"        role="tab" aria-selected="false" data-tab="documents"  aria-controls="panel-documents">📁 Documents</button>
+                    <button class="tab-btn"        role="tab" aria-selected="false" data-tab="trip"       aria-controls="panel-trip">⚡ AI Trip Analyzer</button>
                 </div>
 
                 <!-- =============================================
@@ -359,6 +360,311 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- =============================================
+                     PANEL 5: AI TRIP ANALYZER
+                     ============================================= -->
+                <div class="tab-panel" id="panel-trip" role="tabpanel">
+
+                    <!-- AI Search Panel -->
+                    <div class="ai-search-panel">
+                        <div class="ai-panel-header">
+                            <span class="ai-badge">⚡ AI-Powered</span>
+                            <span class="ai-panel-title">Intelligent Route &amp; Profit Analyzer</span>
+                        </div>
+
+                        <div class="ai-route-row">
+                            <!-- Origin -->
+                            <div class="ai-city-wrap">
+                                <span class="ai-city-label">📍 Origin City</span>
+                                <div style="position:relative">
+                                    <span class="ai-city-icon">🏙</span>
+                                    <input type="text" id="ai-origin" class="ai-city-input"
+                                        placeholder="Start typing a city…" autocomplete="off">
+                                    <div class="ai-dropdown" id="ai-origin-drop"></div>
+                                </div>
+                            </div>
+
+                            <!-- Swap -->
+                            <div style="display:flex;flex-direction:column;justify-content:flex-end">
+                                <button type="button" class="ai-swap-btn" id="ai-swap-btn" title="Swap origin and destination" aria-label="Swap cities">⇄</button>
+                            </div>
+
+                            <!-- Destination -->
+                            <div class="ai-city-wrap">
+                                <span class="ai-city-label">🏁 Destination City</span>
+                                <div style="position:relative">
+                                    <span class="ai-city-icon">📦</span>
+                                    <input type="text" id="ai-dest" class="ai-city-input"
+                                        placeholder="Start typing a city…" autocomplete="off">
+                                    <div class="ai-dropdown" id="ai-dest-drop"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Lanes -->
+                        <div>
+                            <span style="font-size:0.68rem;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.08em;margin-right:0.5rem">Popular Lanes:</span>
+                            <div class="quick-lanes" id="quick-lanes-container">
+                                <button class="quick-lane-btn" data-origin="Atlanta, GA"     data-dest="Chicago, IL">ATL → CHI</button>
+                                <button class="quick-lane-btn" data-origin="Houston, TX"     data-dest="Atlanta, GA">HOU → ATL</button>
+                                <button class="quick-lane-btn" data-origin="Dallas, TX"      data-dest="Los Angeles, CA">DAL → LAX</button>
+                                <button class="quick-lane-btn" data-origin="Chicago, IL"     data-dest="New York, NY">CHI → NYC</button>
+                                <button class="quick-lane-btn" data-origin="Miami, FL"       data-dest="New York, NY">MIA → NYC</button>
+                                <button class="quick-lane-btn" data-origin="Los Angeles, CA" data-dest="Phoenix, AZ">LAX → PHX</button>
+                                <button class="quick-lane-btn" data-origin="Nashville, TN"   data-dest="Dallas, TX">NSH → DAL</button>
+                                <button class="quick-lane-btn" data-origin="Charlotte, NC"   data-dest="Atlanta, GA">CLT → ATL</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Calculator Grid -->
+                    <div class="trip-calc-grid">
+
+                        <!-- LEFT: Inputs -->
+                        <div class="trip-inputs-col">
+
+                            <!-- Route Details -->
+                            <div class="panel-card">
+                                <div class="panel-card-header">
+                                    <h2>🗺 Route Details</h2>
+                                </div>
+                                <div class="trip-input-row">
+                                    <div class="trip-field">
+                                        <label for="t-miles">Total Miles <span style="color:rgba(255,255,255,0.28);font-weight:400">(auto or override)</span></label>
+                                        <div class="trip-sfx" data-sfx="mi">
+                                            <input type="number" id="t-miles" min="1" placeholder="Auto-calculated">
+                                        </div>
+                                        <span class="trip-field-hint" id="t-miles-hint"></span>
+                                    </div>
+                                    <div class="trip-field">
+                                        <label for="t-deadhead">Empty/Deadhead Miles</label>
+                                        <div class="trip-sfx" data-sfx="mi">
+                                            <input type="number" id="t-deadhead" value="0" min="0" placeholder="0">
+                                        </div>
+                                        <span class="trip-field-hint">Miles to drive empty to pickup</span>
+                                    </div>
+                                </div>
+                                <div class="trip-input-row">
+                                    <div class="trip-field">
+                                        <label for="t-equipment">Equipment Type</label>
+                                        <select id="t-equipment">
+                                            <option value="Dry Van">Dry Van (53')</option>
+                                            <option value="Reefer">Reefer</option>
+                                            <option value="Flatbed">Flatbed</option>
+                                            <option value="Box Truck">Box Truck</option>
+                                            <option value="Step Deck">Step Deck</option>
+                                            <option value="Hot Shot">Hot Shot</option>
+                                            <option value="RGN">RGN (Lowboy)</option>
+                                            <option value="Tanker">Tanker</option>
+                                        </select>
+                                    </div>
+                                    <div class="trip-field">
+                                        <label for="t-mpg">Truck MPG</label>
+                                        <input type="number" id="t-mpg" value="6.5" min="1" max="30" step="0.1">
+                                        <span class="trip-field-hint" id="t-mpg-hint">Auto-filled per equipment</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Fuel -->
+                            <div class="panel-card">
+                                <div class="panel-card-header">
+                                    <h2>⛽ Diesel &amp; Fuel</h2>
+                                    <a href="https://www.eia.gov/petroleum/gasdiesel/" target="_blank" rel="noopener noreferrer"
+                                        style="font-size:0.73rem;color:#00a8e1;font-weight:600">Live Price →</a>
+                                </div>
+                                <div class="trip-input-row">
+                                    <div class="trip-field">
+                                        <label for="t-diesel">Diesel Price / Gallon</label>
+                                        <div class="trip-pfx" data-pfx="$">
+                                            <input type="number" id="t-diesel" value="3.89" min="0" step="0.01">
+                                        </div>
+                                    </div>
+                                    <div class="trip-field">
+                                        <label for="t-dh-mpg">Deadhead MPG</label>
+                                        <input type="number" id="t-dh-mpg" value="7.5" min="1" max="30" step="0.1">
+                                        <span class="trip-field-hint">Usually higher than loaded MPG</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Rate -->
+                            <div class="panel-card">
+                                <div class="panel-card-header">
+                                    <h2>💵 Load Rate</h2>
+                                </div>
+                                <div class="trip-input-row">
+                                    <div class="trip-field">
+                                        <label for="t-rate-type">Rate Type</label>
+                                        <select id="t-rate-type">
+                                            <option value="per-mile">Per Mile</option>
+                                            <option value="flat">Flat Rate</option>
+                                        </select>
+                                    </div>
+                                    <div class="trip-field">
+                                        <label for="t-rate">Rate Amount</label>
+                                        <div class="trip-pfx" data-pfx="$">
+                                            <input type="number" id="t-rate" min="0" step="0.01" placeholder="e.g. 2.50 or 1800">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="trip-input-row">
+                                    <div class="trip-field">
+                                        <label for="t-detention">Detention Pay</label>
+                                        <div class="trip-pfx" data-pfx="$">
+                                            <input type="number" id="t-detention" value="0" min="0" step="1" placeholder="0">
+                                        </div>
+                                        <span class="trip-field-hint">Add if detained at shipper/receiver</span>
+                                    </div>
+                                    <div class="trip-field">
+                                        <label for="t-fsc">Fuel Surcharge</label>
+                                        <div class="trip-pfx" data-pfx="$">
+                                            <input type="number" id="t-fsc" value="0" min="0" step="1" placeholder="0">
+                                        </div>
+                                        <span class="trip-field-hint">Fuel surcharge if negotiated</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Expenses -->
+                            <div class="panel-card">
+                                <div class="panel-card-header">
+                                    <h2>📋 Costs &amp; Deductions</h2>
+                                </div>
+                                <div class="trip-input-row">
+                                    <div class="trip-field">
+                                        <label for="t-disp-pct">Dispatcher Fee</label>
+                                        <div class="trip-sfx" data-sfx="%">
+                                            <input type="number" id="t-disp-pct" value="8" min="0" max="100" step="0.5">
+                                        </div>
+                                        <span class="trip-field-hint">% of gross revenue</span>
+                                    </div>
+                                    <div class="trip-field">
+                                        <label for="t-tolls">Tolls</label>
+                                        <div class="trip-pfx" data-pfx="$">
+                                            <input type="number" id="t-tolls" value="0" min="0" step="1" placeholder="0">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="trip-input-row trip-input-row-3">
+                                    <div class="trip-field">
+                                        <label for="t-lumper">Lumper</label>
+                                        <div class="trip-pfx" data-pfx="$">
+                                            <input type="number" id="t-lumper" value="0" min="0" step="1" placeholder="0">
+                                        </div>
+                                    </div>
+                                    <div class="trip-field">
+                                        <label for="t-scale">Scale Fees</label>
+                                        <div class="trip-pfx" data-pfx="$">
+                                            <input type="number" id="t-scale" value="0" min="0" step="1" placeholder="0">
+                                        </div>
+                                    </div>
+                                    <div class="trip-field">
+                                        <label for="t-other">Other</label>
+                                        <div class="trip-pfx" data-pfx="$">
+                                            <input type="number" id="t-other" value="0" min="0" step="1" placeholder="0">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div><!-- /trip-inputs-col -->
+
+                        <!-- RIGHT: AI Results -->
+                        <div class="trip-results-panel" id="trip-results-panel">
+
+                            <!-- Placeholder shown before calculation -->
+                            <div class="trip-placeholder" id="trip-placeholder">
+                                <div class="trip-placeholder-icon">⚡</div>
+                                <p>Enter a route and rate above — AI will analyze your load instantly</p>
+                            </div>
+
+                            <!-- Grade Card (hidden until calculated) -->
+                            <div class="ai-grade-card" id="ai-grade-card" style="display:none">
+                                <div class="ai-grade-glow"></div>
+                                <div style="position:absolute;top:0;left:0;right:0;overflow:hidden;height:2px;display:none" id="ai-thinking-bar-wrap">
+                                    <div class="ai-thinking-bar"></div>
+                                </div>
+                                <div class="load-grade-value" id="ai-grade-val">B</div>
+                                <div class="load-grade-label">Load Grade</div>
+                                <div class="ai-net-profit" id="ai-net-profit">$0.00</div>
+                                <div class="ai-net-per-mile" id="ai-net-per-mile">$0.00/mi net</div>
+                                <div class="ai-profit-bar-wrap">
+                                    <div class="ai-profit-bar" id="ai-profit-bar"></div>
+                                </div>
+                                <div class="ai-profit-bar-label" id="ai-profit-bar-label"></div>
+                            </div>
+
+                            <!-- AI Insights -->
+                            <div class="ai-insights-card" id="ai-insights-card" style="display:none">
+                                <div class="ai-insights-title">
+                                    <span>🤖</span> AI Insights
+                                </div>
+                                <div id="ai-insights-list"></div>
+                            </div>
+
+                            <!-- Route + Fuel Breakdown -->
+                            <div class="ai-breakdown-card" id="ai-route-card" style="display:none">
+                                <div class="ai-breakdown-title">🗺 Route &amp; Fuel</div>
+                                <div class="ai-row"><span class="ai-row-label">Loaded Miles</span><span class="ai-row-value orange" id="ai-miles">—</span></div>
+                                <div class="ai-row"><span class="ai-row-label">Deadhead Miles</span><span class="ai-row-value" id="ai-dh-miles">—</span></div>
+                                <div class="ai-row"><span class="ai-row-label">Drive Time (11h HOS)</span><span class="ai-row-value" id="ai-drive-time">—</span></div>
+                                <div class="ai-row-divider"></div>
+                                <div class="ai-row"><span class="ai-row-label">Gallons (loaded)</span><span class="ai-row-value" id="ai-gallons">—</span></div>
+                                <div class="ai-row"><span class="ai-row-label">Deadhead Fuel</span><span class="ai-row-value" id="ai-dh-fuel">—</span></div>
+                                <div class="ai-row"><span class="ai-row-label">Total Fuel Cost</span><span class="ai-row-value orange" id="ai-fuel-total">—</span></div>
+                                <div class="ai-row"><span class="ai-row-label">Fuel Cost / Mile</span><span class="ai-row-value" id="ai-fuel-per-mi">—</span></div>
+                            </div>
+
+                            <!-- Revenue + Expenses -->
+                            <div class="ai-breakdown-card" id="ai-revenue-card" style="display:none">
+                                <div class="ai-breakdown-title">💵 Revenue &amp; Expenses</div>
+                                <div class="ai-row"><span class="ai-row-label">Gross Revenue</span><span class="ai-row-value orange" id="ai-gross">—</span></div>
+                                <div class="ai-row"><span class="ai-row-label">Detention + FSC</span><span class="ai-row-value" id="ai-extras">—</span></div>
+                                <div class="ai-row"><span class="ai-row-label">Total Revenue</span><span class="ai-row-value orange" id="ai-total-rev">—</span></div>
+                                <div class="ai-row-divider"></div>
+                                <div class="ai-row"><span class="ai-row-label">Fuel Cost</span><span class="ai-row-value" id="ai-exp-fuel">—</span></div>
+                                <div class="ai-row"><span class="ai-row-label">Dispatcher Fee</span><span class="ai-row-value" id="ai-exp-disp">—</span></div>
+                                <div class="ai-row"><span class="ai-row-label">Tolls + Lumper + Other</span><span class="ai-row-value" id="ai-exp-misc">—</span></div>
+                                <div class="ai-total-row">
+                                    <span class="ai-total-label">Net Profit</span>
+                                    <span class="ai-total-value" id="ai-net-total">—</span>
+                                </div>
+                            </div>
+
+                            <!-- Market Rate -->
+                            <div class="ai-breakdown-card" id="ai-market-card" style="display:none">
+                                <div class="ai-breakdown-title">📈 Market Rate Analysis</div>
+                                <div class="ai-row"><span class="ai-row-label">Your Rate / Mile</span><span class="ai-row-value orange" id="ai-your-rate">—</span></div>
+                                <div class="ai-row"><span class="ai-row-label">Lane Average</span><span class="ai-row-value" id="ai-lane-avg">—</span></div>
+                                <div class="ai-row"><span class="ai-row-label">Break-Even Rate</span><span class="ai-row-value" id="ai-breakeven">—</span></div>
+                                <div class="ai-row"><span class="ai-row-label">Market Position</span><span class="ai-row-value" id="ai-market-pos">—</span></div>
+                                <div class="rate-market-bar" id="ai-rate-bar" style="margin-top:0.85rem">
+                                    <div class="rate-market-track">
+                                        <div class="rate-market-needle" id="ai-rate-needle" style="left:50%"></div>
+                                    </div>
+                                    <div class="rate-market-labels">
+                                        <span>Below Market</span>
+                                        <span>Fair</span>
+                                        <span>Above Market</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Projections -->
+                            <div class="ai-breakdown-card" id="ai-proj-card" style="display:none">
+                                <div class="ai-breakdown-title">📊 Income Projections</div>
+                                <div class="ai-row"><span class="ai-row-label">Net / Mile</span><span class="ai-row-value" id="ai-proj-per-mi">—</span></div>
+                                <div class="ai-row"><span class="ai-row-label">Weekly (3 loads)</span><span class="ai-row-value" id="ai-proj-weekly">—</span></div>
+                                <div class="ai-row"><span class="ai-row-label">Monthly (12 loads)</span><span class="ai-row-value" id="ai-proj-monthly">—</span></div>
+                                <div class="ai-row"><span class="ai-row-label">Annual (144 loads)</span><span class="ai-row-value green" id="ai-proj-annual">—</span></div>
+                            </div>
+
+                        </div><!-- /trip-results-panel -->
+
+                    </div><!-- /trip-calc-grid -->
+                </div><!-- /panel-trip -->
 
             </div><!-- /container -->
         </section>
