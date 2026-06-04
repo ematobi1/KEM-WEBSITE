@@ -55,6 +55,8 @@ function showSection(id) {
     if (id === 'customers')  renderCustomers();
     if (id === 'analytics')  renderAnalytics();
     if (id === 'settings')   loadSettings();
+    if (id === 'dispatch')   { if (typeof updateStats === 'function') { updateStats(); renderDashboard(); renderDrivers(); } }
+    if (id === 'tripcalc')   { if (typeof calculate === 'function') calculate(); }
 }
 
 // ── Local Storage Helpers ─────────────────────────────────────────────────────

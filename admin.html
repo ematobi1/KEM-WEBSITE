@@ -9,6 +9,8 @@
     <link rel="icon" type="image/png" href="assets/icons/favicon.png">
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/dispatch.css">
+    <link rel="stylesheet" href="css/calculator.css">
 </head>
 <body class="admin-body">
     <!-- Admin Header -->
@@ -81,6 +83,27 @@
                         <path d="M12 1v6m0 6v6m-9-9h6m6 0h6"></path>
                     </svg>
                     Settings
+                </a>
+
+                <div style="height:1px;background:rgba(255,255,255,0.08);margin:0.75rem 0"></div>
+
+                <a href="#dispatch" class="nav-item" onclick="showSection('dispatch')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+                    </svg>
+                    Dispatch Portal
+                </a>
+                <a href="#analyzer" class="nav-item" onclick="showSection('analyzer')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>
+                    </svg>
+                    AI Trip Analyzer
+                </a>
+                <a href="#tripcalc" class="nav-item" onclick="showSection('tripcalc')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                    </svg>
+                    Trip Calculator
                 </a>
             </nav>
         </aside>
@@ -641,9 +664,415 @@
 
             <!-- Toast Notification -->
             <div id="toast" class="toast"></div>
+
+            <!-- ============================================================
+                 DISPATCH PORTAL SECTION
+                 ============================================================ -->
+            <section id="dispatch-section" class="admin-section">
+                <div class="section-header" style="margin-bottom:1.5rem">
+                    <div>
+                        <h1>Dispatch Portal</h1>
+                        <p class="section-sub">Submit loads, manage drivers, and track active shipments</p>
+                    </div>
+                </div>
+
+                <!-- Stats Bar -->
+                <div class="dispatch-stats" role="status" aria-label="Live dispatch statistics" style="justify-content:flex-start;margin-bottom:1.5rem">
+                    <div class="dispatch-stat" id="dstat-active-loads">
+                        <span class="dispatch-stat-number" id="stat-active-loads">—</span>
+                        <span class="dispatch-stat-label">Active Loads</span>
+                    </div>
+                    <div class="dispatch-stat" id="dstat-available">
+                        <span class="dispatch-stat-number" id="stat-available-drivers">—</span>
+                        <span class="dispatch-stat-label">Available Drivers</span>
+                    </div>
+                    <div class="dispatch-stat" id="dstat-on-load">
+                        <span class="dispatch-stat-number" id="stat-on-load">—</span>
+                        <span class="dispatch-stat-label">On Load</span>
+                    </div>
+                    <div class="dispatch-stat" id="dstat-delivered">
+                        <span class="dispatch-stat-number" id="stat-delivered">—</span>
+                        <span class="dispatch-stat-label">Delivered Today</span>
+                    </div>
+                </div>
+
+                <!-- Tab Navigation -->
+                <div class="dispatch-tabs" role="tablist">
+                    <button class="tab-btn active" data-tab="load-board">📋 Submit Load</button>
+                    <button class="tab-btn" data-tab="drivers">🚛 Driver Roster</button>
+                    <button class="tab-btn" data-tab="dashboard">📊 Active Loads</button>
+                    <button class="tab-btn" data-tab="documents">📁 Documents</button>
+                    <button class="tab-btn" data-tab="trip">⚡ AI Trip Analyzer</button>
+                </div>
+
+                <!-- Panel: Load Board -->
+                <div class="tab-panel active" id="panel-load-board">
+                    <div class="panel-card">
+                        <div class="panel-card-header">
+                            <h2><span class="panel-icon">📋</span> Load Submission Form</h2>
+                            <span style="font-size:0.75rem;color:rgba(255,255,255,0.35)">All fields marked * are required</span>
+                        </div>
+                        <form id="load-form" class="dispatch-form" novalidate>
+                            <p class="form-section-title">Origin &amp; Destination</p>
+                            <div class="form-row">
+                                <div class="form-group"><label for="origin-city">Origin City *</label><input type="text" id="origin-city" name="origin-city" placeholder="e.g. Atlanta" required></div>
+                                <div class="form-group"><label for="origin-state">Origin State *</label><input type="text" id="origin-state" name="origin-state" placeholder="GA" maxlength="2" required></div>
+                                <div class="form-group"><label for="dest-city">Destination City *</label><input type="text" id="dest-city" name="dest-city" placeholder="e.g. Chicago" required></div>
+                                <div class="form-group"><label for="dest-state">Destination State *</label><input type="text" id="dest-state" name="dest-state" placeholder="IL" maxlength="2" required></div>
+                            </div>
+                            <p class="form-section-title">Schedule</p>
+                            <div class="form-row">
+                                <div class="form-group"><label for="pickup-date">Pickup Date *</label><input type="date" id="pickup-date" name="pickup-date" required></div>
+                                <div class="form-group"><label for="pickup-time">Pickup Time</label><input type="time" id="pickup-time" name="pickup-time"></div>
+                                <div class="form-group"><label for="delivery-date">Delivery Date *</label><input type="date" id="delivery-date" name="delivery-date" required></div>
+                                <div class="form-group"><label for="delivery-time">Delivery Time</label><input type="time" id="delivery-time" name="delivery-time"></div>
+                            </div>
+                            <p class="form-section-title">Freight Details</p>
+                            <div class="form-row">
+                                <div class="form-group"><label for="commodity">Commodity *</label><input type="text" id="commodity" name="commodity" placeholder="e.g. Auto Parts" required></div>
+                                <div class="form-group"><label for="weight">Weight (lbs) *</label><input type="number" id="weight" name="weight" placeholder="42000" min="1" max="80000" required></div>
+                                <div class="form-group"><label for="equipment">Equipment Type *</label>
+                                    <select id="equipment" name="equipment" required>
+                                        <option value="">-- Select --</option>
+                                        <option value="Box Truck">Box Truck</option>
+                                        <option value="Dry Van">Dry Van (53')</option>
+                                        <option value="Flatbed">Flatbed</option>
+                                        <option value="Reefer">Reefer</option>
+                                        <option value="Step Deck">Step Deck</option>
+                                        <option value="Hot Shot">Hot Shot</option>
+                                        <option value="RGN">RGN</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group"><label for="dim-length">Length (in)</label><input type="number" id="dim-length" name="dim-length" placeholder="576"></div>
+                                <div class="form-group"><label for="dim-width">Width (in)</label><input type="number" id="dim-width" name="dim-width" placeholder="96"></div>
+                                <div class="form-group"><label for="dim-height">Height (in)</label><input type="number" id="dim-height" name="dim-height" placeholder="96"></div>
+                            </div>
+                            <p class="form-section-title">Rate</p>
+                            <div class="form-row">
+                                <div class="form-group"><label for="rate-type">Rate Type *</label><select id="rate-type" name="rate-type"><option value="flat">Flat Rate</option><option value="per-mile">Per Mile</option></select></div>
+                                <div class="form-group"><label for="rate">Rate Amount ($) *</label><input type="number" id="rate" name="rate" placeholder="2500" min="0" step="0.01" required></div>
+                            </div>
+                            <p class="form-section-title">Broker &amp; Reference</p>
+                            <div class="form-row">
+                                <div class="form-group"><label for="broker-name">Broker Name</label><input type="text" id="broker-name" name="broker-name" placeholder="e.g. XPO Logistics"></div>
+                                <div class="form-group"><label for="broker-contact">Broker Contact</label><input type="text" id="broker-contact" name="broker-contact" placeholder="Phone or Email"></div>
+                                <div class="form-group"><label for="reference-number">Reference #</label><input type="text" id="reference-number" name="reference-number" placeholder="Broker load number"></div>
+                            </div>
+                            <p class="form-section-title">Special Instructions</p>
+                            <div class="form-row">
+                                <div class="form-group" style="grid-column:1/-1"><label for="special-instructions">Notes</label><textarea id="special-instructions" name="special-instructions" placeholder="Team drivers, liftgate, appointment..."></textarea></div>
+                            </div>
+                            <div class="checkbox-group"><input type="checkbox" id="hazmat" name="hazmat"><label for="hazmat">⚠️ Hazmat shipment</label></div>
+                            <div class="form-actions">
+                                <button type="reset" class="btn-dispatch btn-dispatch-secondary">Clear</button>
+                                <button type="submit" class="btn-dispatch btn-dispatch-primary">📋 Submit Load to Board</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Panel: Drivers -->
+                <div class="tab-panel" id="panel-drivers">
+                    <div class="panel-card">
+                        <div class="panel-card-header"><h2><span class="panel-icon">🚛</span> Driver Roster</h2></div>
+                        <div class="drivers-grid" id="drivers-container"></div>
+                    </div>
+                </div>
+
+                <!-- Panel: Dashboard -->
+                <div class="tab-panel" id="panel-dashboard">
+                    <div class="panel-card">
+                        <div class="panel-card-header">
+                            <h2><span class="panel-icon">📊</span> Active Loads — <span id="active-load-count" style="color:#ff9900">0</span></h2>
+                            <div class="dashboard-filters">
+                                <button class="filter-btn active" data-filter="all">All</button>
+                                <button class="filter-btn" data-filter="pending">Pending</button>
+                                <button class="filter-btn" data-filter="dispatched">Dispatched</button>
+                                <button class="filter-btn" data-filter="in-transit">In Transit</button>
+                                <button class="filter-btn" data-filter="delivered">Delivered</button>
+                            </div>
+                        </div>
+                        <div class="loads-table-wrapper">
+                            <table class="loads-table" aria-live="polite">
+                                <thead><tr><th>Load #</th><th>Driver</th><th>Route</th><th>Status</th><th>Pickup</th><th>Delivery</th><th>Rate</th><th>Equipment</th><th>Actions</th></tr></thead>
+                                <tbody id="loads-tbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Panel: Documents -->
+                <div class="tab-panel" id="panel-documents">
+                    <div class="panel-card">
+                        <div class="panel-card-header"><h2><span class="panel-icon">📁</span> Document Management</h2></div>
+                        <div class="doc-grid">
+                            <div class="doc-upload-card"><input type="file" class="doc-upload-input" data-doc-type="Bill of Lading (BOL)" accept=".pdf,.jpg,.jpeg,.png"><span class="doc-upload-icon">📄</span><span class="doc-upload-label">Bill of Lading</span><span class="doc-upload-hint">PDF or image</span></div>
+                            <div class="doc-upload-card"><input type="file" class="doc-upload-input" data-doc-type="Proof of Delivery (POD)" accept=".pdf,.jpg,.jpeg,.png"><span class="doc-upload-icon">✅</span><span class="doc-upload-label">Proof of Delivery</span><span class="doc-upload-hint">PDF or image</span></div>
+                            <div class="doc-upload-card"><input type="file" class="doc-upload-input" data-doc-type="Rate Confirmation" accept=".pdf,.jpg,.jpeg,.png"><span class="doc-upload-icon">📋</span><span class="doc-upload-label">Rate Confirmation</span><span class="doc-upload-hint">PDF or image</span></div>
+                            <div class="doc-upload-card"><input type="file" class="doc-upload-input" data-doc-type="Insurance Certificate" accept=".pdf,.jpg,.jpeg,.png"><span class="doc-upload-icon">🛡️</span><span class="doc-upload-label">Insurance Certificate</span><span class="doc-upload-hint">PDF or image</span></div>
+                            <div class="doc-upload-card"><input type="file" class="doc-upload-input" data-doc-type="CDL / Driver License" accept=".pdf,.jpg,.jpeg,.png"><span class="doc-upload-icon">🪪</span><span class="doc-upload-label">CDL / License</span><span class="doc-upload-hint">PDF or image</span></div>
+                            <div class="doc-upload-card"><input type="file" class="doc-upload-input" data-doc-type="Other Document" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"><span class="doc-upload-icon">📎</span><span class="doc-upload-label">Other Document</span><span class="doc-upload-hint">Any format</span></div>
+                        </div>
+                        <h3 style="font-size:0.82rem;font-weight:700;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.08em;margin:1.25rem 0 0.75rem">Uploaded Documents</h3>
+                        <div class="doc-list" id="doc-list"></div>
+                    </div>
+                </div>
+
+                <!-- Panel: AI Trip Analyzer -->
+                <div class="tab-panel" id="panel-trip">
+                    <div class="ai-search-panel">
+                        <div class="ai-panel-header"><span class="ai-badge">⚡ AI-Powered</span><span class="ai-panel-title">Intelligent Route &amp; Profit Analyzer</span></div>
+                        <div class="ai-route-row">
+                            <div class="ai-city-wrap"><span class="ai-city-label">📍 Origin City</span><div style="position:relative"><span class="ai-city-icon">🏙</span><input type="text" id="ai-origin" class="ai-city-input" placeholder="Start typing a city…" autocomplete="off"><div class="ai-dropdown" id="ai-origin-drop"></div></div></div>
+                            <div style="display:flex;flex-direction:column;justify-content:flex-end"><button type="button" class="ai-swap-btn" id="ai-swap-btn" aria-label="Swap cities">⇄</button></div>
+                            <div class="ai-city-wrap"><span class="ai-city-label">🏁 Destination City</span><div style="position:relative"><span class="ai-city-icon">📦</span><input type="text" id="ai-dest" class="ai-city-input" placeholder="Start typing a city…" autocomplete="off"><div class="ai-dropdown" id="ai-dest-drop"></div></div></div>
+                        </div>
+                        <div><span style="font-size:0.68rem;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.08em;margin-right:0.5rem">Popular Lanes:</span>
+                            <div class="quick-lanes">
+                                <button class="quick-lane-btn" data-origin="Atlanta, GA" data-dest="Chicago, IL">ATL → CHI</button>
+                                <button class="quick-lane-btn" data-origin="Houston, TX" data-dest="Atlanta, GA">HOU → ATL</button>
+                                <button class="quick-lane-btn" data-origin="Dallas, TX" data-dest="Los Angeles, CA">DAL → LAX</button>
+                                <button class="quick-lane-btn" data-origin="Chicago, IL" data-dest="New York, NY">CHI → NYC</button>
+                                <button class="quick-lane-btn" data-origin="Miami, FL" data-dest="New York, NY">MIA → NYC</button>
+                                <button class="quick-lane-btn" data-origin="Nashville, TN" data-dest="Dallas, TX">NSH → DAL</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="trip-calc-grid">
+                        <div class="trip-inputs-col">
+                            <div class="panel-card">
+                                <div class="panel-card-header"><h2>🗺 Route Details</h2></div>
+                                <div class="trip-input-row">
+                                    <div class="trip-field"><label for="t-miles">Total Miles</label><div class="trip-sfx" data-sfx="mi"><input type="number" id="t-miles" min="1" placeholder="Auto-calculated"></div><span class="trip-field-hint" id="t-miles-hint"></span></div>
+                                    <div class="trip-field"><label for="t-deadhead">Deadhead Miles</label><div class="trip-sfx" data-sfx="mi"><input type="number" id="t-deadhead" value="0" min="0"></div></div>
+                                </div>
+                                <div class="trip-input-row">
+                                    <div class="trip-field"><label for="t-equipment">Equipment</label><select id="t-equipment"><option value="Dry Van">Dry Van</option><option value="Reefer">Reefer</option><option value="Flatbed">Flatbed</option><option value="Box Truck">Box Truck</option><option value="Step Deck">Step Deck</option><option value="Hot Shot">Hot Shot</option></select></div>
+                                    <div class="trip-field"><label for="t-mpg">Truck MPG</label><input type="number" id="t-mpg" value="6.5" min="1" max="30" step="0.1"></div>
+                                </div>
+                            </div>
+                            <div class="panel-card">
+                                <div class="panel-card-header"><h2>⛽ Fuel</h2><a href="https://www.eia.gov/petroleum/gasdiesel/" target="_blank" rel="noopener noreferrer" style="font-size:0.73rem;color:#00a8e1;font-weight:600">Live Price →</a></div>
+                                <div class="trip-input-row">
+                                    <div class="trip-field"><label for="t-diesel">Diesel $/Gal</label><div class="trip-pfx" data-pfx="$"><input type="number" id="t-diesel" value="3.89" min="0" step="0.01"></div></div>
+                                    <div class="trip-field"><label for="t-dh-mpg">Deadhead MPG</label><input type="number" id="t-dh-mpg" value="7.5" min="1" step="0.1"></div>
+                                </div>
+                            </div>
+                            <div class="panel-card">
+                                <div class="panel-card-header"><h2>💵 Rate</h2></div>
+                                <div class="trip-input-row">
+                                    <div class="trip-field"><label for="t-rate-type">Type</label><select id="t-rate-type"><option value="per-mile">Per Mile</option><option value="flat">Flat Rate</option></select></div>
+                                    <div class="trip-field"><label for="t-rate">Amount</label><div class="trip-pfx" data-pfx="$"><input type="number" id="t-rate" min="0" step="0.01" placeholder="2.50 or 1800"></div></div>
+                                </div>
+                                <div class="trip-input-row">
+                                    <div class="trip-field"><label for="t-detention">Detention</label><div class="trip-pfx" data-pfx="$"><input type="number" id="t-detention" value="0" min="0" step="1"></div></div>
+                                    <div class="trip-field"><label for="t-fsc">Fuel Surcharge</label><div class="trip-pfx" data-pfx="$"><input type="number" id="t-fsc" value="0" min="0" step="1"></div></div>
+                                </div>
+                            </div>
+                            <div class="panel-card">
+                                <div class="panel-card-header"><h2>📋 Costs</h2></div>
+                                <div class="trip-input-row">
+                                    <div class="trip-field"><label for="t-disp-pct">Dispatcher %</label><div class="trip-sfx" data-sfx="%"><input type="number" id="t-disp-pct" value="8" min="0" max="100" step="0.5"></div></div>
+                                    <div class="trip-field"><label for="t-tolls">Tolls</label><div class="trip-pfx" data-pfx="$"><input type="number" id="t-tolls" value="0" min="0"></div></div>
+                                </div>
+                                <div class="trip-input-row trip-input-row-3">
+                                    <div class="trip-field"><label for="t-lumper">Lumper</label><div class="trip-pfx" data-pfx="$"><input type="number" id="t-lumper" value="0" min="0"></div></div>
+                                    <div class="trip-field"><label for="t-scale">Scale</label><div class="trip-pfx" data-pfx="$"><input type="number" id="t-scale" value="0" min="0"></div></div>
+                                    <div class="trip-field"><label for="t-other">Other</label><div class="trip-pfx" data-pfx="$"><input type="number" id="t-other" value="0" min="0"></div></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="trip-results-panel" id="trip-results-panel">
+                            <div class="trip-placeholder" id="trip-placeholder"><div class="trip-placeholder-icon">⚡</div><p>Enter a route and rate — AI analyzes instantly</p></div>
+                            <div class="ai-grade-card" id="ai-grade-card" style="display:none"><div class="ai-grade-glow"></div><div class="load-grade-value" id="ai-grade-val">B</div><div class="load-grade-label">Load Grade</div><div class="ai-net-profit" id="ai-net-profit">$0.00</div><div class="ai-net-per-mile" id="ai-net-per-mile">$0.00/mi net</div><div class="ai-profit-bar-wrap"><div class="ai-profit-bar" id="ai-profit-bar"></div></div><div class="ai-profit-bar-label" id="ai-profit-bar-label"></div></div>
+                            <div class="ai-insights-card" id="ai-insights-card" style="display:none"><div class="ai-insights-title"><span>🤖</span> AI Insights</div><div id="ai-insights-list"></div></div>
+                            <div class="ai-breakdown-card" id="ai-route-card" style="display:none">
+                                <div class="ai-breakdown-title">🗺 Route &amp; Fuel</div>
+                                <div class="ai-row"><span class="ai-row-label">Loaded Miles</span><span class="ai-row-value orange" id="ai-miles">—</span></div>
+                                <div class="ai-row"><span class="ai-row-label">Deadhead Miles</span><span class="ai-row-value" id="ai-dh-miles">—</span></div>
+                                <div class="ai-row"><span class="ai-row-label">Drive Time</span><span class="ai-row-value" id="ai-drive-time">—</span></div>
+                                <div class="ai-row-divider"></div>
+                                <div class="ai-row"><span class="ai-row-label">Gallons (loaded)</span><span class="ai-row-value" id="ai-gallons">—</span></div>
+                                <div class="ai-row"><span class="ai-row-label">Deadhead Fuel</span><span class="ai-row-value" id="ai-dh-fuel">—</span></div>
+                                <div class="ai-row"><span class="ai-row-label">Total Fuel Cost</span><span class="ai-row-value orange" id="ai-fuel-total">—</span></div>
+                                <div class="ai-row"><span class="ai-row-label">Fuel / Mile</span><span class="ai-row-value" id="ai-fuel-per-mi">—</span></div>
+                            </div>
+                            <div class="ai-breakdown-card" id="ai-revenue-card" style="display:none">
+                                <div class="ai-breakdown-title">💵 Revenue &amp; Expenses</div>
+                                <div class="ai-row"><span class="ai-row-label">Gross Revenue</span><span class="ai-row-value orange" id="ai-gross">—</span></div>
+                                <div class="ai-row"><span class="ai-row-label">Extras (Det + FSC)</span><span class="ai-row-value" id="ai-extras">—</span></div>
+                                <div class="ai-row"><span class="ai-row-label">Total Revenue</span><span class="ai-row-value orange" id="ai-total-rev">—</span></div>
+                                <div class="ai-row-divider"></div>
+                                <div class="ai-row"><span class="ai-row-label">Fuel Cost</span><span class="ai-row-value" id="ai-exp-fuel">—</span></div>
+                                <div class="ai-row"><span class="ai-row-label">Dispatcher Fee</span><span class="ai-row-value" id="ai-exp-disp">—</span></div>
+                                <div class="ai-row"><span class="ai-row-label">Tolls + Misc</span><span class="ai-row-value" id="ai-exp-misc">—</span></div>
+                                <div class="ai-total-row"><span class="ai-total-label">Net Profit</span><span class="ai-total-value" id="ai-net-total">—</span></div>
+                            </div>
+                            <div class="ai-breakdown-card" id="ai-market-card" style="display:none">
+                                <div class="ai-breakdown-title">📈 Market Analysis</div>
+                                <div class="ai-row"><span class="ai-row-label">Your Rate / Mile</span><span class="ai-row-value orange" id="ai-your-rate">—</span></div>
+                                <div class="ai-row"><span class="ai-row-label">Lane Average</span><span class="ai-row-value" id="ai-lane-avg">—</span></div>
+                                <div class="ai-row"><span class="ai-row-label">Break-Even Rate</span><span class="ai-row-value" id="ai-breakeven">—</span></div>
+                                <div class="ai-row"><span class="ai-row-label">Market Position</span><span class="ai-row-value" id="ai-market-pos">—</span></div>
+                                <div class="rate-market-bar"><div class="rate-market-track"><div class="rate-market-needle" id="ai-rate-needle" style="left:50%"></div></div><div class="rate-market-labels"><span>Below</span><span>Fair</span><span>Above</span></div></div>
+                            </div>
+                            <div class="ai-breakdown-card" id="ai-proj-card" style="display:none">
+                                <div class="ai-breakdown-title">📊 Projections</div>
+                                <div class="ai-row"><span class="ai-row-label">Net / Mile</span><span class="ai-row-value" id="ai-proj-per-mi">—</span></div>
+                                <div class="ai-row"><span class="ai-row-label">Weekly (×3)</span><span class="ai-row-value" id="ai-proj-weekly">—</span></div>
+                                <div class="ai-row"><span class="ai-row-label">Monthly (×12)</span><span class="ai-row-value" id="ai-proj-monthly">—</span></div>
+                                <div class="ai-row"><span class="ai-row-label">Annual (×144)</span><span class="ai-row-value green" id="ai-proj-annual">—</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dispatch Modals -->
+                <div class="modal-overlay" id="assign-modal" role="dialog" aria-modal="true"><div class="modal-box" style="max-width:520px"><div class="modal-header"><h2>Assign Load to Driver</h2><button class="modal-close" aria-label="Close">✕</button></div><div class="assign-select-wrapper"><label for="assign-load-select">Select Pending Load</label><select id="assign-load-select"><option value="">-- Select a Load --</option></select></div><div class="form-actions" style="justify-content:flex-end"><button class="btn-dispatch btn-dispatch-secondary" onclick="closeModal('assign-modal')">Cancel</button><button class="btn-dispatch btn-dispatch-primary" id="confirm-assign-driver-btn">Assign Driver</button></div></div></div>
+                <div class="modal-overlay" id="assign-driver-modal" role="dialog" aria-modal="true"><div class="modal-box" style="max-width:520px"><div class="modal-header"><h2>Assign Driver to Load</h2><button class="modal-close" aria-label="Close">✕</button></div><div class="assign-select-wrapper"><label for="assign-driver-select">Select Available Driver</label><select id="assign-driver-select"><option value="">-- Select a Driver --</option></select></div><div class="form-actions" style="justify-content:flex-end"><button class="btn-dispatch btn-dispatch-secondary" onclick="closeModal('assign-driver-modal')">Cancel</button><button class="btn-dispatch btn-dispatch-primary" id="confirm-assign-load-btn">Assign to Load</button></div></div></div>
+                <div class="modal-overlay" id="status-modal" role="dialog" aria-modal="true"><div class="modal-box" style="max-width:560px"><div class="modal-header"><h2 id="status-modal-title">Update Status</h2><button class="modal-close" aria-label="Close">✕</button></div><input type="hidden" id="status-load-id"><div style="margin-bottom:1.25rem"><h3 style="font-size:0.78rem;font-weight:700;color:rgba(255,153,0,0.8);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.75rem">History</h3><div class="load-timeline" id="status-modal-timeline"></div></div><div style="border-top:1px solid rgba(255,255,255,0.06);padding-top:1.1rem"><h3 style="font-size:0.78rem;font-weight:700;color:rgba(255,153,0,0.8);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.75rem">New Status</h3><div class="status-update-form"><div class="form-field"><label for="new-status-select">Status *</label><select id="new-status-select"><option value="">-- Select --</option><option value="Pending">Pending</option><option value="Dispatched">Dispatched</option><option value="In Transit">In Transit</option><option value="Delivered">Delivered</option></select></div><div class="form-field"><label for="status-location">Location</label><input type="text" id="status-location" placeholder="e.g. Nashville, TN"></div><div class="form-field"><label for="status-notes">Notes</label><textarea id="status-notes" placeholder="Optional notes..."></textarea></div></div></div><div class="form-actions" style="justify-content:flex-end"><button class="btn-dispatch btn-dispatch-secondary" onclick="closeModal('status-modal')">Cancel</button><button class="btn-dispatch btn-dispatch-primary" id="submit-status-update-btn">Update Status</button></div></div></div>
+                <div class="modal-overlay" id="details-modal" role="dialog" aria-modal="true"><div class="modal-box"><div class="modal-header"><h2 id="details-modal-title">Load Details</h2><button class="modal-close" aria-label="Close">✕</button></div><div id="details-modal-content"></div><div class="form-actions" style="justify-content:flex-end"><button class="btn-dispatch btn-dispatch-secondary" onclick="closeModal('details-modal')">Close</button></div></div></div>
+                <div class="modal-overlay" id="rc-modal" role="dialog" aria-modal="true"><div class="modal-box"><div class="modal-header"><h2 id="rc-load-title">Rate Confirmation</h2><button class="modal-close" aria-label="Close">✕</button></div><div id="rc-content"></div><div class="form-actions" id="rc-actions" style="justify-content:flex-end"><button class="btn-dispatch btn-dispatch-secondary" onclick="closeModal('rc-modal')">Close</button><button class="btn-dispatch btn-dispatch-secondary" id="download-rc-btn">⬇ PDF</button><button class="btn-dispatch btn-dispatch-primary" id="print-rc-btn">🖨 Print</button></div></div></div>
+
+            </section><!-- /dispatch-section -->
+
+
+            <!-- ============================================================
+                 AI ANALYZER SECTION (shortcut tab)
+                 ============================================================ -->
+            <section id="analyzer-section" class="admin-section">
+                <div class="section-header" style="margin-bottom:1.5rem">
+                    <div><h1>AI Trip Analyzer</h1><p class="section-sub">Intelligent route profit analysis with market benchmarking</p></div>
+                </div>
+                <div style="background:rgba(255,153,0,0.07);border:1px solid rgba(255,153,0,0.22);border-radius:12px;padding:1.25rem 1.5rem;font-size:0.9rem;color:rgba(255,255,255,0.6)">
+                    The AI Trip Analyzer is embedded in the <strong style="color:#ff9900">Dispatch Portal → ⚡ AI Trip Analyzer tab</strong>.
+                    <button onclick="showSection('dispatch'); setTimeout(()=>document.querySelector('[data-tab=\'trip\']')?.click(),100)" class="btn-dispatch btn-dispatch-primary" style="margin-left:1rem;padding:0.45rem 1.2rem;font-size:0.82rem">Open Analyzer →</button>
+                </div>
+            </section>
+
+
+            <!-- ============================================================
+                 TRIP CALCULATOR SECTION
+                 ============================================================ -->
+            <section id="tripcalc-section" class="admin-section">
+                <div class="section-header" style="margin-bottom:1.5rem">
+                    <div><h1>Trip Profit Calculator</h1><p class="section-sub">Calculate fuel cost, revenue, and net profit for any load</p></div>
+                </div>
+
+                <div class="calc-layout" style="display:grid;grid-template-columns:1fr 400px;gap:1.25rem;align-items:start">
+
+                    <!-- Inputs -->
+                    <div>
+                        <form id="calc-form" novalidate>
+
+                            <div class="calc-card">
+                                <div class="calc-card-title">📍 Route</div>
+                                <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+                                    <div class="form-field"><label for="origin-city-calc">Origin City, State</label><input type="text" id="origin-city-calc" name="origin-city" list="origin-city-list" placeholder="e.g. Atlanta, GA" autocomplete="off"><datalist id="origin-city-list"></datalist></div>
+                                    <div class="form-field"><label for="dest-city-calc">Destination City, State</label><input type="text" id="dest-city-calc" name="dest-city" list="dest-city-list" placeholder="e.g. Chicago, IL" autocomplete="off"><datalist id="dest-city-list"></datalist></div>
+                                </div>
+                                <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+                                    <div class="form-field"><label for="manual-miles">Total Miles (override)</label><input type="number" id="manual-miles" name="manual-miles" placeholder="Auto or enter manually" min="1"><span class="field-hint" id="distance-hint"></span></div>
+                                    <div class="form-field"><label for="equipment-type-calc">Equipment Type</label><select id="equipment-type-calc" name="equipment-type"><option value="Dry Van">Dry Van (53')</option><option value="Reefer">Reefer</option><option value="Flatbed">Flatbed</option><option value="Box Truck">Box Truck</option><option value="Step Deck">Step Deck</option><option value="Hot Shot">Hot Shot</option></select></div>
+                                </div>
+                            </div>
+
+                            <div class="calc-card">
+                                <div class="calc-card-title">⛽ Diesel &amp; Fuel</div>
+                                <div class="diesel-info-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Check today's price at <a href="https://www.eia.gov/petroleum/gasdiesel/" target="_blank" rel="noopener noreferrer">EIA.gov</a></div>
+                                <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+                                    <div class="form-field"><label for="diesel-price">Diesel Price / Gal</label><div class="input-prefix-wrap"><span class="input-prefix">$</span><input type="number" id="diesel-price" value="3.89" min="0" step="0.01"></div></div>
+                                    <div class="form-field"><label for="truck-mpg">Fuel Efficiency</label><div class="input-suffix-wrap"><input type="number" id="truck-mpg" value="6.5" min="1" max="30" step="0.1"><span class="input-suffix">MPG</span></div></div>
+                                </div>
+                            </div>
+
+                            <div class="calc-card">
+                                <div class="calc-card-title">💵 Load Rate</div>
+                                <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+                                    <div class="form-field"><label for="rate-type-calc">Rate Type</label><select id="rate-type-calc" name="rate-type"><option value="per-mile">Per Mile</option><option value="flat">Flat Rate</option></select></div>
+                                    <div class="form-field"><label for="rate-amount">Rate Amount</label><div class="input-prefix-wrap"><span class="input-prefix">$</span><input type="number" id="rate-amount" min="0" step="0.01" placeholder="2.50 or 1800"></div></div>
+                                </div>
+                            </div>
+
+                            <div class="calc-card">
+                                <div class="calc-card-title">📋 Expenses</div>
+                                <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:0.75rem">
+                                    <div class="form-field"><label for="dispatcher-fee">Dispatcher Fee</label><div class="input-suffix-wrap"><input type="number" id="dispatcher-fee" value="8" min="0" max="100" step="0.5"><span class="input-suffix">%</span></div></div>
+                                    <div class="form-field"><label for="tolls">Tolls</label><div class="input-prefix-wrap"><span class="input-prefix">$</span><input type="number" id="tolls" value="0" min="0"></div></div>
+                                </div>
+                                <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem">
+                                    <div class="form-field"><label for="lumper-fees">Lumper</label><div class="input-prefix-wrap"><span class="input-prefix">$</span><input type="number" id="lumper-fees" value="0" min="0"></div></div>
+                                    <div class="form-field"><label for="scale-fees">Scale</label><div class="input-prefix-wrap"><span class="input-prefix">$</span><input type="number" id="scale-fees" value="0" min="0"></div></div>
+                                    <div class="form-field"><label for="other-costs">Other</label><div class="input-prefix-wrap"><span class="input-prefix">$</span><input type="number" id="other-costs" value="0" min="0"></div></div>
+                                </div>
+                            </div>
+
+                            <div style="display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:0.5rem">
+                                <button type="button" class="btn-calc btn-calc-primary" id="save-calc-btn">💾 Save</button>
+                                <button type="button" class="btn-calc btn-calc-secondary" id="print-calc-btn">🖨 Print</button>
+                                <button type="button" class="btn-calc btn-calc-secondary" id="reset-calc-btn">↺ Reset</button>
+                            </div>
+                        </form>
+
+                        <div class="calc-card" style="margin-top:1.25rem">
+                            <div class="calc-card-title" style="justify-content:space-between"><span>🗂 Saved Calculations</span><button class="btn-calc-sm" id="clear-history-btn">Clear All</button></div>
+                            <div id="calc-history"><p class="no-history">No saved calculations yet.</p></div>
+                        </div>
+                    </div>
+
+                    <!-- Results -->
+                    <div class="results-panel" id="results-panel">
+                        <div class="results-summary-banner">
+                            <div class="results-net-label">Estimated Net Profit</div>
+                            <div class="results-net-amount" id="res-net-banner">—</div>
+                            <div class="results-net-permile" id="res-net-per-mi-banner">— per mile</div>
+                            <div class="profit-meter"><div class="profit-meter-bar" id="profit-meter-bar"></div></div>
+                            <div class="profit-meter-label" id="profit-meter-label"></div>
+                        </div>
+                        <div class="calc-card"><div class="calc-card-title">🗺 Route</div>
+                            <div class="result-row"><span class="result-label">Distance</span><span class="result-value highlight" id="res-miles">—</span></div>
+                            <div class="result-row"><span class="result-label">Drive Time</span><span class="result-value" id="res-drive-time">—</span></div>
+                        </div>
+                        <div class="calc-card"><div class="calc-card-title">⛽ Fuel</div>
+                            <div class="result-row"><span class="result-label">Gallons</span><span class="result-value" id="res-gallons">—</span></div>
+                            <div class="result-row"><span class="result-label">Fuel Cost</span><span class="result-value highlight" id="res-fuel-cost">—</span></div>
+                            <div class="result-row"><span class="result-label">Fuel / Mile</span><span class="result-value" id="res-fuel-per-mi">—</span></div>
+                        </div>
+                        <div class="calc-card"><div class="calc-card-title">💵 Revenue</div>
+                            <div class="result-row"><span class="result-label">Gross Revenue</span><span class="result-value highlight" id="res-gross">—</span></div>
+                            <div class="result-row"><span class="result-label">Revenue / Mile</span><span class="result-value" id="res-rate-per-mi">—</span></div>
+                        </div>
+                        <div class="calc-card"><div class="calc-card-title">📋 Expenses</div>
+                            <div class="result-row"><span class="result-label">Fuel</span><span class="result-value" id="res-fuel-cost-exp">—</span></div>
+                            <div class="result-row"><span class="result-label">Dispatcher</span><span class="result-value" id="res-disp-fee">—</span></div>
+                            <div class="result-row"><span class="result-label">Tolls</span><span class="result-value" id="res-tolls">—</span></div>
+                            <div class="result-row"><span class="result-label">Lumper</span><span class="result-value" id="res-lumper">—</span></div>
+                            <div class="result-row"><span class="result-label">Scale</span><span class="result-value" id="res-scale">—</span></div>
+                            <div class="result-row"><span class="result-label">Other</span><span class="result-value" id="res-other">—</span></div>
+                            <div class="result-divider"></div>
+                            <div class="result-total-row"><span class="result-total-label">Total Expenses</span><span class="result-total-value highlight" id="res-total-exp">—</span></div>
+                            <div class="result-row"><span class="result-label">Expense / Mile</span><span class="result-value" id="res-exp-per-mi">—</span></div>
+                        </div>
+                        <div class="calc-card" style="border-color:rgba(255,153,0,0.2)"><div class="calc-card-title">📊 Bottom Line</div>
+                            <div class="result-row"><span class="result-label">Net Profit</span><span class="result-value" id="res-net" style="font-size:1.05rem;font-weight:900">—</span></div>
+                            <div class="result-row"><span class="result-label">Net / Mile</span><span class="result-value" id="res-net-per-mi">—</span></div>
+                            <div class="result-divider"></div>
+                            <div class="result-row"><span class="result-label">Break-Even Rate</span><span class="result-value" id="res-breakeven">—</span></div>
+                        </div>
+                    </div>
+
+                </div>
+            </section><!-- /tripcalc-section -->
+
+            <!-- Toast Notification -->
+            <div id="toast" class="toast"></div>
         </main>
     </div>
 
     <script src="js/admin.js"></script>
+    <script src="js/dispatch.js"></script>
+    <script src="js/calculator.js"></script>
 </body>
 </html>

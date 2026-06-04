@@ -95,16 +95,18 @@ const fmtN = (n, d) => n.toLocaleString('en-US', { minimumFractionDigits: d || 0
 /* ---- Main calculation ---- */
 function calculate() {
     const get  = (id) => document.getElementById(id);
-    const val  = (id) => parseFloat(get(id)?.value) || 0;
-    const sval = (id) => get(id)?.value?.trim() || '';
+    /* Try admin-inline ID first (suffix -calc), fall back to standalone page ID */
+    const pick  = (...ids) => ids.reduce((el, id) => el || get(id), null);
+    const val   = (...ids) => parseFloat(pick(...ids)?.value) || 0;
+    const sval  = (...ids) => pick(...ids)?.value?.trim() || '';
 
-    const originCity  = sval('origin-city');
-    const destCity    = sval('dest-city');
+    const originCity  = sval('origin-city-calc', 'origin-city');
+    const destCity    = sval('dest-city-calc',   'dest-city');
     const manualMiles = val('manual-miles');
-    const equipment   = sval('equipment-type');
+    const equipment   = sval('equipment-type-calc', 'equipment-type');
     const mpg         = val('truck-mpg');
     const dieselPrice = val('diesel-price');
-    const rateType    = sval('rate-type');
+    const rateType    = sval('rate-type-calc', 'rate-type');
     const rateAmt     = val('rate-amount');
     const dispPct     = val('dispatcher-fee');
     const tolls       = val('tolls');
@@ -228,11 +230,9 @@ function updateMeter(pct, positive) {
 
 /* ---- Equipment type → auto-fill MPG ---- */
 function onEquipmentChange() {
-    const eq  = document.getElementById('equipment-type')?.value;
+    const eq = (document.getElementById('equipment-type-calc') || document.getElementById('equipment-type'))?.value;
     const mpgEl = document.getElementById('truck-mpg');
-    if (mpgEl && MPG_DEFAULTS[eq]) {
-        mpgEl.value = MPG_DEFAULTS[eq];
-    }
+    if (mpgEl && MPG_DEFAULTS[eq]) mpgEl.value = MPG_DEFAULTS[eq];
     calculate();
 }
 
@@ -330,7 +330,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /* Live recalculate on any input change */
     document.getElementById('calc-form')?.addEventListener('input', calculate);
-    document.getElementById('equipment-type')?.addEventListener('change', onEquipmentChange);
+    /* Listen to both standalone and admin-inline equipment selects */
+    ['equipment-type-calc', 'equipment-type'].forEach(id => {
+        document.getElementById(id)?.addEventListener('change', onEquipmentChange);
+    });
 
     /* Buttons */
     document.getElementById('save-calc-btn')?.addEventListener('click', saveCalc);
