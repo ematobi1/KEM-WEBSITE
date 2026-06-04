@@ -93,6 +93,31 @@
     margin-top: 0.35rem;
 }
 
+/* Clickable stat cards */
+.dispatch-stat[role="button"] {
+    transition: all 0.22s ease;
+}
+.dispatch-stat[role="button"]:hover {
+    border-color: rgba(255,153,0,0.55);
+    background: rgba(255,153,0,0.07);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+}
+.dispatch-stat[role="button"]:focus-visible {
+    outline: 2px solid #ff9900;
+    outline-offset: 3px;
+}
+
+/* Number bump animation when value changes */
+@keyframes stat-bump {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.25); color: #ffcc44; }
+    100% { transform: scale(1); }
+}
+.dispatch-stat-number.stat-bump {
+    animation: stat-bump 0.4s ease;
+}
+
 /* --- Main Portal Container --- */
 .dispatch-portal {
     position: relative;

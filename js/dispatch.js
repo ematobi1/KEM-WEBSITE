@@ -23,12 +23,97 @@ function saveDocs(docs)       { localStorage.setItem(DOCS_KEY,    JSON.stringify
 function seedDrivers() {
     if (getDrivers().length) return;
     saveDrivers([
-        { id: 'DRV001', name: 'Marcus Williams', initials: 'MW', truckType: 'Dry Van',  truckNumber: 'KEM-101', status: 'Available', location: 'Atlanta, GA',    dotNumber: '3421857', mcNumber: '987654', phone: '(470) 555-0101', currentLoadId: null },
-        { id: 'DRV002', name: 'Angela Davis',    initials: 'AD', truckType: 'Flatbed',   truckNumber: 'KEM-102', status: 'Available', location: 'Dallas, TX',     dotNumber: '2983741', mcNumber: '765432', phone: '(214) 555-0102', currentLoadId: null },
-        { id: 'DRV003', name: 'James Torres',    initials: 'JT', truckType: 'Reefer',    truckNumber: 'KEM-103', status: 'Off Duty',  location: 'Chicago, IL',    dotNumber: '4712984', mcNumber: '543210', phone: '(312) 555-0103', currentLoadId: null },
-        { id: 'DRV004', name: 'Lisa Johnson',    initials: 'LJ', truckType: 'Box Truck', truckNumber: 'KEM-201', status: 'Available', location: 'Houston, TX',    dotNumber: '5621398', mcNumber: '321098', phone: '(713) 555-0104', currentLoadId: null },
-        { id: 'DRV005', name: 'Robert Kim',      initials: 'RK', truckType: 'Step Deck', truckNumber: 'KEM-104', status: 'Available', location: 'Nashville, TN',  dotNumber: '6734512', mcNumber: '210987', phone: '(615) 555-0105', currentLoadId: null },
+        { id: 'DRV001', name: 'Marcus Williams', initials: 'MW', truckType: 'Dry Van',  truckNumber: 'KEM-101', status: 'Available', location: 'Atlanta, GA',   dotNumber: '3421857', mcNumber: '987654', phone: '(470) 555-0101', currentLoadId: null },
+        { id: 'DRV002', name: 'Angela Davis',    initials: 'AD', truckType: 'Flatbed',  truckNumber: 'KEM-102', status: 'Available', location: 'Dallas, TX',    dotNumber: '2983741', mcNumber: '765432', phone: '(214) 555-0102', currentLoadId: null },
+        { id: 'DRV003', name: 'James Torres',    initials: 'JT', truckType: 'Reefer',   truckNumber: 'KEM-103', status: 'Off Duty',  location: 'Chicago, IL',   dotNumber: '4712984', mcNumber: '543210', phone: '(312) 555-0103', currentLoadId: null },
+        { id: 'DRV004', name: 'Lisa Johnson',    initials: 'LJ', truckType: 'Box Truck',truckNumber: 'KEM-201', status: 'Available', location: 'Houston, TX',   dotNumber: '5621398', mcNumber: '321098', phone: '(713) 555-0104', currentLoadId: null },
+        { id: 'DRV005', name: 'Robert Kim',      initials: 'RK', truckType: 'Step Deck',truckNumber: 'KEM-104', status: 'Available', location: 'Nashville, TN', dotNumber: '6734512', mcNumber: '210987', phone: '(615) 555-0105', currentLoadId: null },
     ]);
+}
+
+/* ---- Seed demo loads (only if storage is empty) ---- */
+
+function seedDemoLoads() {
+    if (getLoads().length) return;
+
+    const now       = new Date();
+    const todayStr  = now.toISOString().slice(0, 10);
+    const yd        = new Date(now); yd.setDate(yd.getDate() - 1);
+    const ydStr     = yd.toISOString().slice(0, 10);
+    const tm        = new Date(now); tm.setDate(tm.getDate() + 1);
+    const tmStr     = tm.toISOString().slice(0, 10);
+    const ago = (ms) => new Date(now.getTime() - ms).toISOString();
+    const todayAt   = (h, m) => { const d = new Date(now); d.setHours(h, m, 0, 0); return d.toISOString(); };
+
+    saveLoads([
+        {
+            id: 'KEM0001', status: 'Pending',
+            originCity: 'Atlanta',  originState: 'GA', destCity: 'Charlotte', destState: 'NC',
+            pickupDate: todayStr, pickupTime: '10:00', deliveryDate: todayStr, deliveryTime: '18:00',
+            commodity: 'Auto Parts', weight: '32000', equipment: 'Dry Van',
+            rateType: 'flat', rate: '1850', hazmat: false, specialInstructions: '',
+            brokerName: 'Echo Global Logistics', brokerContact: '(800) 354-7993', referenceNumber: 'ECH-885421',
+            driverId: null, driverName: null,
+            createdAt: ago(3600000),
+            statusHistory: [{ status: 'Pending', timestamp: ago(3600000), location: 'Atlanta, GA', notes: 'Load submitted to board' }]
+        },
+        {
+            id: 'KEM0002', status: 'Dispatched',
+            originCity: 'Houston',  originState: 'TX', destCity: 'Nashville', destState: 'TN',
+            pickupDate: todayStr, pickupTime: '12:00', deliveryDate: tmStr, deliveryTime: '08:00',
+            commodity: 'Electronics', weight: '18500', equipment: 'Reefer',
+            rateType: 'flat', rate: '2400', hazmat: false, specialInstructions: 'Temp: 35°F required',
+            brokerName: 'Coyote Logistics', brokerContact: '(888) 264-9963', referenceNumber: 'COY-112233',
+            driverId: 'DRV004', driverName: 'Lisa Johnson',
+            createdAt: ago(7200000),
+            statusHistory: [
+                { status: 'Pending',    timestamp: ago(7200000), location: 'Houston, TX',  notes: 'Load submitted to board' },
+                { status: 'Dispatched', timestamp: ago(5400000), location: 'Houston, TX',  notes: 'Driver assigned: Lisa Johnson' }
+            ]
+        },
+        {
+            id: 'KEM0003', status: 'In Transit',
+            originCity: 'Dallas',   originState: 'TX', destCity: 'Chicago', destState: 'IL',
+            pickupDate: ydStr,    pickupTime: '14:00', deliveryDate: tmStr, deliveryTime: '06:00',
+            commodity: 'Steel Coils', weight: '44000', equipment: 'Flatbed',
+            rateType: 'flat', rate: '3200', hazmat: false, specialInstructions: 'Tarps required',
+            brokerName: 'C.H. Robinson', brokerContact: '(800) 323-7587', referenceNumber: 'CHR-778899',
+            driverId: 'DRV002', driverName: 'Angela Davis',
+            createdAt: ago(86400000),
+            statusHistory: [
+                { status: 'Pending',    timestamp: ago(86400000), location: 'Dallas, TX',     notes: 'Load submitted to board' },
+                { status: 'Dispatched', timestamp: ago(82800000), location: 'Dallas, TX',     notes: 'Driver assigned: Angela Davis' },
+                { status: 'In Transit', timestamp: ago(72000000), location: 'Oklahoma City, OK', notes: 'Picked up on time — running smooth' }
+            ]
+        },
+        {
+            id: 'KEM0004', status: 'Delivered',
+            originCity: 'Memphis',  originState: 'TN', destCity: 'Atlanta', destState: 'GA',
+            pickupDate: ydStr,    pickupTime: '20:00', deliveryDate: todayStr, deliveryTime: '06:00',
+            commodity: 'Food Grade', weight: '38000', equipment: 'Reefer',
+            rateType: 'flat', rate: '1600', hazmat: false, specialInstructions: '',
+            brokerName: 'J.B. Hunt', brokerContact: '(800) 643-3622', referenceNumber: 'JBH-445566',
+            driverId: 'DRV001', driverName: 'Marcus Williams',
+            createdAt: ago(86400000 + 3600000),
+            statusHistory: [
+                { status: 'Pending',    timestamp: ago(90000000), location: 'Memphis, TN',    notes: 'Load submitted to board' },
+                { status: 'Dispatched', timestamp: ago(86400000), location: 'Memphis, TN',    notes: 'Driver assigned: Marcus Williams' },
+                { status: 'In Transit', timestamp: ago(79200000), location: 'Memphis, TN',    notes: 'Picked up — running on schedule' },
+                { status: 'Delivered',  timestamp: todayAt(6, 15), location: 'Atlanta, GA',   notes: 'Delivered and signed — POD obtained ✓' }
+            ]
+        }
+    ]);
+
+    /* Update driver statuses to match demo loads */
+    const drivers = getDrivers();
+    const set = (id, status, loadId) => {
+        const d = drivers.find(x => x.id === id);
+        if (d) { d.status = status; d.currentLoadId = loadId; }
+    };
+    set('DRV004', 'On Load',   'KEM0002');  // Lisa — Dispatched
+    set('DRV002', 'On Load',   'KEM0003');  // Angela — In Transit
+    set('DRV001', 'Available', null);        // Marcus — back after delivery
+    saveDrivers(drivers);
 }
 
 /* ---- Generate load number ---- */
@@ -622,14 +707,64 @@ function removeDoc(id) {
 
 /* ---- Stats update ---- */
 
+function deliveredTodayCount(loads) {
+    const todayStr = new Date().toISOString().slice(0, 10);
+    return loads.filter(l => {
+        if (l.status !== 'Delivered') return false;
+        const entry = (l.statusHistory || []).slice().reverse().find(h => h.status === 'Delivered');
+        return entry ? entry.timestamp.startsWith(todayStr) : false;
+    }).length;
+}
+
 function updateStats() {
     const loads   = getLoads();
     const drivers = getDrivers();
-    const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
-    set('stat-active-loads',       loads.filter(l => l.status !== 'Delivered').length);
-    set('stat-available-drivers',  drivers.filter(d => d.status === 'Available').length);
-    set('stat-delivered',          loads.filter(l => l.status === 'Delivered').length);
-    set('stat-on-load',            drivers.filter(d => d.status === 'On Load').length);
+    const setText = (id, val) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (el.textContent !== String(val)) {
+            el.textContent = val;
+            el.classList.add('stat-bump');
+            setTimeout(() => el.classList.remove('stat-bump'), 400);
+        }
+    };
+    setText('stat-active-loads',      loads.filter(l => l.status !== 'Delivered').length);
+    setText('stat-available-drivers', drivers.filter(d => d.status === 'Available').length);
+    setText('stat-on-load',           drivers.filter(d => d.status === 'On Load').length);
+    setText('stat-delivered',         deliveredTodayCount(loads));
+}
+
+/* ---- Make stat cards clickable — jump to filtered view ---- */
+
+function initStatCards() {
+    const map = [
+        { id: 'stat-active-loads',      tab: 'dashboard', filter: 'all'       },
+        { id: 'stat-available-drivers', tab: 'drivers',   filter: null         },
+        { id: 'stat-on-load',           tab: 'drivers',   filter: null         },
+        { id: 'stat-delivered',         tab: 'dashboard', filter: 'delivered'  },
+    ];
+
+    map.forEach(({ id, tab, filter }) => {
+        const card = document.getElementById(id)?.closest('.dispatch-stat');
+        if (!card) return;
+        card.style.cursor = 'pointer';
+        card.setAttribute('role', 'button');
+        card.setAttribute('tabindex', '0');
+        card.title = 'Click to view details';
+
+        const go = () => {
+            const tabBtn = document.querySelector('.tab-btn[data-tab="' + tab + '"]');
+            tabBtn?.click();
+            if (filter) {
+                setTimeout(() => {
+                    const filterBtn = document.querySelector('.filter-btn[data-filter="' + filter + '"]');
+                    filterBtn?.click();
+                }, 60);
+            }
+        };
+        card.addEventListener('click', go);
+        card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
+    });
 }
 
 /* ---- Dashboard filters ---- */
@@ -696,11 +831,26 @@ function esc(str) {
 
 document.addEventListener('DOMContentLoaded', () => {
     seedDrivers();
+    seedDemoLoads();
     initTabs();
     initLoadForm();
     initFilters();
     initDocUploads();
+    initStatCards();
     updateStats();
+
+    /* Cross-tab live sync — stats and active panel refresh when another tab changes data */
+    window.addEventListener('storage', e => {
+        if (e.key === LOADS_KEY || e.key === DRIVERS_KEY) {
+            updateStats();
+            const active = document.querySelector('.tab-panel.active');
+            if (active?.id === 'panel-dashboard') renderDashboard();
+            if (active?.id === 'panel-drivers')   renderDrivers();
+        }
+    });
+
+    /* Auto-refresh stats every 60 seconds */
+    setInterval(updateStats, 60000);
 
     /* Wire modal close buttons */
     document.querySelectorAll('.modal-close').forEach(btn => {
