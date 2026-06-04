@@ -358,11 +358,12 @@ a:focus {
     display: flex;
     align-items: center;
     overflow: hidden;
-    background-image: url('../assets/images/hero-background.jpg');
+    background-color: #0a0e1a;
+    background-image:
+        url('../assets/images/hero-background.jpg');
     background-size: cover;
-    background-position: center;
+    background-position: center top;
     background-repeat: no-repeat;
-    background-color: #000;
 }
 
 /* Dark overlay for text readability */
