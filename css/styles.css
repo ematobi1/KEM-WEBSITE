@@ -359,23 +359,22 @@ a:focus {
     align-items: center;
     overflow: hidden;
     background-color: #0a0e1a;
-    background-image:
-        url('../assets/images/hero-background.jpg');
+    background-image: url('../assets/images/hero-background.jpg');
     background-size: cover;
-    background-position: center top;
+    background-position: center 45%;
     background-repeat: no-repeat;
 }
 
-/* Dark overlay for text readability */
+/* Dark overlay — light enough to let the night cityscape show through */
 .hero::before {
     content: '';
     position: absolute;
     inset: 0;
     background: linear-gradient(
         160deg,
-        rgba(0, 0, 0, 0.60) 0%,
-        rgba(0, 0, 0, 0.45) 50%,
-        rgba(0, 0, 0, 0.60) 100%
+        rgba(0, 0, 0, 0.45) 0%,
+        rgba(0, 0, 0, 0.25) 50%,
+        rgba(0, 0, 0, 0.50) 100%
     );
     z-index: 0;
 }
